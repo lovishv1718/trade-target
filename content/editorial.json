@@ -1,0 +1,26 @@
+{
+  "homepage": {
+    "lead": "nse-ipo-allotment-status",
+    "secondary": ["hero-motors-ipo-allotment-status", "ntpc-q4-2026-result", "gold-and-silver-prices-surge"],
+    "shareAnalysisLead": "steel-authority-of-india-fundamental-analysis",
+    "personalFinanceLead": "employees-provident-fund-epf"
+  },
+  "kickers": {
+    "ntpc-q4-2026-result": "Results",
+    "divis-lab-q4-2026-results": "Results",
+    "gold-and-silver-prices-surge": "Commodities",
+    "how-to-invest-in-silver-gold-and-copper-in-india": "Commodities",
+    "what-is-ncdex-meaning-functions-and-benefits": "Commodities",
+    "mutual-funds-cut-stakes-in-30-stocks": "Funds",
+    "new-amcs-in-india": "Funds",
+    "parag-parikh-flexi-cap-fund-vs-hdfc-flexi-cap-fund": "Funds",
+    "quant-small-cap-fund-holdings-review": "Funds",
+    "life-cycle-funds": "Funds",
+    "stock-market-holiday-next-week": "Markets",
+    "nifty-could-slip-to-20500-warns-jpmorgan": "Markets",
+    "upcoming-dividends-in-april-2026": "Dividends",
+    "diet-coke-shortage-in-india-why-is-it-disappearing": "Business",
+    "campa-cola-comeback": "Business"
+  },
+  "newsTopics": ["Results", "Markets", "Commodities", "IPO", "Funds", "Business", "Dividends"]
+}

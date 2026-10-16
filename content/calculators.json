@@ -1,0 +1,258 @@
+[
+  {
+    "slug": "sip-calculator",
+    "name": "SIP Calculator",
+    "category": "Investing",
+    "short": "Future value of a monthly SIP",
+    "description": "Work out what a monthly systematic investment plan could grow to, and compare it with putting the same total in as a lump sum.",
+    "faqs": [
+      { "q": "How does this SIP calculator work out the maturity value?", "a": "It treats each instalment as invested at the start of the month and compounds it monthly at one-twelfth of the annual return you enter. The result is the future value of an annuity due: P × [((1 + i)^n − 1) ÷ i] × (1 + i)." },
+      { "q": "Are mutual fund SIP returns guaranteed?", "a": "No. Equity and hybrid fund returns move with the market. The expected return you enter is an assumption, not a promise, and actual NAV-based returns can be higher or lower in any year." },
+      { "q": "Is a 12% expected return realistic?", "a": "It depends on the fund category and the period. Use a lower figure for debt and hybrid funds, and test a range of returns for equity funds rather than relying on a single number." },
+      { "q": "Does the calculator account for tax and exit load?", "a": "No. Capital gains tax, exit loads and expense ratios are not deducted. Fund NAVs already reflect the expense ratio, but tax on redemption is payable separately." },
+      { "q": "What happens if I miss an SIP instalment?", "a": "Most fund houses simply skip the missed instalment. Several consecutive misses can lead to the SIP being cancelled, but units already bought stay invested." }
+    ],
+    "related": ["step-up-sip-calculator", "lumpsum-calculator", "swp-calculator", "cagr-calculator"],
+    "articles": ["parag-parikh-flexi-cap-fund-vs-hdfc-flexi-cap-fund", "quant-small-cap-fund-holdings-review", "life-cycle-funds", "new-amcs-in-india"]
+  },
+  {
+    "slug": "lumpsum-calculator",
+    "name": "Lumpsum Calculator",
+    "category": "Investing",
+    "short": "Growth of a one-time investment",
+    "description": "See how a single investment compounds over time at an assumed annual return, and how it compares with spreading the same amount through an SIP.",
+    "faqs": [
+      { "q": "What formula does the lumpsum calculator use?", "a": "Future value = P × (1 + r)^t, where P is the amount invested, r is the expected annual return and t is the number of years. Returns are compounded once a year." },
+      { "q": "Is lumpsum better than SIP?", "a": "If markets rise steadily, a lumpsum invested early usually ends higher because the whole amount compounds for longer. An SIP spreads the entry price across market levels, which reduces the risk of investing everything at a peak." },
+      { "q": "Can I use this for fixed deposits?", "a": "Only approximately. Bank FDs usually compound quarterly, so use the FD calculator for deposit maturity values." },
+      { "q": "Does inflation reduce the value shown?", "a": "The figure shown is in future rupees. To see its value in today's money, divide it by (1 + inflation)^years." },
+      { "q": "Are returns on lumpsum mutual fund investments taxed?", "a": "Yes. Gains are taxed as capital gains when you redeem units. The rate depends on the fund type and how long you held the units." }
+    ],
+    "related": ["sip-calculator", "cagr-calculator", "fd-calculator", "step-up-sip-calculator"],
+    "articles": ["parag-parikh-flexi-cap-fund-vs-hdfc-flexi-cap-fund", "how-to-select-best-stocks", "life-cycle-funds"]
+  },
+  {
+    "slug": "step-up-sip-calculator",
+    "name": "Step-up SIP Calculator",
+    "category": "Investing",
+    "short": "SIP that rises every year",
+    "description": "Model an SIP that increases by a fixed percentage every year, in line with salary hikes, and see the gap it opens over a flat SIP.",
+    "faqs": [
+      { "q": "What is a step-up SIP?", "a": "A step-up or top-up SIP raises the monthly instalment by a set percentage or amount once a year. Most fund houses let you set this when you register the SIP." },
+      { "q": "How is the step-up applied in this calculator?", "a": "The instalment stays the same for 12 months, then rises by the step-up percentage. Each instalment is invested at the start of the month and compounded monthly." },
+      { "q": "How much step-up is sensible?", "a": "Many investors match it to their expected annual salary increase, often 5% to 10%. A step-up that outpaces income growth may be hard to sustain." },
+      { "q": "Can I stop the step-up later?", "a": "Yes. You can usually modify or cancel the top-up through the fund house or your platform, while keeping the base SIP running." },
+      { "q": "Why does the step-up make such a large difference?", "a": "Later instalments are larger, and every year's higher amount then compounds for the rest of the term, so the effect builds over long periods." }
+    ],
+    "related": ["sip-calculator", "lumpsum-calculator", "retirement-calculator", "swp-calculator"],
+    "articles": ["life-cycle-funds", "parag-parikh-flexi-cap-fund-vs-hdfc-flexi-cap-fund", "50-30-20-rule"]
+  },
+  {
+    "slug": "swp-calculator",
+    "name": "SWP Calculator",
+    "category": "Investing",
+    "short": "Monthly withdrawals from a corpus",
+    "description": "Plan a systematic withdrawal plan: how much you can take out each month, what is left at the end, and when the money runs out at a given return.",
+    "faqs": [
+      { "q": "How does an SWP work?", "a": "You invest a lump sum in a mutual fund and instruct the fund house to redeem a fixed amount every month. The remaining units stay invested and continue to earn returns." },
+      { "q": "How is the balance worked out each month?", "a": "The balance earns one month of return, then the withdrawal is taken out: B(next) = B × (1 + i) − W, where i is the monthly return." },
+      { "q": "What happens if withdrawals exceed returns?", "a": "The corpus shrinks every month. The calculator shows the month in which it would run out at the return you assume." },
+      { "q": "How are SWP withdrawals taxed?", "a": "Each withdrawal is a redemption of units, so only the gain portion is taxed as capital gains, not the full amount withdrawn." },
+      { "q": "Is a fixed monthly withdrawal safe in a falling market?", "a": "Withdrawing a fixed amount when NAVs are low sells more units, which can deplete the corpus faster. Many investors keep one to two years of withdrawals in a debt fund to manage this." }
+    ],
+    "related": ["retirement-calculator", "sip-calculator", "nps-calculator", "lumpsum-calculator"],
+    "articles": ["life-cycle-funds", "new-amcs-in-india", "quant-small-cap-fund-holdings-review"]
+  },
+  {
+    "slug": "ppf-calculator",
+    "name": "PPF Calculator",
+    "category": "Savings",
+    "short": "Public Provident Fund maturity",
+    "description": "Calculate the maturity value of yearly Public Provident Fund deposits over the 15-year term and any five-year extensions.",
+    "faqs": [
+      { "q": "What is the current PPF interest rate?", "a": "TradeTarget's PPF guide puts the rate at 7.1% a year, compounded annually. The government reviews it every quarter, so check the latest notification before you invest." },
+      { "q": "How much can I deposit in PPF?", "a": "At least ₹500 and at most ₹1.5 lakh in a financial year, in one go or in instalments." },
+      { "q": "How does this calculator treat deposits?", "a": "It assumes the full yearly deposit is made at the start of the year, before 5 April, so it earns interest for the whole year." },
+      { "q": "Can I extend a PPF account after 15 years?", "a": "Yes, in blocks of five years, with or without fresh deposits. Use the tenure slider to model 20, 25 or 30 years." },
+      { "q": "Is PPF interest taxable?", "a": "No. Deposits qualify for deduction under Section 80C in the old regime, and interest and maturity proceeds are tax-free." }
+    ],
+    "related": ["epf-calculator", "nps-calculator", "fd-calculator", "income-tax-calculator"],
+    "articles": ["ppf-interest-rate", "section-80c", "best-tax-saving-options"]
+  },
+  {
+    "slug": "epf-calculator",
+    "name": "EPF Calculator",
+    "category": "Retirement",
+    "short": "Provident fund corpus at retirement",
+    "description": "Estimate your Employees' Provident Fund balance at retirement from your basic pay, annual increments and the EPF interest rate.",
+    "faqs": [
+      { "q": "How much goes into EPF every month?", "a": "You contribute 12% of basic pay plus dearness allowance. Your employer also contributes 12%, of which up to 8.33% (capped at ₹1,250 a month) goes to the Employees' Pension Scheme and the rest to EPF." },
+      { "q": "What interest rate does the calculator use?", "a": "It defaults to 8.25%, the rate in TradeTarget's EPF guide. EPFO declares the rate every financial year." },
+      { "q": "How is EPF interest calculated?", "a": "Interest is worked out monthly on the running balance at one-twelfth of the annual rate and credited to the account once a year." },
+      { "q": "Does the result include my pension?", "a": "No. The EPS share of the employer contribution builds a pension entitlement, not a lump sum, so it is shown separately and left out of the EPF corpus." },
+      { "q": "Is the EPF corpus tax-free?", "a": "Withdrawals after five years of continuous service are tax-free. Interest on employee contributions above ₹2.5 lakh a year is taxable." }
+    ],
+    "related": ["ppf-calculator", "nps-calculator", "retirement-calculator", "hra-calculator"],
+    "articles": ["employees-provident-fund-epf", "ppf-interest-rate", "section-80c"]
+  },
+  {
+    "slug": "fd-calculator",
+    "name": "FD Calculator",
+    "category": "Savings",
+    "short": "Fixed deposit maturity and interest",
+    "description": "Find the maturity value and interest earned on a fixed deposit for any tenure and compounding frequency.",
+    "faqs": [
+      { "q": "How is FD maturity calculated?", "a": "Maturity = P × (1 + r/n)^(n × t), where r is the annual rate, n the number of compounding periods a year and t the tenure in years. Most banks compound quarterly." },
+      { "q": "What is the difference between cumulative and payout FDs?", "a": "A cumulative FD reinvests interest and pays everything at maturity, which is what this calculator shows. A payout FD pays interest monthly or quarterly and returns only the principal at maturity." },
+      { "q": "Is FD interest taxable?", "a": "Yes. Interest is added to your income and taxed at your slab rate. Banks deduct TDS once interest crosses the threshold for the year." },
+      { "q": "Do senior citizens get a higher rate?", "a": "Most banks pay senior citizens an extra 0.25% to 0.50% a year. Enter that rate to see the difference." },
+      { "q": "Are bank FDs insured?", "a": "Deposits are insured by DICGC up to ₹5 lakh per depositor per bank, covering principal and interest together." }
+    ],
+    "related": ["rd-calculator", "ppf-calculator", "lumpsum-calculator", "income-tax-calculator"],
+    "articles": ["what-is-fixed-deposit", "highest-fd-interest-rates"]
+  },
+  {
+    "slug": "rd-calculator",
+    "name": "RD Calculator",
+    "category": "Savings",
+    "short": "Recurring deposit maturity",
+    "description": "Calculate what a monthly recurring deposit pays at maturity with quarterly compounding, as most Indian banks calculate it.",
+    "faqs": [
+      { "q": "How do banks calculate RD maturity?", "a": "Each monthly instalment earns interest compounded quarterly for the time it stays in the account. The calculator adds up the maturity value of every instalment." },
+      { "q": "What is the minimum tenure for an RD?", "a": "Most banks offer RDs from six months to ten years, in multiples of three months." },
+      { "q": "What happens if I miss an instalment?", "a": "Banks usually charge a small penalty for a delayed instalment. Several missed instalments can lead to the account being closed early." },
+      { "q": "Is RD interest taxable?", "a": "Yes. It is taxed at your slab rate, and banks deduct TDS once interest crosses the threshold for the year." },
+      { "q": "RD or SIP: which is better?", "a": "An RD gives a fixed, known return and suits short-term goals. An equity SIP can earn more over long periods but its value moves with the market." }
+    ],
+    "related": ["fd-calculator", "sip-calculator", "ppf-calculator", "lumpsum-calculator"],
+    "articles": ["what-is-fixed-deposit", "highest-fd-interest-rates", "50-30-20-rule"]
+  },
+  {
+    "slug": "nps-calculator",
+    "name": "NPS Calculator",
+    "category": "Retirement",
+    "short": "Pension corpus, lump sum and annuity",
+    "description": "Estimate your National Pension System corpus at 60, the lump sum you can take out, and the monthly pension from the annuity.",
+    "faqs": [
+      { "q": "How much of the NPS corpus must buy an annuity?", "a": "Under the exit rules notified in December 2025, non-government subscribers must use at least 20% of the corpus to buy an annuity and can withdraw up to 80% as a lump sum. Government employees still use at least 40% for the annuity." },
+      { "q": "How is the monthly pension estimated?", "a": "Pension = annuity purchase amount × annuity rate ÷ 12. Annuity rates depend on the provider and the plan you choose." },
+      { "q": "What return should I assume?", "a": "It depends on your equity allocation. NPS lets you hold up to 75% in equity under active choice; use a lower return for a more conservative mix." },
+      { "q": "What tax benefits does NPS offer?", "a": "Under the old regime, you can claim up to ₹50,000 under Section 80CCD(1B) over and above Section 80C. Employer contributions are deductible under Section 80CCD(2) in both regimes, within limits." },
+      { "q": "Is the NPS lump sum taxable?", "a": "Up to 60% of the corpus withdrawn at exit is tax-free. The pension from the annuity is taxed as income in the year you receive it." }
+    ],
+    "related": ["retirement-calculator", "epf-calculator", "ppf-calculator", "swp-calculator"],
+    "articles": ["atal-pension-yojana", "section-80c", "best-tax-saving-options"]
+  },
+  {
+    "slug": "retirement-calculator",
+    "name": "Retirement Calculator",
+    "category": "Retirement",
+    "short": "Corpus needed and monthly saving",
+    "description": "Work out how large a retirement corpus you need to cover inflation-adjusted expenses, and the monthly SIP that gets you there.",
+    "faqs": [
+      { "q": "How does the calculator estimate the corpus needed?", "a": "It inflates today's monthly expenses to your retirement age, then finds the amount that can fund those expenses, rising with inflation every year, until your life expectancy at the post-retirement return." },
+      { "q": "Why does inflation matter so much?", "a": "At 6% inflation, prices roughly double every 12 years. Expenses of ₹50,000 a month today would need about ₹1 lakh a month in 12 years." },
+      { "q": "What post-retirement return should I assume?", "a": "Retirees usually hold more debt, so a lower return than during working years is prudent. If the return is below inflation, the corpus needed rises sharply." },
+      { "q": "Are my existing savings counted?", "a": "Yes. Current savings are grown at the pre-retirement return and subtracted from the corpus needed before the monthly SIP is worked out." },
+      { "q": "Does this include EPF, PPF and NPS?", "a": "Add their current balances to existing savings, or use the dedicated calculators to project each one separately." }
+    ],
+    "related": ["nps-calculator", "epf-calculator", "swp-calculator", "step-up-sip-calculator"],
+    "articles": ["employees-provident-fund-epf", "ppf-interest-rate", "atal-pension-yojana", "50-30-20-rule"]
+  },
+  {
+    "slug": "home-loan-emi-calculator",
+    "name": "Home Loan EMI Calculator",
+    "category": "Loans",
+    "short": "EMI, interest and prepayment effect",
+    "description": "Calculate your home loan EMI, the total interest over the tenure, and how much a prepayment saves.",
+    "faqs": [
+      { "q": "How is a home loan EMI calculated?", "a": "EMI = P × r × (1 + r)^n ÷ ((1 + r)^n − 1), where P is the loan amount, r the monthly interest rate and n the number of monthly instalments." },
+      { "q": "How does prepayment help?", "a": "A prepayment reduces the outstanding principal. If you keep the EMI unchanged, the loan closes earlier and total interest falls. The calculator shows both effects." },
+      { "q": "Do banks charge for prepaying a floating-rate home loan?", "a": "RBI rules do not allow banks to charge foreclosure or prepayment penalties on floating-rate home loans taken by individuals." },
+      { "q": "What tax benefits are available on a home loan?", "a": "Under the old regime, interest up to ₹2 lakh a year on a self-occupied home is deductible under Section 24(b), and principal repayment counts towards the ₹1.5 lakh Section 80C limit." },
+      { "q": "Why is most of my early EMI going towards interest?", "a": "Interest is charged on the outstanding balance, which is highest at the start. As principal falls, more of each EMI goes towards repayment." }
+    ],
+    "related": ["car-loan-emi-calculator", "personal-loan-emi-calculator", "income-tax-calculator", "hra-calculator"],
+    "articles": ["what-is-personal-loan", "section-80c", "best-tax-saving-options"]
+  },
+  {
+    "slug": "car-loan-emi-calculator",
+    "name": "Car Loan EMI Calculator",
+    "category": "Loans",
+    "short": "EMI after down payment",
+    "description": "Work out the EMI on a car loan after your down payment, and the total interest you pay over the tenure.",
+    "faqs": [
+      { "q": "How much down payment should I make?", "a": "Lenders usually finance 80% to 90% of the on-road price. A larger down payment cuts the loan amount, the EMI and the total interest." },
+      { "q": "What tenure do car loans come in?", "a": "Usually one to seven years. Longer tenures lower the EMI but raise the total interest paid." },
+      { "q": "Is the EMI formula the same as for a home loan?", "a": "Yes. Car loans use the same reducing-balance EMI formula: P × r × (1 + r)^n ÷ ((1 + r)^n − 1)." },
+      { "q": "Can I prepay a car loan?", "a": "Most lenders allow it, but fixed-rate car loans often carry a foreclosure charge. Check your loan agreement." },
+      { "q": "Does the calculator include insurance and registration?", "a": "No. Enter the amount you plan to borrow. Insurance, registration and accessories are usually paid upfront or added to the loan separately." }
+    ],
+    "related": ["home-loan-emi-calculator", "personal-loan-emi-calculator", "fd-calculator"],
+    "articles": ["what-is-personal-loan", "paying-minimum-due-on-credit-card"]
+  },
+  {
+    "slug": "personal-loan-emi-calculator",
+    "name": "Personal Loan EMI Calculator",
+    "category": "Loans",
+    "short": "EMI with processing fee",
+    "description": "Calculate the EMI on a personal loan, the processing fee, and the effective cost of borrowing.",
+    "faqs": [
+      { "q": "Why are personal loan rates higher than home loan rates?", "a": "Personal loans are unsecured, so lenders price in more risk. Rates depend on your income, credit score and the lender." },
+      { "q": "How does the processing fee affect the cost?", "a": "The fee is deducted upfront or paid separately, so you receive less than the loan amount but repay the full amount. The calculator adds the fee to the total cost." },
+      { "q": "What credit score do lenders look for?", "a": "Most lenders prefer a score of 750 or above for the best rates. A lower score can still get a loan, usually at a higher rate." },
+      { "q": "Can I foreclose a personal loan?", "a": "Usually after a lock-in of six to twelve EMIs, with a foreclosure charge of a few per cent of the outstanding amount." },
+      { "q": "Is a personal loan better than a credit card balance?", "a": "Personal loan rates are usually well below credit card interest, so converting a large card balance into a loan can cut interest costs." }
+    ],
+    "related": ["home-loan-emi-calculator", "car-loan-emi-calculator", "income-tax-calculator"],
+    "articles": ["what-is-personal-loan", "paying-minimum-due-on-credit-card"]
+  },
+  {
+    "slug": "income-tax-calculator",
+    "name": "Income Tax Calculator",
+    "category": "Tax",
+    "short": "Old vs new regime, FY 2026-27",
+    "description": "Compare your income tax under the old and new regimes for FY 2026-27, with deductions, rebate, surcharge and cess.",
+    "faqs": [
+      { "q": "What are the new regime slabs for FY 2026-27?", "a": "Nil up to ₹4 lakh, 5% from ₹4 lakh to ₹8 lakh, 10% to ₹12 lakh, 15% to ₹16 lakh, 20% to ₹20 lakh, 25% to ₹24 lakh and 30% above ₹24 lakh. Budget 2026 left these unchanged." },
+      { "q": "Why is there no tax up to ₹12.75 lakh salary in the new regime?", "a": "Salaried taxpayers get a ₹75,000 standard deduction, and the Section 87A rebate cancels tax on taxable income up to ₹12 lakh. Marginal relief applies just above that level." },
+      { "q": "Which deductions are allowed under the old regime?", "a": "Section 80C (up to ₹1.5 lakh), 80D health insurance, 80CCD(1B) NPS (up to ₹50,000), home loan interest under Section 24(b) (up to ₹2 lakh), HRA exemption and a ₹50,000 standard deduction, among others." },
+      { "q": "Which regime should I choose?", "a": "Compare both with your actual deductions. The old regime usually helps only when deductions are large; the calculator shows the break-even clearly." },
+      { "q": "Does the calculator include surcharge and cess?", "a": "Yes. Surcharge applies above ₹50 lakh of income, with marginal relief, and is capped at 25% in the new regime. Health and education cess of 4% is added to tax plus surcharge." }
+    ],
+    "related": ["hra-calculator", "nps-calculator", "ppf-calculator", "home-loan-emi-calculator"],
+    "articles": ["section-80c", "best-tax-saving-options"]
+  },
+  {
+    "slug": "hra-calculator",
+    "name": "HRA Calculator",
+    "category": "Tax",
+    "short": "House rent allowance exemption",
+    "description": "Calculate how much of your house rent allowance is exempt from tax under Section 10(13A) for FY 2026-27.",
+    "faqs": [
+      { "q": "How is the HRA exemption worked out?", "a": "The exempt amount is the lowest of three figures: the HRA you actually receive, rent paid minus 10% of basic pay plus DA, and 50% (metro) or 40% (other cities) of basic pay plus DA." },
+      { "q": "Which cities count as metro for HRA?", "a": "From FY 2026-27, the 50% limit applies to Delhi, Mumbai, Kolkata, Chennai, Bengaluru, Hyderabad, Pune and Ahmedabad under the Income Tax Rules, 2026. All other cities use 40%." },
+      { "q": "Can I claim HRA under the new regime?", "a": "No. The HRA exemption is available only if you opt for the old regime." },
+      { "q": "Do I need my landlord's PAN?", "a": "Yes, if annual rent exceeds ₹1 lakh. Employers usually also ask for rent receipts or a rent agreement." },
+      { "q": "Can I claim HRA if I pay rent to my parents?", "a": "Yes, if you actually pay rent and they report it as income. You cannot claim HRA for rent paid to your spouse." }
+    ],
+    "related": ["income-tax-calculator", "home-loan-emi-calculator", "epf-calculator"],
+    "articles": ["section-80c", "best-tax-saving-options"]
+  },
+  {
+    "slug": "cagr-calculator",
+    "name": "CAGR Calculator",
+    "category": "Investing",
+    "short": "Compound annual growth rate",
+    "description": "Find the compound annual growth rate between a starting and ending value, and compare it with a benchmark rate.",
+    "faqs": [
+      { "q": "What is CAGR?", "a": "CAGR is the constant yearly rate at which an investment would have grown from its starting value to its ending value. It smooths out year-to-year swings." },
+      { "q": "How is CAGR calculated?", "a": "CAGR = (Ending value ÷ Beginning value)^(1 ÷ years) − 1." },
+      { "q": "How is CAGR different from absolute return?", "a": "Absolute return is the total percentage change, regardless of time. CAGR spreads that change over the number of years, so it can be compared across investments held for different periods." },
+      { "q": "What are the limits of CAGR?", "a": "It ignores volatility and assumes a single investment at the start. For SIPs or irregular cash flows, XIRR is the better measure." },
+      { "q": "Can CAGR be negative?", "a": "Yes. If the ending value is below the starting value, CAGR is negative." }
+    ],
+    "related": ["lumpsum-calculator", "sip-calculator", "fd-calculator"],
+    "articles": ["parag-parikh-flexi-cap-fund-vs-hdfc-flexi-cap-fund", "steel-authority-of-india-fundamental-analysis", "how-to-select-best-stocks"]
+  }
+]

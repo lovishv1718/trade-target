@@ -1,0 +1,163 @@
+{
+  "intro": "TradeTarget writes finance content for fintech companies, stockbrokers, wealth managers and asset management companies. The same team that covers markets for our readers writes for yours.",
+  "services": [
+    {
+      "name": "Finance content",
+      "items": [
+        "Corporate finance: mergers and acquisitions, investment banking, financial management",
+        "Personal finance: financial planning, insurance, real estate, taxation",
+        "Business news: industry trends, market movements and insights"
+      ]
+    },
+    {
+      "name": "Investment content",
+      "items": [
+        "Equity: stock market, algo trading, mutual funds, ETFs",
+        "Debt: bonds and fixed income instruments",
+        "Derivatives: options and futures",
+        "Alternative investments: hedge funds, venture capital, private equity"
+      ]
+    }
+  ],
+  "contentTypes": [
+    {
+      "name": "Blog posts and articles",
+      "note": "Explainers, product guides and SEO articles"
+    },
+    {
+      "name": "Website content",
+      "note": "Product pages, landing pages and help centres"
+    },
+    {
+      "name": "News content and newsletters",
+      "note": "Market wraps, results coverage and weekly letters"
+    },
+    {
+      "name": "Social media content",
+      "note": "Posts, threads and carousel copy"
+    },
+    {
+      "name": "Video scripts",
+      "note": "Explainer and market-update scripts"
+    },
+    {
+      "name": "Proposal writing",
+      "note": "Pitch documents and RFP responses"
+    },
+    {
+      "name": "Content proofing",
+      "note": "Fact-checks and compliance-minded edits"
+    },
+    {
+      "name": "Translation",
+      "note": "English and Hindi finance content"
+    },
+    {
+      "name": "Banner design",
+      "note": "Campaign creatives to go with the copy"
+    },
+    {
+      "name": "Press releases",
+      "note": "Announcements and media notes"
+    }
+  ],
+  "clients": [
+    {
+      "name": "Groww",
+      "logo": "/images/clients/groww.webp"
+    },
+    {
+      "name": "5Paisa",
+      "logo": "/images/clients/5paisa.webp"
+    },
+    {
+      "name": "Standard Chartered",
+      "logo": "/images/clients/standard-chartered.webp"
+    },
+    {
+      "name": "QuantInsti",
+      "logo": "/images/clients/quantinsti.webp"
+    },
+    {
+      "name": "Kotak Securities",
+      "logo": "/images/clients/kotak-securities.webp"
+    },
+    {
+      "name": "HDFC Sky",
+      "logo": "/images/clients/hdfc-sky.webp"
+    },
+    {
+      "name": "HDFC Smart Wealth",
+      "logo": "/images/clients/hdfc-smart-wealth.webp"
+    },
+    {
+      "name": "Kotak Mutual Fund",
+      "logo": "/images/clients/kotak-mahindra-mutual-fund.webp"
+    },
+    {
+      "name": "Personal Finance TV",
+      "logo": "/images/clients/personal-finance-tv.webp"
+    }
+  ],
+  "process": [
+    {
+      "step": "Send a brief",
+      "text": "Tell us the topic, audience, content type, volume and deadline. We reply within one working day."
+    },
+    {
+      "step": "Get a matched writer",
+      "text": "An editor assigns a writer who covers that market segment and agrees an outline with you before drafting."
+    },
+    {
+      "step": "Review and publish",
+      "text": "Drafts are fact-checked and edited in-house. You get revisions until the piece is ready to publish."
+    }
+  ],
+  "writers": [
+    {
+      "author": "hemant",
+      "focus": "Equities, IPOs and company results",
+      "samples": [
+        "nse-ipo-allotment-status",
+        "ntpc-q4-2026-result",
+        "steel-authority-of-india-fundamental-analysis"
+      ]
+    },
+    {
+      "author": "kashish",
+      "focus": "Commodities, mutual funds and market news",
+      "samples": [
+        "gold-and-silver-prices-surge",
+        "quant-small-cap-fund-holdings-review",
+        "nifty-could-slip-to-20500-warns-jpmorgan"
+      ]
+    },
+    {
+      "author": "ramesh",
+      "focus": "Company analysis and sector research",
+      "samples": [],
+      "deskLink": {
+        "label": "Share Analysis desk",
+        "href": "/share-analysis/"
+      }
+    }
+  ],
+  "formOptions": {
+    "contentTypes": [
+      "Blog posts and articles",
+      "Website content",
+      "News content and newsletters",
+      "Social media content",
+      "Video scripts",
+      "Press releases",
+      "Other"
+    ],
+    "volumes": [
+      "1 to 5 pieces a month",
+      "6 to 15 pieces a month",
+      "16 to 30 pieces a month",
+      "More than 30 pieces a month",
+      "One-off project"
+    ]
+  }
+}

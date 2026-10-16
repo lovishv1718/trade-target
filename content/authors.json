@@ -1,0 +1,59 @@
+[
+  {
+    "slug": "hemant",
+    "name": "Hemant Bisht",
+    "role": "Founder",
+    "photo": "/images/authors/hemant-bisht.webp",
+    "shortBio": "Hemant Bisht is the Founder of Trade Target and an experienced capital markets professional with over a decade of expertise in equities, mutual funds, and investment research. He focuses on delivering data-driven analysis and structured financial insights that support informed decision-making for today’s investors.",
+    "bio": [
+      "Hemant Bisht is the Founder of Trade Target and an established professional in India’s financial services industry. With more than a decade of experience across the equity, mutual fund, and broader BFSI segments, he brings a strong command of market analytics, investment products, and financial communication.",
+      "His academic background, comprising an MBA in Finance and multiple NISM certifications, supports his ability to evaluate complex financial information and present it with precision and clarity."
+    ],
+    "competencies": [
+      "Over 10 years of specialised experience in equity research, mutual fund analysis, and investment strategy",
+      "Extensive exposure to financial content development, product communication, and investor-focused research",
+      "Holds an MBA in Finance and multiple NISM certifications across key market and advisory domains",
+      "Thorough understanding of financial products, regulatory frameworks, and market operations"
+    ],
+    "expertise": ["Equities", "IPOs", "Mutual funds", "Company results"],
+    "linkedin": "https://www.linkedin.com/company/trade-target/"
+  },
+  {
+    "slug": "ramesh",
+    "name": "Ramesh Bisht",
+    "role": "Co-Founder",
+    "photo": null,
+    "shortBio": "Ramesh Bisht leads Trade Target’s market intelligence and research work, with extensive experience in equity markets, company analysis, and sector monitoring.",
+    "bio": [
+      "Ramesh Bisht plays a pivotal role in strengthening Trade Target’s market intelligence and research capabilities. With extensive experience in equity markets, company analysis, and sector monitoring, he brings a structured and data-driven approach to market interpretation.",
+      "As Co-Founder, Ramesh contributes to the strategic and analytical direction of Trade Target. His ability to connect macroeconomic developments with sector-level and stock-specific outcomes adds depth to the platform’s research output."
+    ],
+    "competencies": [
+      "Strong expertise in equity research, financial statement analysis, and market trend evaluation",
+      "Hands-on experience in tracking sectors, corporate actions, and earnings performance",
+      "Skilled in interpreting economic indicators, policy changes, and their impact on capital markets",
+      "Deep understanding of valuation frameworks, risk factors, and stock selection principles"
+    ],
+    "expertise": ["Company analysis", "Sector research", "Corporate actions", "Valuation"],
+    "linkedin": null
+  },
+  {
+    "slug": "kashish",
+    "name": "Kashish Sharma",
+    "role": "Co-Founder",
+    "photo": "/images/authors/kashish-sharma.webp",
+    "shortBio": "Kashish Sharma is the Co-Founder of Trade Target with extensive experience in financial content strategy and investment-focused communication. She specialises in interpreting market developments and creating clear, reliable insights for investors and readers.",
+    "bio": [
+      "Kashish Sharma oversees the strategic direction of Trade Target’s content operations and plays a key role in maintaining the platform’s analytical and editorial standards. With more than eight years of experience in financial content, investment communication, and market-focused writing, she brings a disciplined and structured approach to transforming complex financial information into clear, accurate, and investor-centric insights.",
+      "Her academic foundation, supported by an MBA in Finance, enhances her ability to evaluate market data, regulatory developments, and product structures with precision."
+    ],
+    "competencies": [
+      "Extensive experience in financial content strategy, investment communication, and market research",
+      "Strong understanding of equities, mutual funds, wealth management products, and financial planning concepts",
+      "Experienced in managing content workflows across market insights, investment guides, and analytical reports",
+      "Oversees quality control, content frameworks, and publication practices"
+    ],
+    "expertise": ["Mutual funds", "Personal finance", "Commodities", "Editorial standards"],
+    "linkedin": null
+  }
+]

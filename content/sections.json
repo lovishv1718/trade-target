@@ -1,0 +1,88 @@
+[
+  {
+    "slug": "news",
+    "name": "News",
+    "path": "/news/",
+    "accent": "results",
+    "description": "Company results, market moves, commodities and policy news from Indian markets."
+  },
+  {
+    "slug": "ipo",
+    "name": "IPO",
+    "path": "/ipo/",
+    "accent": "ipo",
+    "description": "IPO dates, GMP, subscription status, allotment and listing for mainboard and SME issues."
+  },
+  {
+    "slug": "share-analysis",
+    "name": "Share Analysis",
+    "path": "/share-analysis/",
+    "accent": "navy",
+    "description": "Fundamental analysis of listed Indian companies: financials, ratios, shareholding and peers."
+  },
+  {
+    "slug": "stock-market-iq",
+    "name": "Stock Market IQ",
+    "path": "/stock-market-iq/",
+    "accent": "accent",
+    "description": "Plain-language explainers on trading, investing, chart patterns and market structure."
+  },
+  {
+    "slug": "personal-finance",
+    "name": "Personal Finance",
+    "path": "/personal-finance/",
+    "accent": "funds",
+    "description": "Retirement, tax, loans, insurance, deposits, government schemes and document guides.",
+    "subsections": [
+      {
+        "slug": "retirement",
+        "name": "Retirement",
+        "path": "/retirement/",
+        "description": "EPF, PPF, NPS and planning for life after work."
+      },
+      {
+        "slug": "taxation",
+        "name": "Taxation",
+        "path": "/taxation/",
+        "description": "Income tax rules, deductions and tax-saving options."
+      },
+      {
+        "slug": "loan",
+        "name": "Loan",
+        "path": "/loan/",
+        "description": "Personal, home and instant loans explained."
+      },
+      {
+        "slug": "insurance",
+        "name": "Insurance",
+        "path": "/insurance/",
+        "description": "Life, health and general insurance basics."
+      },
+      {
+        "slug": "banking-and-fixed-deposit",
+        "name": "Banking and FD",
+        "path": "/banking-and-fixed-deposit/",
+        "description": "Fixed deposit rates, banking products and savings."
+      },
+      {
+        "slug": "government-scheme",
+        "name": "Government Scheme",
+        "path": "/government-scheme/",
+        "description": "Small savings and welfare schemes run by the Centre."
+      },
+      {
+        "slug": "document-guides",
+        "name": "Document Guides",
+        "path": "/document-guides/",
+        "description": "Step-by-step help with Aadhaar, PAN, voter ID and more."
+      }
+    ]
+  },
+  {
+    "slug": "blog-junction",
+    "name": "Blog Junction",
+    "path": "/blog-junction/",
+    "accent": "funds",
+    "description": "Fund comparisons, brand stories, budget explainers and longer reads."
+  }
+]

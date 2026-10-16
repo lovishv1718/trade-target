@@ -1,0 +1,26 @@
+{
+  "asOf": "2026-10-16T15:30:00+05:30",
+  "isSample": true,
+  "note": "Sample values for this design preview. Wire to an exchange data feed before launch.",
+  "ticker": [
+    { "id": "nifty50", "name": "Nifty 50", "value": 24312.45, "change": 118.6, "changePct": 0.49 },
+    { "id": "sensex", "name": "Sensex", "value": 79948.6, "change": 402.15, "changePct": 0.51 },
+    { "id": "niftybank", "name": "Nifty Bank", "value": 53214.3, "change": -96.4, "changePct": -0.18 },
+    { "id": "niftyit", "name": "Nifty IT", "value": 34880.15, "change": -212.55, "changePct": -0.61 },
+    { "id": "usdinr", "name": "USD/INR", "value": 88.42, "change": 0.07, "changePct": 0.08 },
+    { "id": "gold", "name": "Gold 10g", "value": 158920, "change": 640, "changePct": 0.4, "unit": "rupee" }
+  ],
+  "board": [
+    { "id": "nifty50", "name": "Nifty 50", "value": 24312.45, "change": 118.6, "changePct": 0.49 },
+    { "id": "sensex", "name": "Sensex", "value": 79948.6, "change": 402.15, "changePct": 0.51 },
+    { "id": "niftybank", "name": "Nifty Bank", "value": 53214.3, "change": -96.4, "changePct": -0.18 },
+    { "id": "niftyit", "name": "Nifty IT", "value": 34880.15, "change": -212.55, "changePct": -0.61 },
+    { "id": "midcap", "name": "Nifty Midcap 100", "value": 55621.8, "change": 301.25, "changePct": 0.54 },
+    { "id": "smallcap", "name": "Nifty Smallcap 100", "value": 17402.35, "change": -40.1, "changePct": -0.23 }
+  ],
+  "commodities": [
+    { "id": "gold", "name": "Gold", "unitLabel": "per 10 g", "value": 158920, "change": 640, "changePct": 0.4, "unit": "rupee" },
+    { "id": "silver", "name": "Silver", "unitLabel": "per kg", "value": 286400, "change": -1850, "changePct": -0.64, "unit": "rupee" },
+    { "id": "usdinr", "name": "USD/INR", "unitLabel": "spot", "value": 88.42, "change": 0.07, "changePct": 0.08 }
+  ]
+}

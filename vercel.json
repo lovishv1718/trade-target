@@ -1,0 +1,21 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build",
+  "outputDirectory": "out",
+  "trailingSlash": true,
+  "redirects": [
+    { "source": "/category/news/", "destination": "/news/", "permanent": true },
+    { "source": "/category/ipo/", "destination": "/ipo/", "permanent": true },
+    { "source": "/category/ipo/mainboard-ipo/", "destination": "/ipo/", "permanent": true },
+    { "source": "/category/ipo/sme-ipo/", "destination": "/ipo/", "permanent": true },
+    { "source": "/ongoing/", "destination": "/ipo/", "permanent": true },
+    { "source": "/upcoming/", "destination": "/ipo/", "permanent": true },
+    { "source": "/category/share-analysis/", "destination": "/share-analysis/", "permanent": true },
+    { "source": "/category/stock-market-iq/", "destination": "/stock-market-iq/", "permanent": true },
+    { "source": "/category/blog-junction/", "destination": "/blog-junction/", "permanent": true },
+    { "source": "/category/personal-finance/", "destination": "/personal-finance/", "permanent": true },
+    { "source": "/category/personal-finance/:sub/", "destination": "/:sub/", "permanent": true },
+    { "source": "/about-us/", "destination": "/about/", "permanent": true },
+    { "source": "/contact/", "destination": "/contact-us/", "permanent": true }
+  ]
+}

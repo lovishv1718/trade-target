@@ -1,0 +1,39 @@
+{
+  "name": "TradeTarget",
+  "url": "https://tradetarget.in",
+  "tagline": "Stock market and personal finance news from Mumbai",
+  "description": "TradeTarget covers Indian stock markets, IPOs, company results, mutual funds and personal finance, and runs a finance content writing agency for brokers, AMCs and fintechs.",
+  "email": "business@tradetarget.in",
+  "location": "Mumbai, Maharashtra",
+  "founded": "TradeTarget",
+  "socials": [
+    { "name": "X", "handle": "@tradetarget3", "url": "https://twitter.com/tradetarget3" },
+    { "name": "Facebook", "handle": "tradetarget03", "url": "https://www.facebook.com/tradetarget03" },
+    { "name": "Instagram", "handle": "tradetarget", "url": "https://www.instagram.com/tradetarget/" },
+    { "name": "LinkedIn", "handle": "trade-target", "url": "https://www.linkedin.com/company/trade-target/" },
+    { "name": "YouTube", "handle": "@tradetarget", "url": "https://www.youtube.com/@tradetarget" },
+    { "name": "WhatsApp", "handle": "Channel", "url": "https://whatsapp.com/channel/0029Va9bmu89Gv7YYsv7Ee1L" }
+  ],
+  "trending": [
+    { "label": "NSE IPO allotment", "href": "/ipo/nse-ipo-allotment-status/" },
+    { "label": "Hero Motors IPO", "href": "/ipo/hero-motors-ipo-allotment-status/" },
+    { "label": "NTPC Q4 result", "href": "/news/ntpc-q4-2026-result/" },
+    { "label": "Gold price today", "href": "/news/gold-and-silver-prices-surge/" },
+    { "label": "EPF interest rate", "href": "/personal-finance/retirement/employees-provident-fund-epf/" },
+    { "label": "PPF interest rate", "href": "/personal-finance/retirement/ppf-interest-rate/" },
+    { "label": "SIP calculator", "href": "/calculators/sip-calculator/" },
+    { "label": "Income tax calculator", "href": "/calculators/income-tax-calculator/" },
+    { "label": "SAIL share analysis", "href": "/share-analysis/steel-authority-of-india-fundamental-analysis/" },
+    { "label": "Section 80C", "href": "/personal-finance/taxation/section-80c/" }
+  ],
+  "nav": [
+    { "label": "News", "href": "/news/" },
+    { "label": "IPO", "href": "/ipo/" },
+    { "label": "Share Analysis", "href": "/share-analysis/" },
+    { "label": "Stock Market IQ", "href": "/stock-market-iq/" },
+    { "label": "Personal Finance", "href": "/personal-finance/" },
+    { "label": "Blog Junction", "href": "/blog-junction/" },
+    { "label": "Calculators", "href": "/calculators/" },
+    { "label": "Hire Writers", "href": "/hire-writers/" }
+  ]
+}
