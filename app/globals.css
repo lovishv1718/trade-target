@@ -333,6 +333,23 @@
     width: 100%;
   }
 
+  /* An arrow inside a button nudges forward on hover */
+  .btn .arrow {
+    display: inline-block;
+    transition: transform var(--duration-fast) var(--ease-out);
+  }
+  .btn:hover .arrow {
+    transform: translateX(2px);
+  }
+  .btn:disabled .arrow {
+    transform: none;
+  }
+
+  /* Section ending: the closing half of .section-rule, a hairline in the same colour */
+  .section-end {
+    border-top: 1px solid var(--rule-color, var(--color-ink));
+  }
+
   /* Links in running text: underlined, the rule darkens on hover */
   .link {
     color: var(--color-ink);
@@ -1141,24 +1158,3 @@
   }
 }
 
-/* ---- Homepage ---- */
-/* Agent 2 (homepage). Stock Market IQ scroller: hidden scrollbar on touch screens,
-   a thin visible track on desktop so the row reads as scrollable. Paired with
-   .no-scrollbar in the markup, so without this file it falls back to no bar. */
-@media (min-width: 768px) and (pointer: fine) {
-  .home-scroller.no-scrollbar {
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-ink) var(--color-rule);
-    padding-bottom: 1.25rem;
-  }
-  .home-scroller.no-scrollbar::-webkit-scrollbar {
-    display: block;
-    height: 4px;
-  }
-  .home-scroller.no-scrollbar::-webkit-scrollbar-track {
-    background: var(--color-rule);
-  }
-  .home-scroller.no-scrollbar::-webkit-scrollbar-thumb {
-    background: var(--color-ink);
-  }
-}

@@ -8,7 +8,8 @@ import { JsonLd } from "@/components/json-ld";
 import { Kicker } from "@/components/kicker";
 import { NewsletterBand } from "@/components/newsletter-band";
 import { Photo } from "@/components/photo";
-import { SectionHeader } from "@/components/section-header";
+import { Scroller } from "@/components/scroller";
+import { SectionEnd, SectionHeader } from "@/components/section-header";
 import { LeadStory, StoryLink, StoryMeta, StoryRow, StoryTile } from "@/components/story";
 import { getArticleBySlug, getArticleCards, getArticlesBySection, getCalculators, getEditorial, getSubsections, toCard, type ArticleCard } from "@/lib/content";
 import { getIpos, istToday } from "@/lib/ipo";
@@ -57,6 +58,11 @@ export default function HomePage() {
   const calcs = getCalculators();
   const ipos = getIpos();
   const buildDate = istToday();
+  // What each section ending reports is left to read
+  const topics = getEditorial().newsTopics;
+  const newsCount = all.filter((a) => a.section === "news" || a.section === "ipo" || topics.includes(a.kicker)).length;
+  const count = (section: string) => getArticlesBySection(section).length;
+  const mainboard = ipos.filter((i) => i.board === "mainboard").length;
 
   return (
     <>
@@ -85,17 +91,18 @@ export default function HomePage() {
       </div>
 
       {/* Latest news list ------------------------------------------------------- */}
-      <div className="wrap mt-12 md:mt-14">
+      <div className="wrap mt-10 md:mt-12">
         <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-x-8 xl:grid-cols-[minmax(0,1fr)_320px] xl:gap-x-10">
           <section aria-label="Latest news">
-            <SectionHeader title="Latest news" href="/news/" accent="ink" linkLabel="All news" />
+            <SectionHeader title="Latest news" href="/news/" accent="ink" more={false} />
             <div className="divide-y divide-rule">
               {latest.map((s) => (
                 <StoryRow key={s.slug} story={s} standfirst />
               ))}
             </div>
+            <SectionEnd href="/news/" label="All news" accent="ink" note={`${latest.length} of ${newsCount} stories from the newsroom`} />
           </section>
-          <aside className="space-y-10">
+          <aside className="space-y-10 md:grid md:grid-cols-2 md:gap-x-8 md:space-y-0 lg:block lg:space-y-10">
             <section aria-label="Most read">
               <SectionHeader title="Most read" accent="ink" />
               <ol className="mt-1 divide-y divide-rule">
@@ -108,7 +115,7 @@ export default function HomePage() {
                   ))}
               </ol>
             </section>
-            <section aria-label="Hire our writers" className="surface-ink p-5">
+            <section aria-label="Hire our writers" className="surface-ink self-start p-5">
               <p className="kicker text-company">For brokers, AMCs and fintechs</p>
               <p className="headline mt-2 text-xl">The writers behind these stories can write for you</p>
               <Link prefetch={false} href="/hire-writers/" className="btn mt-5">
@@ -120,21 +127,22 @@ export default function HomePage() {
       </div>
 
       {/* IPO dashboard preview -------------------------------------------------- */}
-      <section className="mt-14 border-y border-rule bg-white py-10 md:mt-16 md:py-12" aria-label="IPO dashboard">
+      <section className="mt-16 border-y border-rule bg-white py-10 md:mt-20 md:py-12" aria-label="IPO dashboard">
         <div className="wrap">
-          <SectionHeader title="IPO dashboard" href="/ipo/" accent="ipo" linkLabel="Full dashboard">
+          <SectionHeader title="IPO dashboard" href="/ipo/" accent="ipo" more={false}>
             <span className="text-sm text-muted">Mainboard issues, status from today’s date</span>
           </SectionHeader>
           <div className="mt-4">
             <IpoPreviewTable ipos={ipos} buildDate={buildDate} />
           </div>
           <p className="mt-3 text-xs text-muted">Bonfiglioli, Jio Platforms, Paras Healthcare, Zetwerk and Tonbo use sample figures. GMP is unofficial.</p>
+          <SectionEnd href="/ipo/" label="Open the IPO dashboard" accent="ipo" note={`${mainboard} mainboard and ${ipos.length - mainboard} SME issues tracked, with dates, GMP and subscription`} />
         </div>
       </section>
 
       {/* Share Analysis: lead + list ---------------------------------------------- */}
-      <section className="wrap mt-12 md:mt-14" aria-label="Share Analysis">
-        <SectionHeader title="Share Analysis" href="/share-analysis/" accent="company" />
+      <section className="wrap mt-12 md:mt-16" aria-label="Share Analysis">
+        <SectionHeader title="Share Analysis" href="/share-analysis/" accent="company" more={false} />
         <div className="mt-5 grid lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
           <article className="pb-2 lg:border-r lg:border-rule lg:pb-0 lg:pr-8">
             <Link prefetch={false} href={shareLead.path} className="group grid gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-1 lg:gap-4">
@@ -153,25 +161,27 @@ export default function HomePage() {
             ))}
           </div>
         </div>
+        <SectionEnd href="/share-analysis/" label="All share analysis" accent="company" note={`${count("share-analysis")} companies analysed: financials, ratios and shareholding`} />
       </section>
 
       {/* Stock Market IQ: horizontal scroller; the next card always peeks in ------------- */}
-      <section className="wrap mt-14 md:mt-16" aria-label="Stock Market IQ">
-        <SectionHeader title="Stock Market IQ" href="/stock-market-iq/" accent="learn">
+      <section className="wrap mt-10 md:mt-12" aria-label="Stock Market IQ">
+        <SectionHeader title="Stock Market IQ" href="/stock-market-iq/" accent="learn" more={false}>
           <span className="hidden text-sm text-muted sm:inline">Explainers in plain language</span>
         </SectionHeader>
-        <div className="home-scroller no-scrollbar -mx-4 mt-5 flex snap-x scroll-px-4 gap-5 overflow-x-auto px-4 pb-2 md:mx-0 md:scroll-px-0 md:px-0 lg:gap-6">
+        <Scroller label="Stock Market IQ explainers" className="mt-4">
           {smiq.map((s) => (
-            <div key={s.slug} className="w-[72%] shrink-0 snap-start sm:w-[42%] md:w-[30%] lg:w-[21%]">
+            <div key={s.slug} className="w-[72%] sm:w-[42%] md:w-[30%] lg:w-[21%]">
               <StoryTile story={s} sizes="(min-width: 1024px) 260px, (min-width: 768px) 30vw, 72vw" />
             </div>
           ))}
-        </div>
+        </Scroller>
+        <SectionEnd href="/stock-market-iq/" label="All explainers" accent="learn" note={smiq.length < count("stock-market-iq") ? `${smiq.length} of ${count("stock-market-iq")} explainers in this row` : `All ${smiq.length} explainers are in this row`} />
       </section>
 
       {/* Personal Finance: lead + four ------------------------------------------------- */}
-      <section className="wrap mt-12 md:mt-14" aria-label="Personal Finance">
-        <SectionHeader title="Personal Finance" href="/personal-finance/" accent="money" />
+      <section className="wrap mt-16 md:mt-24" aria-label="Personal Finance">
+        <SectionHeader title="Personal Finance" href="/personal-finance/" accent="money" more={false} />
         <ul aria-label="Personal Finance topics" className="flex flex-wrap gap-x-5 border-b border-rule">
           {subs.map((s) => (
             <li key={s.slug}>
@@ -184,24 +194,25 @@ export default function HomePage() {
         <div className="mt-6 grid gap-y-8 lg:grid-cols-2">
           <article className="lg:border-r lg:border-rule lg:pr-8">
             <Link prefetch={false} href={pfLead.path} className="group block">
-              <Photo image={pfLead.image} sizes="(min-width: 1024px) 590px, 100vw" aspect="aspect-[3/2]" />
+              <Photo image={pfLead.image} sizes="(min-width: 1024px) 590px, 100vw" aspect="aspect-[3/2] md:aspect-[2/1] lg:aspect-[3/2]" />
               <Kicker label={pfLead.kicker} className="mt-4 block" />
               <h3 className="headline mt-1.5 text-balance break-words text-2xl md:text-3xl">{pfLead.title}</h3>
               <p className="mt-2 text-md text-ink-2 md:text-base md:leading-normal">{pfLead.standfirst}</p>
             </Link>
             <StoryMeta story={pfLead} className="mt-3" />
           </article>
-          <div className="grid grid-cols-2 content-start gap-x-4 gap-y-8 sm:gap-x-6 lg:pl-8">
+          <div className="grid grid-cols-2 content-start gap-x-4 gap-y-8 sm:gap-x-6 md:grid-cols-4 lg:grid-cols-2 lg:pl-8">
             {pfRest.slice(0, 4).map((s) => (
               <StoryTile key={s.slug} story={s} headingSize="text-md leading-snug sm:text-lg" sizes="(min-width: 1024px) 280px, 50vw" />
             ))}
           </div>
         </div>
+        <SectionEnd href="/personal-finance/" label="All personal finance" accent="money" note={`${count("personal-finance")} guides across ${subs.length} topics`} />
       </section>
 
       {/* Calculators -------------------------------------------------------------- */}
-      <section className="wrap mt-14 md:mt-16" aria-label="Calculators">
-        <SectionHeader title="Calculators" href="/calculators/" accent="learn" linkLabel={`All ${calcs.length}`} />
+      <section className="wrap mt-10 md:mt-12" aria-label="Calculators">
+        <SectionHeader title="Calculators" href="/calculators/" accent="learn" more={false} />
         <div className="mt-5 grid gap-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
           <div>
             <p className="mb-3 text-md font-semibold text-ink-2">Try it: what could a monthly SIP grow to?</p>
@@ -223,24 +234,35 @@ export default function HomePage() {
               ))}
           </ul>
         </div>
+        <SectionEnd href="/calculators/" label={`All ${calcs.length} calculators`} accent="learn" note={`Investing, savings, retirement, loans and tax`} />
       </section>
 
       {/* Funds and long reads -------------------------------------------------------- */}
-      <section className="wrap mt-12 md:mt-14" aria-label="Blog Junction">
-        <SectionHeader title="Blog Junction" href="/blog-junction/" accent="money">
+      <section className="wrap mt-14 md:mt-16" aria-label="Blog Junction">
+        <SectionHeader title="Blog Junction" href="/blog-junction/" accent="money" more={false}>
           <span className="hidden text-sm text-muted sm:inline">Fund comparisons and longer reads</span>
         </SectionHeader>
-        <div className="mt-5 grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-0 lg:divide-x lg:divide-rule">
+        {/* A reading list rather than a row of cards: image beside the text, two columns from tablet up */}
+        <div className="mt-2 grid md:grid-cols-2 md:gap-x-10">
           {funds.map((s) => (
-            <div key={s.slug} className="lg:px-6 lg:first:pl-0 lg:last:pr-0">
-              <StoryTile story={s} standfirst />
-            </div>
+            <article key={s.slug} className="border-b border-rule py-5 last:border-b-0 md:[&:nth-last-child(-n+2)]:border-b-0">
+              <Link prefetch={false} href={s.path} className="group grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] items-start gap-4 sm:gap-5">
+                <Photo image={s.image} sizes="(min-width: 1024px) 220px, (min-width: 768px) 180px, 40vw" aspect="aspect-[4/3]" />
+                <div className="min-w-0">
+                  <Kicker label={s.kicker} />
+                  <h3 className="headline mt-1 break-words text-lg md:text-xl">{s.title}</h3>
+                  <p className="mt-1.5 hidden text-md text-ink-2 sm:line-clamp-2">{s.standfirst}</p>
+                  <StoryMeta story={s} className="mt-2" />
+                </div>
+              </Link>
+            </article>
           ))}
         </div>
+        <SectionEnd href="/blog-junction/" label="All of Blog Junction" accent="money" note={`${funds.length} of ${count("blog-junction")} reads shown`} />
       </section>
 
       {/* Hire writers band ---------------------------------------------------------- */}
-      <section className="surface-ink mt-16 md:mt-20" aria-labelledby="hire-band">
+      <section className="surface-ink mt-16 md:mt-24" aria-labelledby="hire-band">
         <div className="wrap grid gap-10 py-12 md:py-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:items-center lg:gap-x-16">
           <div>
             <p className="kicker text-company">TradeTarget content services</p>

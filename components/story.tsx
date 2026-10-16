@@ -53,7 +53,8 @@ export function StoryTile({
   headingSize?: string;
 }) {
   return (
-    <article>
+    // Hover or focus draws a 2px rule in across the top of the card: transform only, nothing moves
+    <article className="relative pt-3 before:absolute before:inset-x-0 before:top-0 before:h-0.5 before:origin-left before:scale-x-0 before:bg-ink before:transition-transform before:duration-200 before:ease-out hover:before:scale-x-100 focus-within:before:scale-x-100 motion-reduce:before:transition-none">
       <Link prefetch={false} href={story.path} className="group block">
         <Photo image={story.image} sizes={sizes} aspect={aspect} />
         <Kicker label={story.kicker} className="mt-3 block" />

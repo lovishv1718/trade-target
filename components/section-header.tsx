@@ -24,6 +24,7 @@ export function SectionHeader({
   accent = "ink",
   linkLabel = "More",
   as: Tag = "h2",
+  more = true,
   children,
 }: {
   title: string;
@@ -31,6 +32,8 @@ export function SectionHeader({
   accent?: string;
   linkLabel?: string;
   as?: "h1" | "h2";
+  /** Hide the right-hand link when a SectionEnd closes the section with the same destination */
+  more?: boolean;
   children?: ReactNode;
 }) {
   const style = { "--rule-color": ACCENT_VAR[accent] ?? accent } as CSSProperties;
@@ -48,11 +51,27 @@ export function SectionHeader({
         </Tag>
         {children}
       </div>
-      {href ? (
+      {href && more ? (
         <Link prefetch={false} href={href} className={`link-more shrink-0 ${LINK_TONE[accent] ?? "text-ink"}`}>
           {linkLabel} <span className="arrow" aria-hidden>→</span>
         </Link>
       ) : null}
+    </div>
+  );
+}
+
+/**
+ * The other half of SectionHeader: a hairline in the same section colour, a line on what is
+ * left to read, and one button to the full section, always on the right.
+ */
+export function SectionEnd({ href, label, accent = "ink", note }: { href: string; label: string; accent?: string; note?: ReactNode }) {
+  const style = { "--rule-color": ACCENT_VAR[accent] ?? accent } as CSSProperties;
+  return (
+    <div className="section-end mt-6 flex flex-wrap items-center justify-between gap-x-6 gap-y-3 pt-4" style={style}>
+      <p className="text-sm text-muted">{note}</p>
+      <Link prefetch={false} href={href} className="btn btn-secondary btn-sm ml-auto">
+        {label} <span className="arrow" aria-hidden>→</span>
+      </Link>
     </div>
   );
 }

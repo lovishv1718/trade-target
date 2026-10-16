@@ -52,7 +52,7 @@ export function Ticker() {
           tabIndex={0}
           className="group flex min-w-0 flex-1 items-center overflow-hidden focus-visible:-outline-offset-2 motion-reduce:overflow-x-auto motion-reduce:[scrollbar-width:thin]"
         >
-          <div className="flex w-max animate-ticker group-hover:[animation-play-state:paused] group-focus-within:[animation-play-state:paused] motion-reduce:animate-none">
+          <div className="flex w-max animate-ticker will-change-transform [backface-visibility:hidden] group-hover:[animation-play-state:paused] group-focus-within:[animation-play-state:paused] motion-reduce:animate-none">
             <ul className="flex">
               {markets.ticker.map((q) => (
                 <Item key={q.id} q={q} />

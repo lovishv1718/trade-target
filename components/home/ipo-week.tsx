@@ -41,7 +41,7 @@ export function IpoThisWeek({ ipos, buildDate }: { ipos: Ipo[]; buildDate: strin
     .sort((a, b) => statusOrder(a.status) - statusOrder(b.status));
 
   return (
-    <section aria-labelledby="ipo-week" className="surface-ink px-4 pb-4 pt-1">
+    <section aria-labelledby="ipo-week" className="surface-ink flex flex-col px-4 pb-4 pt-1">
       <div className="flex min-h-11 items-center justify-between gap-3">
         <h2 id="ipo-week" className="kicker text-sm text-ink">
           IPO this week
@@ -81,7 +81,7 @@ export function IpoThisWeek({ ipos, buildDate }: { ipos: Ipo[]; buildDate: strin
           ))}
         </ul>
       )}
-      <p className="border-t border-rule pt-2 text-2xs text-muted">Includes sample data. GMP is unofficial.</p>
+      <p className="mt-auto border-t border-rule pt-2 text-2xs text-muted">Includes sample data. GMP is unofficial.</p>
     </section>
   );
 }
