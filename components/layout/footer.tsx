@@ -45,7 +45,7 @@ export function Footer() {
       <div className="wrap py-10">
         <div className="flex flex-col gap-6 border-b border-white/15 pb-8 md:flex-row md:items-end md:justify-between">
           <div>
-            <Logo inverse />
+            <Logo height={64} inverse />
             <p className="mt-2 max-w-md text-sm text-white/65">{site.tagline}. Finance content writing for brokers, AMCs and fintechs.</p>
           </div>
           <div>

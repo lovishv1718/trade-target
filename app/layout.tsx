@@ -7,8 +7,9 @@ import { Header } from "@/components/layout/header";
 import { SearchOverlay } from "@/components/search/search-overlay";
 import "./globals.css";
 
-// Variable fonts: one file per family covers every weight used
-const serif = Source_Serif_4({ subsets: ["latin"], variable: "--font-source-serif", display: "swap" });
+// Variable fonts: one file per family covers every weight used. The serif also carries its
+// optical-size axis, so display headlines get the tighter Display cut automatically.
+const serif = Source_Serif_4({ subsets: ["latin"], axes: ["opsz"], variable: "--font-source-serif", display: "swap" });
 const sans = Source_Sans_3({ subsets: ["latin"], variable: "--font-source-sans", display: "swap" });
 
 export const metadata: Metadata = {
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#10284a",
+  themeColor: "#000000",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

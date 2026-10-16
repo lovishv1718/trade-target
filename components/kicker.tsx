@@ -1,33 +1,40 @@
+// Five section groups (see the colour tokens in app/globals.css). News and the
+// market desks speak in ink, the paper's own voice; the other groups each have one colour.
 const COLORS: Record<string, string> = {
+  News: "text-ink",
+  Markets: "text-ink",
+  Business: "text-ink",
+  Commodities: "text-ink",
   IPO: "text-ipo",
-  Results: "text-results-ink",
-  Dividends: "text-results-ink",
-  Commodities: "text-commodities-ink",
-  Funds: "text-funds-ink",
-  Markets: "text-navy",
-  Business: "text-accent-ink",
-  News: "text-accent-ink",
-  "Share Analysis": "text-navy",
-  "Stock Market IQ": "text-accent-ink",
-  "Personal Finance": "text-funds-ink",
-  "Blog Junction": "text-funds-ink",
-  Calculators: "text-accent-ink",
+  "Share Analysis": "text-company",
+  Results: "text-company",
+  Dividends: "text-company",
+  "Personal Finance": "text-money",
+  Funds: "text-money",
+  "Blog Junction": "text-money",
+  "Stock Market IQ": "text-learn",
+  Calculators: "text-learn",
 };
 
 export function kickerColor(label: string) {
-  return COLORS[label] ?? "text-accent-ink";
+  return COLORS[label] ?? "text-ink";
 }
 
 export function Kicker({ label, className = "" }: { label: string; className?: string }) {
   return <span className={`kicker ${kickerColor(label)} ${className}`}>{label}</span>;
 }
 
-/** CSS colour used for section rules */
+/** CSS colour used for section rules. The old names (navy, accent, results, commodities, funds) still resolve. */
 export const ACCENT_VAR: Record<string, string> = {
-  navy: "var(--color-navy)",
-  accent: "var(--color-accent)",
+  ink: "var(--color-ink)",
+  news: "var(--color-ink)",
   ipo: "var(--color-ipo)",
-  results: "var(--color-results)",
-  commodities: "var(--color-commodities)",
-  funds: "var(--color-funds)",
+  company: "var(--color-company-mark)",
+  money: "var(--color-money)",
+  learn: "var(--color-learn)",
+  navy: "var(--color-ink)",
+  accent: "var(--color-ink)",
+  results: "var(--color-company-mark)",
+  commodities: "var(--color-ink)",
+  funds: "var(--color-money)",
 };

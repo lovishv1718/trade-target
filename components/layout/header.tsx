@@ -29,7 +29,7 @@ export function Header() {
       <div className="bg-white">
         <div className="wrap flex items-center justify-between gap-4 py-4 md:py-5">
           <div className="flex min-w-0 flex-col">
-            <Logo size="lg" />
+            <Logo height={72} eager />
             <p className="mt-1 hidden text-[0.8rem] text-muted md:block">Markets, IPOs and personal finance from Mumbai</p>
           </div>
           <div className="flex items-center gap-2 md:gap-3">
