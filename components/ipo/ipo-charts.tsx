@@ -1,8 +1,21 @@
 "use client";
 
-import { Area, AreaChart, Bar, BarChart, CartesianGrid, LabelList, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, LabelList, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { formatDayMonth } from "@/lib/format";
 import type { Subscription } from "@/lib/ipo";
+
+// Recharts attributes cannot read CSS variables, so token values are written out here.
+const C = {
+  grid: "#e2dccf", // rule
+  axis: "#c8c0b0", // rule-strong
+  tick: "#625e57", // muted
+  zero: "#8c877e", // faint: reference rule only
+  ink: "#000000",
+  ipo: "#1f4fb4",
+  cursor: "#f3eee5", // paper-2
+};
+const TICK = { fontSize: 12, fill: C.tick };
+const TOOLTIP = { fontSize: 12, border: `1px solid ${C.axis}`, borderRadius: 0, color: C.ink, background: "#ffffff" };
 
 const LABELS: Record<keyof Subscription, string> = { qib: "QIB", nii: "NII", retail: "Retail", employee: "Employee", total: "Total" };
 
@@ -11,17 +24,23 @@ export function SubscriptionChart({ subscription }: { subscription: Subscription
     .filter((k) => subscription[k] !== null && subscription[k] !== undefined)
     .map((k) => ({ name: LABELS[k], value: subscription[k] as number, total: k === "total" }));
   return (
-    <div className="h-[260px] w-full">
+    <div className="h-[260px] w-full tabular">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} layout="vertical" margin={{ top: 4, right: 56, left: 8, bottom: 4 }}>
-          <CartesianGrid stroke="#ece7de" horizontal={false} />
-          <XAxis type="number" tick={{ fontSize: 12, fill: "#5a6475" }} axisLine={false} tickLine={false} tickFormatter={(v) => `${v}x`} />
-          <YAxis type="category" dataKey="name" width={72} tick={{ fontSize: 13, fill: "#17202d", fontWeight: 600 }} axisLine={false} tickLine={false} />
-          <Tooltip cursor={{ fill: "rgba(16,40,74,0.05)" }} formatter={(v) => [`${Number(v).toFixed(2)} times`, "Subscribed"]} contentStyle={{ fontSize: 13, borderColor: "#e3ddd2" }} />
-          <Bar dataKey="value" maxBarSize={26} isAnimationActive={false} fill="#1c5fb8" shape={(props: { x?: number; y?: number; width?: number; height?: number; payload?: { total: boolean } }) => (
-            <rect x={props.x} y={props.y} width={Math.max(props.width ?? 0, 0)} height={props.height} fill={props.payload?.total ? "#10284a" : "#1c5fb8"} />
-          )}>
-            <LabelList dataKey="value" position="right" formatter={(v) => `${Number(v).toFixed(2)}x`} style={{ fontSize: 12, fontWeight: 600, fill: "#17202d" }} />
+        <BarChart data={data} layout="vertical" margin={{ top: 4, right: 56, left: 0, bottom: 4 }}>
+          <CartesianGrid stroke={C.grid} horizontal={false} />
+          <XAxis type="number" tick={TICK} axisLine={{ stroke: C.axis }} tickLine={false} tickFormatter={(v) => `${v}x`} />
+          <YAxis type="category" dataKey="name" width={72} tick={{ ...TICK, fontWeight: 600 }} axisLine={{ stroke: C.axis }} tickLine={false} />
+          <Tooltip cursor={{ fill: C.cursor }} formatter={(v) => [`${Number(v).toFixed(2)} times`, "Subscribed"]} contentStyle={TOOLTIP} />
+          <Bar
+            dataKey="value"
+            maxBarSize={22}
+            isAnimationActive={false}
+            fill={C.ipo}
+            shape={(props: { x?: number; y?: number; width?: number; height?: number; payload?: { total: boolean } }) => (
+              <rect x={props.x} y={props.y} width={Math.max(props.width ?? 0, 0)} height={props.height} fill={props.payload?.total ? C.ink : C.ipo} />
+            )}
+          >
+            <LabelList dataKey="value" position="right" formatter={(v) => `${Number(v).toFixed(2)}x`} style={{ fontSize: 12, fontWeight: 600, fill: C.ink }} />
           </Bar>
         </BarChart>
       </ResponsiveContainer>
@@ -32,22 +51,16 @@ export function SubscriptionChart({ subscription }: { subscription: Subscription
 export function GmpChart({ history }: { history: { date: string; gmp: number }[] }) {
   const data = history.map((h) => ({ ...h, label: formatDayMonth(h.date) }));
   return (
-    <div className="h-[240px] w-full">
+    <div className="h-[240px] w-full tabular">
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={data} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
-          <defs>
-            <linearGradient id="gmpFill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#1c5fb8" stopOpacity={0.22} />
-              <stop offset="100%" stopColor="#1c5fb8" stopOpacity={0.02} />
-            </linearGradient>
-          </defs>
-          <CartesianGrid stroke="#ece7de" vertical={false} />
-          <XAxis dataKey="label" tick={{ fontSize: 12, fill: "#5a6475" }} tickLine={false} axisLine={{ stroke: "#d8d1c4" }} />
-          <YAxis tick={{ fontSize: 12, fill: "#5a6475" }} tickLine={false} axisLine={false} width={48} tickFormatter={(v) => `₹${v}`} />
-          <ReferenceLine y={0} stroke="#9aa3b2" />
-          <Tooltip formatter={(v) => [`₹${v}`, "GMP"]} contentStyle={{ fontSize: 13, borderColor: "#e3ddd2" }} />
-          <Area type="monotone" dataKey="gmp" stroke="#1c5fb8" strokeWidth={2.5} fill="url(#gmpFill)" dot={{ r: 3, fill: "#1c5fb8" }} isAnimationActive={false} />
-        </AreaChart>
+        <LineChart data={data} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
+          <CartesianGrid stroke={C.grid} vertical={false} />
+          <XAxis dataKey="label" tick={TICK} tickLine={false} axisLine={{ stroke: C.axis }} />
+          <YAxis tick={TICK} tickLine={false} axisLine={false} width={48} tickFormatter={(v) => `₹${v}`} />
+          <ReferenceLine y={0} stroke={C.zero} />
+          <Tooltip cursor={{ stroke: C.axis }} formatter={(v) => [`₹${v}`, "GMP"]} contentStyle={TOOLTIP} />
+          <Line type="linear" dataKey="gmp" stroke={C.ink} strokeWidth={2} dot={{ r: 3, fill: C.ink, stroke: C.ink }} activeDot={{ r: 4, fill: C.ipo, stroke: C.ipo }} isAnimationActive={false} />
+        </LineChart>
       </ResponsiveContainer>
     </div>
   );

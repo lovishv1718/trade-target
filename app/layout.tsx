@@ -22,6 +22,7 @@ export const metadata: Metadata = {
   openGraph: { siteName: "TradeTarget", type: "website", locale: "en_IN" },
   twitter: { card: "summary_large_image", site: "@tradetarget3" },
   alternates: { canonical: "/" },
+  icons: { icon: [{ url: "/brand/trade-target-mark.webp", type: "image/webp" }] },
 };
 
 export const viewport: Viewport = {
@@ -31,6 +32,15 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en-IN" className={`${serif.variable} ${sans.variable}`}>
+      <head>
+        {/* Marks .img-fade images as loaded so they fade in on decode. Registered before any image
+            parses and independent of hydration, so images are never held back. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `document.addEventListener("load",function(e){var t=e.target;if(t&&t.classList&&t.classList.contains("img-fade"))t.setAttribute("data-loaded","")},true);`,
+          }}
+        />
+      </head>
       <body className="min-h-screen">
         <Header />
         <main id="main">{children}</main>

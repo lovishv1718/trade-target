@@ -5,14 +5,27 @@ import { JsonLd } from "../json-ld";
 
 export function AuthorAvatar({ author, size = 44 }: { author: Author; size?: number }) {
   if (author.photo) {
-    return <Image src={author.photo} alt={author.name} width={size} height={size} className="shrink-0 rounded-full bg-paper-2 object-cover" style={{ width: size, height: size }} />;
+    return (
+      <Image
+        src={author.photo}
+        alt={author.name}
+        width={size}
+        height={size}
+        className="img-fade shrink-0 rounded-full bg-paper-2 object-cover"
+        style={{ width: size, height: size }}
+      />
+    );
   }
   const initials = author.name
     .split(" ")
     .map((p) => p[0])
     .join("");
   return (
-    <span aria-hidden className="flex shrink-0 items-center justify-center rounded-full bg-navy font-serif font-semibold text-white" style={{ width: size, height: size, fontSize: size * 0.36 }}>
+    <span
+      aria-hidden
+      className="flex shrink-0 items-center justify-center rounded-full bg-ink font-sans font-semibold tracking-wide text-paper"
+      style={{ width: size, height: size, fontSize: Math.round(size * 0.36) }}
+    >
       {initials}
     </span>
   );
@@ -20,34 +33,38 @@ export function AuthorAvatar({ author, size = 44 }: { author: Author; size?: num
 
 export function AuthorBox({ author }: { author: Author }) {
   return (
-    <section aria-label="About the author" className="flex flex-col gap-4 border-t-[3px] border-navy bg-white p-5 sm:flex-row md:p-6">
-      <AuthorAvatar author={author} size={88} />
-      <div>
-        <p className="kicker text-muted">About the author</p>
-        <h2 className="headline mt-1 text-xl">
-          <Link href={`/author/${author.slug}/`} className="hover:underline">
-            {author.name}
-          </Link>
-          <span className="ml-2 font-sans text-sm font-semibold text-accent-ink">{author.role}, TradeTarget</span>
-        </h2>
-        <p className="mt-2 text-[0.97rem] leading-relaxed text-[#3a4453]">{author.shortBio}</p>
-        <p className="mt-3 flex flex-wrap gap-2">
-          {author.expertise.map((e) => (
-            <span key={e} className="border border-rule px-2 py-0.5 text-xs font-semibold text-muted">
-              {e}
-            </span>
-          ))}
-        </p>
+    <section aria-label="About the author" className="border-t-2 border-ink pt-5">
+      <p className="kicker text-muted">About the author</p>
+      <div className="mt-4 flex items-start gap-4 sm:gap-5">
+        <AuthorAvatar author={author} size={72} />
+        <div className="min-w-0">
+          <h2 className="headline text-xl">
+            <Link href={`/author/${author.slug}/`} className="decoration-1 underline-offset-4 hover:underline">
+              {author.name}
+            </Link>
+          </h2>
+          <p className="mt-1 text-sm font-semibold text-ink-2">{author.role}, TradeTarget</p>
+        </div>
       </div>
+      <p className="mt-4 text-base leading-relaxed text-ink-2">{author.shortBio}</p>
+      {author.expertise.length ? (
+        <ul className="mt-4 flex flex-wrap gap-2" aria-label="Expertise">
+          {author.expertise.map((e) => (
+            <li key={e} className="tag">
+              {e}
+            </li>
+          ))}
+        </ul>
+      ) : null}
     </section>
   );
 }
 
 export function KeyTakeaways({ text }: { text: string }) {
   return (
-    <aside className="border-l-4 border-gold bg-white px-5 py-4">
-      <p className="kicker text-commodities-ink">Quick summary</p>
-      <p className="mt-1.5 text-[1.05rem] leading-relaxed">{text}</p>
+    <aside aria-label="Quick summary" className="border-t-2 border-ink pt-3">
+      <p className="kicker text-ink">Quick summary</p>
+      <p className="mt-2 text-lg leading-relaxed text-ink">{text}</p>
     </aside>
   );
 }
@@ -56,19 +73,25 @@ export function FaqSection({ faqs, title = "Frequently asked questions" }: { faq
   if (!faqs.length) return null;
   return (
     <section aria-labelledby="faq-heading" className="mt-12">
-      <h2 id="faq-heading" className="headline text-[1.6rem]">
+      <h2 id="faq-heading" className="headline border-t-2 border-ink pt-3 text-2xl">
         {title}
       </h2>
-      <div className="mt-4 divide-y divide-rule border-y border-rule">
+      <div className="mt-4 divide-y divide-rule border-b border-rule">
         {faqs.map((f, i) => (
-          <details key={i} className="group py-1" open={i === 0}>
-            <summary className="flex cursor-pointer list-none items-start justify-between gap-4 py-3 text-[1.05rem] font-semibold leading-snug">
-              {f.q}
-              <span aria-hidden className="mt-0.5 text-lg leading-none text-accent-ink transition-transform group-open:rotate-45">
-                +
-              </span>
+          <details key={i} className="art-disclosure group" open={i === 0}>
+            <summary className="flex min-h-11 cursor-pointer list-none items-start justify-between gap-4 py-3.5 text-lg font-semibold leading-snug text-ink [&::-webkit-details-marker]:hidden">
+              <span className="min-w-0">{f.q}</span>
+              <svg
+                aria-hidden
+                width="14"
+                height="14"
+                viewBox="0 0 14 14"
+                className="mt-1.5 shrink-0 text-ink transition-transform duration-200 ease-out group-open:rotate-45 motion-reduce:transition-none"
+              >
+                <path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.6" fill="none" />
+              </svg>
             </summary>
-            <p className="pb-4 pr-8 text-[1rem] leading-relaxed text-[#3a4453]">{f.a}</p>
+            <p className="art-disclosure-body max-w-[62ch] pb-5 pr-8 text-base leading-relaxed text-ink-2">{f.a}</p>
           </details>
         ))}
       </div>
@@ -85,8 +108,8 @@ export function FaqSection({ faqs, title = "Frequently asked questions" }: { faq
 
 export function DisclaimerBox() {
   return (
-    <aside className="border border-rule bg-paper-2/60 px-5 py-4 text-[0.88rem] leading-relaxed text-[#4a5463]">
-      <p className="kicker text-muted">Disclaimer</p>
+    <aside aria-label="Disclaimer" className="border border-rule bg-paper-2 px-4 py-4 text-sm leading-relaxed text-ink-2 md:px-5">
+      <p className="kicker text-ink">Disclaimer</p>
       <p className="mt-1.5">
         This article is for information and education only and is not investment advice or a recommendation to buy, sell or hold any security. TradeTarget is
         not a SEBI-registered investment adviser or research analyst. Investments in the securities market are subject to market risks. Figures are as

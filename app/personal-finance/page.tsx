@@ -19,7 +19,7 @@ export default function PersonalFinancePage() {
   const subs = getSubsections();
   return (
     <>
-      <SectionMasthead title={section.name} description={section.description} accent="funds" crumbs={[{ label: "Home", href: "/" }]} count={all.length}>
+      <SectionMasthead title={section.name} description={section.description} accent="money" crumbs={[{ label: "Home", href: "/" }]} count={all.length}>
         <SubsectionTabs />
       </SectionMasthead>
 
@@ -29,11 +29,11 @@ export default function PersonalFinancePage() {
             <Photo image={lead.image} sizes="(min-width: 768px) 720px, 100vw" aspect="aspect-[16/9]" priority />
           </Link>
           <div>
-            <span className="kicker text-funds-ink">Retirement</span>
+            <span className="kicker text-money">Retirement</span>
             <Link prefetch={false} href={lead.path} className="group">
-              <h2 className="headline mt-1.5 text-[1.9rem] leading-tight group-hover:underline md:text-[2.3rem]">{lead.title}</h2>
+              <h2 className="headline mt-1.5 text-3xl group-hover:underline md:text-4xl">{lead.title}</h2>
             </Link>
-            <p className="mt-3 text-[1.05rem] leading-relaxed text-[#3a4453]">{lead.standfirst}</p>
+            <p className="mt-3 text-md leading-relaxed text-ink-2 md:text-lg md:leading-relaxed">{lead.standfirst}</p>
             <StoryMeta story={lead} className="mt-3" />
           </div>
         </article>
@@ -44,18 +44,18 @@ export default function PersonalFinancePage() {
             if (!items.length) return null;
             const [first, ...others] = items;
             return (
-              <section key={sub.slug} aria-labelledby={`sub-${sub.slug}`} className="border-t-[3px] border-funds pt-2.5">
-                <div className="flex items-baseline justify-between">
-                  <h2 id={`sub-${sub.slug}`} className="headline text-[1.35rem]">
+              <section key={sub.slug} aria-labelledby={`sub-${sub.slug}`} className="border-t-[3px] border-money pt-2.5">
+                <div className="flex items-center justify-between gap-4">
+                  <h2 id={`sub-${sub.slug}`} className="headline text-xl md:text-2xl">
                     <Link prefetch={false} href={sub.path} className="hover:underline">
                       {sub.name}
                     </Link>
                   </h2>
-                  <Link prefetch={false} href={sub.path} className="text-sm font-semibold text-funds-ink hover:underline">
-                    More →
+                  <Link prefetch={false} href={sub.path} className="link-more shrink-0 text-money">
+                    More<span className="sr-only"> in {sub.name}</span> <span className="arrow" aria-hidden>→</span>
                   </Link>
                 </div>
-                <p className="text-sm text-muted">{sub.description}</p>
+                <p className="text-sm leading-normal text-muted">{sub.description}</p>
                 <StoryRow story={first} />
                 <div className="divide-y divide-rule border-t border-rule">
                   {others.slice(0, 2).map((s) => (

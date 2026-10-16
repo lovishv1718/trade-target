@@ -23,16 +23,17 @@ export default function HireWritersPage() {
         <Breadcrumbs items={[{ label: "Home", href: "/" }]} current="Hire our writers" />
       </div>
 
-      <section className="wrap mt-5 grid gap-8 lg:grid-cols-[1.1fr_1fr] lg:items-center">
-        <div>
-          <p className="kicker text-accent-ink">TradeTarget content services</p>
-          <h1 className="headline mt-2 text-[2.3rem] leading-[1.1] md:text-[3rem]">Finance writing for brokers, AMCs and fintechs</h1>
-          <p className="mt-4 max-w-xl text-[1.12rem] leading-relaxed text-[#3a4453]">{hire.intro}</p>
+      {/* Intro: the pitch flush left, a photograph beside it */}
+      <section className="wrap mt-6 grid gap-8 md:mt-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-14">
+        <div className="lg:border-t lg:border-ink lg:pt-5">
+          <p className="kicker text-muted">TradeTarget content services</p>
+          <h1 className="headline mt-3 max-w-[22ch] text-3xl md:text-4xl lg:text-5xl">Finance writing for brokers, AMCs and fintechs</h1>
+          <p className="mt-4 max-w-[60ch] text-lg leading-relaxed text-ink-2">{hire.intro}</p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <a href="#brief" className="bg-accent-ink px-5 py-3 font-semibold text-white hover:bg-accent-700">
+            <a href="#brief" className="btn btn-lg">
               Send a brief
             </a>
-            <a href="mailto:business@tradetarget.in" className="border border-navy px-5 py-3 font-semibold text-navy hover:bg-navy hover:text-white">
+            <a href="mailto:business@tradetarget.in" className="btn btn-secondary btn-lg">
               business@tradetarget.in
             </a>
           </div>
@@ -43,32 +44,32 @@ export default function HireWritersPage() {
         </figure>
       </section>
 
-      <section className="mt-12 border-y border-rule bg-white py-8" aria-labelledby="clients-heading">
-        <div className="wrap">
-          <h2 id="clients-heading" className="text-center text-sm font-semibold uppercase tracking-wider text-muted">
-            Teams we have written for
-          </h2>
-          <ul className="mt-6 grid grid-cols-3 items-center gap-6 sm:grid-cols-5 lg:grid-cols-9">
-            {hire.clients.map((c) => (
-              <li key={c.name} className="flex flex-col items-center gap-2 text-center">
-                <Image src={c.logo} alt={c.name} width={72} height={72} className="h-16 w-16 object-contain grayscale transition hover:grayscale-0" />
-                <span className="text-[0.75rem] font-semibold leading-tight text-muted">{c.name}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+      {/* Clients: every logo in a hairline ledger */}
+      <section className="wrap mt-12 md:mt-16" aria-labelledby="clients-heading">
+        <h2 id="clients-heading" className="kicker border-b border-ink pb-2 text-ink">
+          Teams we have written for
+        </h2>
+        <ul className="grid grid-cols-3 border-l border-rule lg:grid-cols-9">
+          {hire.clients.map((c) => (
+            <li key={c.name} className="flex flex-col items-center justify-center gap-2 border-b border-r border-rule bg-white px-2 py-4 text-center">
+              <Image src={c.logo} alt={c.name} width={72} height={72} className="img-fade h-14 w-14 object-contain grayscale hover:grayscale-0 md:h-16 md:w-16" />
+              <span className="text-2xs font-semibold leading-tight text-muted">{c.name}</span>
+            </li>
+          ))}
+        </ul>
       </section>
 
-      <section className="wrap mt-14 grid gap-10 lg:grid-cols-[1fr_1.3fr]" aria-label="Services">
+      {/* Services: ruled lists, not cards */}
+      <section className="wrap mt-14 grid gap-12 md:mt-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] lg:gap-16" aria-label="Services">
         <div>
-          <SectionHeader title="What we write about" accent="accent" />
-          <div className="mt-4 space-y-6">
+          <SectionHeader title="What we write about" />
+          <div className="mt-2 space-y-7">
             {hire.services.map((s) => (
               <div key={s.name}>
-                <h3 className="font-semibold">{s.name}</h3>
-                <ul className="mt-2 space-y-1.5 text-[0.98rem] text-[#3a4453]">
+                <h3 className="pt-2 text-base font-semibold text-ink">{s.name}</h3>
+                <ul className="mt-2 divide-y divide-rule border-y border-rule text-md text-ink-2">
                   {s.items.map((i) => (
-                    <li key={i} className="border-l-2 border-gold pl-3">
+                    <li key={i} className="py-2.5">
                       {i}
                     </li>
                   ))}
@@ -79,63 +80,60 @@ export default function HireWritersPage() {
         </div>
         <div>
           <SectionHeader title="Content we deliver" />
-          <div className="table-wrap mt-4">
-            <table className="data-table">
-              <tbody>
-                {hire.contentTypes.map((t) => (
-                  <tr key={t.name}>
-                    <td className="font-semibold">{t.name}</td>
-                    <td className="text-muted">{t.note}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <dl className="mt-2 divide-y divide-rule border-b border-rule">
+            {hire.contentTypes.map((t) => (
+              <div key={t.name} className="grid gap-0.5 py-3 sm:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] sm:gap-6">
+                <dt className="text-md font-semibold text-ink">{t.name}</dt>
+                <dd className="text-md text-muted">{t.note}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </section>
 
-      <section className="wrap mt-14" aria-label="Writers">
+      {/* Writers and sample work: columns divided by hairlines */}
+      <section className="wrap mt-14 md:mt-16" aria-label="Writers">
         <SectionHeader title="Who writes for you" />
-        <div className="mt-5 grid gap-6 md:grid-cols-3">
+        <div className="mt-2 grid md:grid-cols-3">
           {hire.writers.map((w) => {
             const a = getAuthor(w.author);
             const samples = getArticlesBySlugs(w.samples);
             return (
-              <article key={w.author} className="flex flex-col border border-rule bg-white p-5">
+              <article key={w.author} className="flex flex-col border-b border-rule py-6 md:border-b-0 md:border-l md:px-6 md:first:border-l-0 md:first:pl-0 md:last:pr-0">
                 <div className="flex items-center gap-4">
                   <AuthorAvatar author={a} size={64} />
                   <div>
                     <h3 className="headline text-xl">
-                      <Link href={`/author/${a.slug}/`} className="hover:underline">
+                      <Link href={`/author/${a.slug}/`} className="hover:underline hover:underline-offset-2">
                         {a.name}
                       </Link>
                     </h3>
-                    <p className="text-sm font-semibold text-accent-ink">{a.role}</p>
+                    <p className="mt-0.5 text-sm text-ink-2">{a.role}</p>
                   </div>
                 </div>
-                <p className="mt-3 text-[0.95rem] font-semibold">{w.focus}</p>
-                <ul className="mt-2 flex flex-wrap gap-1.5">
+                <p className="mt-4 text-md font-semibold text-ink">{w.focus}</p>
+                <ul className="mt-2.5 flex flex-wrap gap-1.5" aria-label="Expertise">
                   {a.expertise.map((e) => (
-                    <li key={e} className="border border-rule px-2 py-0.5 text-xs font-semibold text-muted">
+                    <li key={e} className="tag">
                       {e}
                     </li>
                   ))}
                 </ul>
-                <div className="mt-4 border-t border-rule pt-3">
+                <div className="mt-5 border-t border-rule pt-3">
                   <p className="kicker text-muted">{samples.length ? "Recent work" : "Leads"}</p>
                   {samples.length ? (
-                    <ul className="mt-1.5 space-y-1.5 text-[0.92rem]">
+                    <ul className="mt-1 divide-y divide-rule text-md leading-snug">
                       {samples.map((s) => (
-                        <li key={s.slug}>
-                          <Link href={s.path} className="text-ipo underline decoration-ipo/30 underline-offset-2 hover:decoration-ipo">
+                        <li key={s.slug} className="py-2">
+                          <Link href={s.path} className="link">
                             {s.title}
                           </Link>
                         </li>
                       ))}
                     </ul>
                   ) : "deskLink" in w && w.deskLink ? (
-                    <Link href={w.deskLink.href} className="mt-1.5 inline-block text-[0.92rem] text-ipo underline">
-                      {w.deskLink.label}
+                    <Link href={w.deskLink.href} className="link-more mt-0.5">
+                      {w.deskLink.label} <span className="arrow" aria-hidden>→</span>
                     </Link>
                   ) : null}
                 </div>
@@ -145,45 +143,49 @@ export default function HireWritersPage() {
         </div>
       </section>
 
-      <section className="mt-14 bg-navy-900 py-12 text-white" aria-labelledby="process-heading">
+      {/* Process: a black band, steps numbered with tabular figures */}
+      <section className="surface-ink mt-14 py-10 md:mt-16 md:py-14" aria-labelledby="process-heading">
         <div className="wrap">
-          <h2 id="process-heading" className="headline text-[1.8rem] text-white">
+          <h2 id="process-heading" className="headline border-b border-rule-strong pb-3 text-2xl text-ink md:text-3xl">
             How it works
           </h2>
-          <ol className="mt-6 grid gap-px bg-white/10 md:grid-cols-3">
+          <ol className="grid md:grid-cols-3">
             {hire.process.map((p, i) => (
-              <li key={p.step} className="bg-navy-900 p-6">
-                <span className="font-serif text-[2.6rem] font-semibold leading-none text-gold">{String(i + 1).padStart(2, "0")}</span>
-                <h3 className="mt-3 text-lg font-semibold">{p.step}</h3>
-                <p className="mt-1.5 text-white/75">{p.text}</p>
+              <li key={p.step} className="border-b border-rule py-6 md:border-b-0 md:border-l md:px-6 md:first:border-l-0 md:first:pl-0 md:last:pr-0">
+                <span className="text-3xl font-semibold leading-none tabular-nums text-ink">{String(i + 1).padStart(2, "0")}</span>
+                <h3 className="mt-4 text-lg font-semibold text-ink">{p.step}</h3>
+                <p className="mt-1.5 max-w-[46ch] text-md leading-relaxed text-ink-2">{p.text}</p>
               </li>
             ))}
           </ol>
         </div>
       </section>
 
-      <section id="brief" className="wrap mt-14 scroll-mt-16 grid gap-8 lg:grid-cols-[1fr_1.5fr]" aria-labelledby="brief-heading">
-        <div>
-          <h2 id="brief-heading" className="headline text-[2rem] leading-tight">
+      {/* The brief: the page's main action */}
+      <section id="brief" className="wrap mt-14 grid scroll-mt-20 gap-8 pb-16 md:mt-16 md:pb-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] lg:gap-14" aria-labelledby="brief-heading">
+        <div className="border-t border-ink pt-5">
+          <h2 id="brief-heading" className="headline text-3xl md:text-4xl">
             Send a brief
           </h2>
-          <p className="mt-3 text-[1.05rem] text-[#3a4453]">Tell us what you need. An editor replies within one working day with a suggested writer and an outline.</p>
-          <dl className="mt-6 space-y-3 text-[0.95rem]">
-            <div>
-              <dt className="text-muted">Email</dt>
-              <dd className="font-semibold">
-                <a href="mailto:business@tradetarget.in" className="hover:underline">
+          <p className="mt-3 max-w-[46ch] text-lg leading-normal text-ink-2">Tell us what you need. An editor replies within one working day with a suggested writer and an outline.</p>
+          <dl className="mt-6 divide-y divide-rule border-y border-rule">
+            <div className="grid gap-0.5 py-3 sm:grid-cols-[7rem_minmax(0,1fr)] sm:gap-4">
+              <dt className="text-sm text-muted">Email</dt>
+              <dd className="text-md font-semibold text-ink">
+                <a href="mailto:business@tradetarget.in" className="link break-all">
                   business@tradetarget.in
                 </a>
               </dd>
             </div>
-            <div>
-              <dt className="text-muted">Based in</dt>
-              <dd className="font-semibold">Mumbai, Maharashtra</dd>
+            <div className="grid gap-0.5 py-3 sm:grid-cols-[7rem_minmax(0,1fr)] sm:gap-4">
+              <dt className="text-sm text-muted">Based in</dt>
+              <dd className="text-md font-semibold text-ink">Mumbai, Maharashtra</dd>
             </div>
           </dl>
         </div>
-        <BriefForm contentTypes={hire.formOptions.contentTypes} volumes={hire.formOptions.volumes} />
+        <div className="lg:pt-0">
+          <BriefForm contentTypes={hire.formOptions.contentTypes} volumes={hire.formOptions.volumes} />
+        </div>
       </section>
     </>
   );

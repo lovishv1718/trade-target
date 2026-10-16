@@ -3,6 +3,10 @@ import site from "@/content/site.json";
 import { getCalculators, getSubsections } from "@/lib/content";
 import { Logo } from "../logo";
 
+// White/80 at rest, white and underlined on hover. Compact on a mouse, 44px tall on touch.
+const link = "text-white/80 underline-offset-4 hover:text-white hover:underline";
+const tapLink = `flex min-h-7 items-center py-0.5 leading-snug pointer-coarse:min-h-11 ${link}`;
+
 export function Footer() {
   const subs = getSubsections();
   const calcs = getCalculators();
@@ -41,19 +45,18 @@ export function Footer() {
   ];
 
   return (
-    <footer className="mt-16 bg-navy-900 text-white/80">
-      <div className="wrap py-10">
-        <div className="flex flex-col gap-6 border-b border-white/15 pb-8 md:flex-row md:items-end md:justify-between">
+    <footer className="surface-ink mt-16 text-sm text-ink-2">
+      <div className="wrap pb-6 pt-10 md:pt-12">
+        {/* Identity: mark, what we are, where to follow */}
+        <div className="grid gap-6 border-b border-rule pb-8 md:grid-cols-[auto_minmax(0,1fr)_auto] md:items-center md:gap-8">
+          <Logo inverse height={56} />
+          <p className="max-w-md text-md leading-normal text-ink-2">{site.tagline}. Finance content writing for brokers, AMCs and fintechs.</p>
           <div>
-            <Logo height={64} inverse />
-            <p className="mt-2 max-w-md text-sm text-white/65">{site.tagline}. Finance content writing for brokers, AMCs and fintechs.</p>
-          </div>
-          <div>
-            <p className="kicker text-white/55">Follow us</p>
-            <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1.5 text-sm">
+            <p className="kicker text-muted">Follow us</p>
+            <ul className="mt-1.5 flex flex-wrap gap-x-5">
               {site.socials.map((s) => (
                 <li key={s.name}>
-                  <a href={s.url} target="_blank" rel="noopener noreferrer" className="font-semibold text-white hover:text-gold">
+                  <a href={s.url} target="_blank" rel="noopener noreferrer" className={`flex min-h-8 items-center font-semibold pointer-coarse:min-h-11 ${link}`}>
                     {s.name}
                   </a>
                 </li>
@@ -62,28 +65,28 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-b border-white/15 py-5">
-          <p className="text-sm">
-            <span className="kicker mr-3 text-gold">Trending</span>
-            {site.trending.map((t, i) => (
-              <span key={t.href}>
-                <Link prefetch={false} href={t.href} className="hover:text-white hover:underline">
+        <div className="flex flex-col gap-2 border-b border-rule py-5 md:flex-row md:items-baseline md:gap-6">
+          <p className="kicker shrink-0 text-ink">Trending</p>
+          <ul className="flex flex-wrap items-center">
+            {site.trending.map((t) => (
+              <li key={t.href} className="flex items-center after:mx-3 after:h-3 after:w-px after:bg-rule-strong last:after:hidden">
+                <Link prefetch={false} href={t.href} className={`flex min-h-8 items-center pointer-coarse:min-h-11 ${link}`}>
                   {t.label}
                 </Link>
-                {i < site.trending.length - 1 ? <span className="mx-2 text-white/30">|</span> : null}
-              </span>
+              </li>
             ))}
-          </p>
+          </ul>
         </div>
 
+        {/* Sitemap */}
         <div className="grid grid-cols-2 gap-x-6 gap-y-8 py-8 sm:grid-cols-3 lg:grid-cols-5">
           {columns.map((col) => (
             <div key={col.title}>
-              <h2 className="text-[0.95rem] font-semibold text-white">{col.title}</h2>
-              <ul className="mt-3 space-y-2 text-sm">
+              <h2 className="kicker border-b border-rule pb-2 text-ink">{col.title}</h2>
+              <ul className="mt-2">
                 {col.links.map((l) => (
                   <li key={l.href}>
-                    <Link prefetch={false} href={l.href} className="hover:text-white hover:underline">
+                    <Link prefetch={false} href={l.href} className={tapLink}>
                       {l.label}
                     </Link>
                   </li>
@@ -93,27 +96,43 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="border-t border-white/15 pt-6 text-[0.8rem] leading-relaxed text-white/60">
-          <p>
-            <strong className="text-white/85">Disclaimer:</strong> TradeTarget is a financial news and education platform. It is not registered with the
+        <div className="border-t border-rule pt-6 text-xs leading-relaxed text-muted">
+          <p className="max-w-[100ch]">
+            <strong className="font-semibold text-ink">Disclaimer:</strong> TradeTarget is a financial news and education platform. It is not registered with the
             Securities and Exchange Board of India (SEBI) as an investment adviser or research analyst, and nothing on this site is a recommendation to buy,
             sell or hold any security, fund or other product. Investments in the securities market are subject to market risks; read all related documents
             carefully before investing. Past performance does not indicate future returns. Grey market premium (GMP) figures are unofficial, come from market
             sources and can change quickly; they are reported for information only. Calculator results are estimates based on the inputs and assumptions you
             enter. Consult a SEBI-registered investment adviser before making investment decisions.{" "}
-            <Link prefetch={false} href="/disclaimer/" className="underline hover:text-white">
+            <Link prefetch={false} href="/disclaimer/" className="link">
               Read the full disclaimer
             </Link>
             .
           </p>
-          <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-6 flex flex-col gap-2 border-t border-rule pt-4 sm:flex-row sm:items-center sm:justify-between">
             <p>© {new Date().getFullYear()} TradeTarget, Mumbai. All rights reserved.</p>
-            <p className="flex flex-wrap gap-x-4">
-              <Link prefetch={false} href="/privacy-policy/" className="hover:text-white">Privacy</Link>
-              <Link prefetch={false} href="/terms-and-conditions/" className="hover:text-white">Terms</Link>
-              <Link prefetch={false} href="/disclaimer/" className="hover:text-white">Disclaimer</Link>
-              <a href={`mailto:${site.email}`} className="hover:text-white">{site.email}</a>
-            </p>
+            <ul className="-ml-2 flex flex-wrap sm:-mr-2 sm:ml-0">
+              <li>
+                <Link prefetch={false} href="/privacy-policy/" className={`flex min-h-8 items-center px-2 pointer-coarse:min-h-11 ${link}`}>
+                  Privacy
+                </Link>
+              </li>
+              <li>
+                <Link prefetch={false} href="/terms-and-conditions/" className={`flex min-h-8 items-center px-2 pointer-coarse:min-h-11 ${link}`}>
+                  Terms
+                </Link>
+              </li>
+              <li>
+                <Link prefetch={false} href="/disclaimer/" className={`flex min-h-8 items-center px-2 pointer-coarse:min-h-11 ${link}`}>
+                  Disclaimer
+                </Link>
+              </li>
+              <li>
+                <a href={`mailto:${site.email}`} className={`flex min-h-8 items-center px-2 pointer-coarse:min-h-11 ${link}`}>
+                  {site.email}
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
       </div>

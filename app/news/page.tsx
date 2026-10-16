@@ -19,12 +19,12 @@ export default function NewsPage() {
   const stories = getArticleCards().filter((a) => a.section === "news" || a.section === "ipo" || topics.includes(a.kicker));
   const [lead, second, third] = stories.filter((s) => s.section === "news");
   return (
-    <div className="wrap pt-5 md:pt-7">
+    <div className="wrap pt-4 md:pt-6">
       <Breadcrumbs items={[{ label: "Home", href: "/" }]} current="News" />
-      <header className="mt-4 border-b border-rule pb-5">
-        <p className="kicker text-accent-ink">News</p>
-        <h1 className="headline mt-1 text-[2.2rem] leading-tight md:text-[2.7rem]">Markets and business news</h1>
-        <p className="mt-2 max-w-2xl text-[1.05rem] text-[#3a4453]">Quarterly results, IPOs, commodities, mutual funds and the moves that matter to Indian investors.</p>
+      <header className="section-rule mt-3 border-b border-rule pt-3 pb-5 md:pb-6">
+        <p className="kicker text-ink">News</p>
+        <h1 className="headline mt-1.5 text-3xl md:text-4xl">Markets and business news</h1>
+        <p className="mt-2 max-w-2xl text-md leading-normal text-ink-2 md:text-lg md:leading-normal">Quarterly results, IPOs, commodities, mutual funds and the moves that matter to Indian investors.</p>
       </header>
 
       <div className="mt-6 grid gap-8 md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
@@ -36,8 +36,8 @@ export default function NewsPage() {
       </div>
 
       <div className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px]">
-        <section aria-label="All stories">
-          <h2 className="headline section-rule pt-2.5 text-[1.5rem]">All stories</h2>
+        <section aria-labelledby="all-stories">
+          <h2 id="all-stories" className="headline section-rule pt-2.5 text-2xl">All stories</h2>
           <div className="mt-4">
             <Suspense fallback={null}>
               <NewsListing stories={stories} topics={topics} />

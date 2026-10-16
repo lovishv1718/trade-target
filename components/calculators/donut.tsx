@@ -5,7 +5,10 @@ export type Slice = { name: string; value: number; color: string };
 // A circle with r = 15.9155 has a circumference of 100, so dash lengths are percentages.
 const R = 15.9155;
 
-/** Lightweight SVG donut; slices animate through a CSS transition on the dash array. */
+/**
+ * Lightweight SVG donut. Slices ease to new sizes through a 240ms ease-out
+ * transition on the dash array (the global reduced-motion rule removes it).
+ */
 export function Donut({ slices, centerLabel, centerValue, size = 190 }: { slices: Slice[]; centerLabel?: string; centerValue?: string; size?: number }) {
   const data = slices.filter((s) => s.value > 0);
   const total = data.reduce((s, x) => s + x.value, 0) || 1;
@@ -18,8 +21,8 @@ export function Donut({ slices, centerLabel, centerValue, size = 190 }: { slices
   }));
   return (
     <div className="relative shrink-0" style={{ width: size, height: size }}>
-      <svg viewBox="0 0 42 42" width={size} height={size} role="img" aria-label={data.map((s) => `${s.name} ${formatINR(s.value)}`).join(", ")}>
-        <circle cx="21" cy="21" r={R} fill="none" stroke="#ece7de" strokeWidth="6" />
+      <svg viewBox="0 0 42 42" width={size} height={size} role="img" aria-label={data.map((s, i) => `${s.name} ${formatINR(s.value)} (${pcts[i].toFixed(1)}%)`).join(", ")}>
+        <circle cx="21" cy="21" r={R} fill="none" stroke="#e2dccf" strokeWidth="6" />
         {arcs.map((a) => (
           <circle
             key={a.name}
@@ -31,16 +34,16 @@ export function Donut({ slices, centerLabel, centerValue, size = 190 }: { slices
             strokeWidth="6"
             strokeDasharray={`${a.dash} ${100 - a.dash}`}
             strokeDashoffset={25 - a.start}
-            style={{ transition: "stroke-dasharray 450ms ease, stroke-dashoffset 450ms ease" }}
+            style={{ transition: "stroke-dasharray 240ms cubic-bezier(0.2, 0.7, 0.2, 1), stroke-dashoffset 240ms cubic-bezier(0.2, 0.7, 0.2, 1)" }}
           >
             <title>{`${a.name}: ${formatINR(a.value)}`}</title>
           </circle>
         ))}
       </svg>
       {centerLabel ? (
-        <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center">
-          <span className="text-[0.72rem] font-semibold uppercase tracking-wide text-muted">{centerLabel}</span>
-          <span className="headline text-lg">{centerValue}</span>
+        <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
+          <span className="kicker text-muted">{centerLabel}</span>
+          {centerValue ? <span className="mt-0.5 text-xl font-semibold leading-tight text-ink tabular">{centerValue}</span> : null}
         </div>
       ) : null}
     </div>
@@ -50,18 +53,18 @@ export function Donut({ slices, centerLabel, centerValue, size = 190 }: { slices
 export function DonutWithLegend({ slices, centerLabel, centerValue }: { slices: Slice[]; centerLabel?: string; centerValue?: string }) {
   const total = slices.reduce((s, x) => s + Math.max(x.value, 0), 0) || 1;
   return (
-    <div className="flex flex-col items-center gap-5 sm:flex-row">
+    <div className="flex flex-col items-center gap-5 sm:flex-row sm:gap-6">
       <Donut slices={slices} centerLabel={centerLabel} centerValue={centerValue} />
-      <ul className="w-full space-y-2.5">
+      <ul className="w-full divide-y divide-rule border-y border-rule">
         {slices.map((s) => (
-          <li key={s.name} className="flex items-center justify-between gap-3 text-sm">
-            <span className="flex items-center gap-2">
-              <span aria-hidden className="inline-block h-3 w-3" style={{ background: s.color }} />
+          <li key={s.name} className="flex min-h-11 items-center justify-between gap-3 py-2 text-sm">
+            <span className="flex items-center gap-2 leading-snug text-ink-2">
+              <span aria-hidden className="inline-block h-3 w-3 shrink-0" style={{ background: s.color }} />
               {s.name}
             </span>
-            <span className="text-right">
-              <span className="font-semibold tabular">{formatINR(s.value)}</span>
-              <span className="ml-2 text-xs text-muted">{((Math.max(s.value, 0) / total) * 100).toFixed(1)}%</span>
+            <span className="shrink-0 text-right tabular">
+              <span className="font-semibold text-ink">{formatINR(s.value)}</span>
+              <span className="ml-2 inline-block min-w-12 text-xs text-muted">{((Math.max(s.value, 0) / total) * 100).toFixed(1)}%</span>
             </span>
           </li>
         ))}

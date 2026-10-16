@@ -5,8 +5,9 @@ import type { ComponentProps } from "react";
 import { InView } from "../in-view";
 
 // Recharts is large, so charts load only when they come near the viewport. The
-// placeholder matches the chart height to avoid layout shift.
-const PLACEHOLDER = "h-[300px] w-full bg-paper-2/70 md:h-[340px]";
+// placeholder is a calm, still paper-2 block at exactly the chart's height
+// (h-75 = 300px, md:h-85 = 340px, as in charts.tsx), so nothing shifts on load.
+const PLACEHOLDER = "h-75 w-full bg-paper-2 md:h-85";
 const loading = () => <div aria-hidden className={PLACEHOLDER} />;
 
 const StackedAreaChart = dynamic(() => import("./charts").then((m) => m.StackedArea), { ssr: false, loading });

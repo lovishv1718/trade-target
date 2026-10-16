@@ -22,15 +22,15 @@ export default function ShareAnalysisPage() {
   const [lead, ...rest] = stories;
   return (
     <>
-      <SectionMasthead title={section.name} description={section.description} crumbs={[{ label: "Home", href: "/" }]} count={stories.length} />
+      <SectionMasthead title={section.name} description={section.description} accent="company" crumbs={[{ label: "Home", href: "/" }]} count={stories.length} />
       <div className="wrap mt-6">
         <article className="border-b border-rule pb-8">
           <Link prefetch={false} href={lead.path} className="group grid gap-6 md:grid-cols-[1.3fr_1fr] md:items-center">
             <Photo image={lead.image} sizes="(min-width: 768px) 700px, 100vw" aspect="aspect-[16/9]" priority />
             <div>
               <Kicker label="Fundamental analysis" />
-              <h2 className="headline mt-1.5 text-[1.9rem] leading-tight md:text-[2.3rem]">{lead.title}</h2>
-              <p className="mt-3 text-[1.05rem] leading-relaxed text-[#3a4453]">{lead.standfirst}</p>
+              <h2 className="headline mt-1.5 text-3xl md:text-4xl">{lead.title}</h2>
+              <p className="mt-3 text-md leading-relaxed text-ink-2 md:text-lg md:leading-relaxed">{lead.standfirst}</p>
               <StoryMeta story={lead} className="mt-3" />
             </div>
           </Link>
@@ -43,7 +43,7 @@ export default function ShareAnalysisPage() {
         </div>
 
         <section className="mt-14" aria-label="Companies covered">
-          <SectionHeader title="Companies covered" />
+          <SectionHeader title="Companies covered" accent="company" />
           <div className="table-wrap mt-4">
             <table className="data-table">
               <thead>
@@ -59,12 +59,12 @@ export default function ShareAnalysisPage() {
                   .map((s) => (
                     <tr key={s.slug}>
                       <td>
-                        <Link prefetch={false} href={s.path} className="font-semibold hover:text-ipo hover:underline">
+                        <Link prefetch={false} href={s.path} className="font-semibold underline-offset-2 hover:underline">
                           {company(s.title)}
                         </Link>
                       </td>
-                      <td>{formatDate(s.date)}</td>
-                      <td className="text-right">{s.readTime} min</td>
+                      <td className="tabular">{formatDate(s.date)}</td>
+                      <td className="tabular text-right">{s.readTime} min</td>
                     </tr>
                   ))}
               </tbody>

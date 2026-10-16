@@ -18,7 +18,7 @@ export default function StockMarketIqPage() {
   const tools = getCalculators().filter((c) => ["sip-calculator", "cagr-calculator", "lumpsum-calculator", "step-up-sip-calculator"].includes(c.slug));
   return (
     <>
-      <SectionMasthead title={section.name} description={section.description} accent="accent" crumbs={[{ label: "Home", href: "/" }]} count={stories.length} />
+      <SectionMasthead title={section.name} description={section.description} accent="learn" crumbs={[{ label: "Home", href: "/" }]} count={stories.length} />
       <div className="wrap mt-6 grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px]">
         <div>
           <LeadStory story={lead} priority />
@@ -29,13 +29,13 @@ export default function StockMarketIqPage() {
           </div>
         </div>
         <aside className="space-y-8">
-          <section aria-label="Start here" className="bg-white p-5">
-            <p className="kicker text-accent-ink">Start here</p>
-            <ol className="mt-2 space-y-3">
+          <section aria-label="Start here" className="border-t-[3px] border-learn pt-3">
+            <p className="kicker text-learn">Start here</p>
+            <ol className="mt-2 divide-y divide-rule">
               {stories.slice(0, 5).map((s, i) => (
-                <li key={s.slug} className="flex gap-3">
-                  <span className="headline text-xl text-accent/80">{i + 1}</span>
-                  <Link href={s.path} className="font-semibold leading-snug hover:underline">
+                <li key={s.slug} className="flex gap-3 py-3">
+                  <span aria-hidden className="tabular w-5 shrink-0 text-xl font-semibold leading-snug text-learn">{i + 1}</span>
+                  <Link href={s.path} className="text-md font-semibold leading-snug underline-offset-2 hover:underline">
                     {s.title}
                   </Link>
                 </li>
@@ -43,12 +43,12 @@ export default function StockMarketIqPage() {
             </ol>
           </section>
           <section aria-label="Calculators">
-            <SectionHeader title="Put it to work" accent="accent" />
+            <SectionHeader title="Put it to work" accent="learn" />
             <ul className="mt-2 divide-y divide-rule">
               {tools.map((c) => (
                 <li key={c.slug}>
-                  <Link href={`/calculators/${c.slug}/`} className="flex justify-between py-2.5 font-semibold hover:text-accent-ink">
-                    {c.name} <span aria-hidden className="text-accent-ink">→</span>
+                  <Link href={`/calculators/${c.slug}/`} className="group flex min-h-11 items-center justify-between gap-3 py-2 font-semibold underline-offset-2 hover:underline">
+                    {c.name} <span aria-hidden className="text-learn transition-transform duration-150 ease-out group-hover:translate-x-0.5 motion-reduce:transition-none">→</span>
                   </Link>
                 </li>
               ))}

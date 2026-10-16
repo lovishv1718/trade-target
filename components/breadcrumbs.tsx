@@ -4,20 +4,24 @@ import { JsonLd } from "./json-ld";
 export function Breadcrumbs({ items, current }: { items: { label: string; href: string }[]; current?: string }) {
   const all = current ? [...items, { label: current, href: "" }] : items;
   return (
-    <nav aria-label="Breadcrumb" className="text-[0.82rem] text-muted">
-      <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
+    <nav aria-label="Breadcrumb" className="text-xs text-muted sm:text-sm">
+      <ol className="flex min-w-0 flex-wrap items-center gap-x-2">
         {items.map((c) => (
-          <li key={c.href} className="flex items-center gap-1.5">
-            <Link prefetch={false} href={c.href} className="hover:text-ink hover:underline">
+          <li key={c.href} className="flex items-center gap-2">
+            <Link
+              prefetch={false}
+              href={c.href}
+              className="inline-flex items-center py-1 underline-offset-2 hover:text-ink hover:underline pointer-coarse:min-h-11"
+            >
               {c.label}
             </Link>
-            <span aria-hidden className="text-ink/25">
+            <span aria-hidden className="text-faint">
               /
             </span>
           </li>
         ))}
         {current ? (
-          <li aria-current="page" className="line-clamp-1 max-w-[50ch] text-ink/70">
+          <li aria-current="page" className="min-w-0 max-w-full truncate py-1 text-ink-2 sm:max-w-[60ch]">
             {current}
           </li>
         ) : null}

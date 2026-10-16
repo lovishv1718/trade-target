@@ -29,9 +29,9 @@ function Row({ label, a, b, strong = false, better }: { label: string; a: number
   const fmt = (v: number | string) => (typeof v === "number" ? formatINR(v) : v);
   return (
     <tr className={`border-t border-rule ${strong ? "font-bold" : ""}`}>
-      <td className="py-2 pr-2 text-muted">{label}</td>
-      <td className={`py-2 text-right tabular ${better === "new" ? "bg-ipo/5" : ""}`}>{fmt(a)}</td>
-      <td className={`py-2 text-right tabular ${better === "old" ? "bg-ipo/5" : ""}`}>{fmt(b)}</td>
+      <td className="py-2 pr-2 text-ink-2">{label}</td>
+      <td className={`whitespace-nowrap px-2 py-2 text-right tabular ${better === "new" ? "bg-paper-2" : ""}`}>{fmt(a)}</td>
+      <td className={`whitespace-nowrap px-2 py-2 text-right tabular ${better === "old" ? "bg-paper-2" : ""}`}>{fmt(b)}</td>
     </tr>
   );
 }
@@ -114,12 +114,12 @@ export function IncomeTaxCalculator() {
             }
           >
             <div className="overflow-x-auto">
-              <table className="w-full text-[0.9rem]">
+              <table className="w-full text-sm">
                 <thead>
                   <tr>
                     <th className="pb-2 text-left font-semibold text-muted"> </th>
-                    <th className={`pb-2 text-right font-bold ${cmp.better === "new" ? "text-ipo" : ""}`}>New regime{cmp.better === "new" ? " ✓" : ""}</th>
-                    <th className={`pb-2 text-right font-bold ${cmp.better === "old" ? "text-ipo" : ""}`}>Old regime{cmp.better === "old" ? " ✓" : ""}</th>
+                    <th scope="col" className={`whitespace-nowrap px-2 pb-2 pt-1 text-right font-bold text-ink ${cmp.better === "new" ? "bg-paper-2" : ""}`}>New regime{cmp.better === "new" ? " ✓" : ""}</th>
+                    <th scope="col" className={`whitespace-nowrap px-2 pb-2 pt-1 text-right font-bold text-ink ${cmp.better === "old" ? "bg-paper-2" : ""}`}>Old regime{cmp.better === "old" ? " ✓" : ""}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -130,12 +130,12 @@ export function IncomeTaxCalculator() {
                   <Row label="Rebate / relief" a={-(cmp.new.rebate + cmp.new.marginalRelief87A)} b={-(cmp.old.rebate + cmp.old.marginalRelief87A)} better={cmp.better} />
                   <Row label="Surcharge" a={cmp.new.surcharge} b={cmp.old.surcharge} better={cmp.better} />
                   <Row label="Cess (4%)" a={cmp.new.cess} b={cmp.old.cess} better={cmp.better} />
-                  <tr className="border-t-2 border-navy font-bold">
+                  <tr className="border-t-2 border-ink font-bold text-ink">
                     <td className="py-2">Total tax</td>
-                    <td className={`py-2 text-right ${cmp.better === "new" ? "bg-ipo/5" : ""}`}>
+                    <td className={`whitespace-nowrap px-2 py-2 text-right ${cmp.better === "new" ? "bg-paper-2" : ""}`}>
                       <AnimatedValue value={cmp.new.totalTax} />
                     </td>
-                    <td className={`py-2 text-right ${cmp.better === "old" ? "bg-ipo/5" : ""}`}>
+                    <td className={`whitespace-nowrap px-2 py-2 text-right ${cmp.better === "old" ? "bg-paper-2" : ""}`}>
                       <AnimatedValue value={cmp.old.totalTax} />
                     </td>
                   </tr>
@@ -284,10 +284,10 @@ export function HraCalculator() {
       <CalcSection title="The three limits">
         <div className="grid gap-px border border-rule bg-rule sm:grid-cols-3">
           {r.limits.map((l) => (
-            <div key={l.key} className={`bg-white px-4 py-4 ${r.binding === l.key ? "outline-2 -outline-offset-2 outline-accent" : ""}`}>
+            <div key={l.key} className={`bg-white px-4 py-4 ${r.binding === l.key ? "outline-2 -outline-offset-2 outline-ink" : ""}`}>
               <p className="text-sm text-muted">{l.label}</p>
-              <p className="headline mt-1 text-2xl tabular">{formatINR(l.amount)}</p>
-              {r.binding === l.key ? <p className="mt-1 text-xs font-bold uppercase tracking-wide text-accent-ink">Lowest, so this is exempt</p> : null}
+              <p className="mt-1 text-2xl font-semibold text-ink tabular">{formatINR(l.amount)}</p>
+              {r.binding === l.key ? <p className="kicker mt-1.5 text-ink">Lowest, so this is exempt</p> : null}
             </div>
           ))}
         </div>
@@ -337,7 +337,7 @@ export function HraCalculator() {
         />
         <p className="mt-4 text-sm text-muted">
           From FY 2026-27 the Income Tax Rules, 2026 extend the 50% limit to Bengaluru, Hyderabad, Pune and Ahmedabad. HRA exemption is not available in the new
-          regime. Use the result in the <Link href="/calculators/income-tax-calculator/" className="text-ipo underline">income tax calculator</Link>.
+          regime. Use the result in the <Link href="/calculators/income-tax-calculator/" className="link">income tax calculator</Link>.
         </p>
       </CalcSection>
     </>

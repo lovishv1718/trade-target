@@ -372,7 +372,7 @@ export function SwpCalculator() {
             value={r.finalValue}
             sub={
               r.depletedAtMonth ? (
-                <span className="font-semibold text-gold">Money runs out in month {r.depletedAtMonth} (year {Math.ceil(r.depletedAtMonth / 12)})</span>
+                <span className="font-semibold text-down">Money runs out in month {r.depletedAtMonth} (year {Math.ceil(r.depletedAtMonth / 12)})</span>
               ) : (
                 <>after withdrawing {formatINRCompact(r.totalWithdrawn)} over {yrs(years)}</>
               )
@@ -482,7 +482,7 @@ export function CagrCalculator() {
               <DonutWithLegend
                 slices={[
                   { name: "Value left", value: end, color: COLORS.invested },
-                  { name: "Loss", value: start - end, color: "#c3282c" },
+                  { name: "Loss", value: start - end, color: "#c80000" },
                 ]}
               />
             )}

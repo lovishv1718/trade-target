@@ -158,7 +158,7 @@ export function NpsCalculator() {
           </>
         }
         results={
-          <ResultPanel label={`NPS corpus at ${retireAge}`} value={r.corpus} sub={<>Monthly pension of about <strong className="text-gold">{formatINR(r.monthlyPension)}</strong></>}>
+          <ResultPanel label={`NPS corpus at ${retireAge}`} value={r.corpus} sub={<>Monthly pension of about <strong className="font-semibold text-ink tabular">{formatINR(r.monthlyPension)}</strong></>}>
             <DonutWithLegend
               slices={[
                 { name: "Lump sum you can withdraw", value: r.lumpSum, color: COLORS.returns },
@@ -174,15 +174,15 @@ export function NpsCalculator() {
               />
             </div>
             {compare ? (
-              <div className="mt-3 grid grid-cols-2 gap-3 border-t border-rule pt-3 text-sm">
+              <div className="mt-4 grid grid-cols-2 gap-px border border-rule bg-rule text-sm">
                 {[
                   ["20% annuity", at20],
                   ["40% annuity", at40],
                 ].map(([label, x]) => {
                   const v = x as typeof at20;
                   return (
-                    <div key={label as string} className="bg-paper p-3">
-                      <p className="font-semibold">{label as string}</p>
+                    <div key={label as string} className="bg-white p-3">
+                      <p className="font-semibold text-ink">{label as string}</p>
                       <p className="mt-1 text-muted">Lump sum</p>
                       <p className="font-semibold tabular">{formatINRCompact(v.lumpSum)}</p>
                       <p className="mt-1 text-muted">Pension</p>

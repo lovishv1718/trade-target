@@ -3,13 +3,15 @@
 import { marketSession } from "@/lib/market";
 import { useNow } from "@/lib/use-now";
 
+/** Live or closed, readable without colour: a filled dot and green label when open, a hollow dot and muted label otherwise. */
 export function MarketStatusBadge() {
   const now = useNow();
-  if (!now) return <span className="h-5" />;
+  // Same box before the clock is known, so nothing shifts when the label arrives
+  if (!now) return <span aria-hidden className="inline-block h-4 w-28" />;
   const s = marketSession(now);
   return (
-    <span className={`inline-flex items-center gap-1.5 text-[0.75rem] font-semibold ${s.open ? "text-up-ink" : "text-muted"}`}>
-      <span aria-hidden className={`inline-block h-1.5 w-1.5 rounded-full ${s.open ? "bg-up" : "bg-muted/60"}`} />
+    <span className={`inline-flex items-center gap-1.5 text-xs font-semibold ${s.open ? "text-up" : "text-muted"}`}>
+      <span aria-hidden className={`inline-block size-2 rounded-full ${s.open ? "bg-up" : "border border-muted"}`} />
       {s.label}
     </span>
   );

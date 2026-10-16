@@ -3,7 +3,18 @@
 import { Bar, BarChart, CartesianGrid, Cell, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { formatNumber } from "@/lib/format";
 
-const PALETTE = ["#10284a", "#d9480f", "#0c7c8c", "#f2b233", "#1c5fb8", "#7a8699"];
+// Literal hex: Recharts attributes can't read CSS variables. Mirrors the site tokens.
+const PALETTE = ["#000000", "#d99a12", "#1f4fb4", "#0b6676", "#5a37a3", "#c8c0b0"];
+const GRID = "#e2dccf";
+const AXIS = "#c8c0b0";
+const TICK = { fontSize: 12, fill: "#625e57" };
+const UP = "#00703c";
+const DOWN = "#c80000";
+const TOOLTIP = { fontSize: 14, border: "1px solid #c8c0b0", borderRadius: 0, background: "#ffffff", color: "#000000", padding: "6px 10px" };
+const LEGEND = { fontSize: 12, color: "#2e2b27", paddingTop: 8 };
+
+/** Total height of the figure; the lazy placeholder reserves exactly this. */
+export const CHART_FIGURE_CLASS = "h-[324px] md:h-[364px]";
 
 type Series = { name: string; data: number[] };
 
@@ -26,49 +37,59 @@ export function ArticleChart({ type, categories, series }: { type: "bar" | "line
   const hasNegative = series.some((s) => s.data.some((d) => d < 0));
   const isPct = keys.some((k) => /%|growth|roe|roce|share/i.test(k)) || type === "share";
 
+  const tickFmt = (v: number) => (isPct ? `${v}%` : fmt(v));
+  const tipFmt = (v: unknown) => (isPct ? `${fmt(Number(v))}%` : fmt(Number(v)));
+
   return (
-    <figure className="not-prose border border-rule bg-white p-3 pt-4 md:p-5">
-      <div className="h-[280px] w-full md:h-[320px]">
+    <figure className={`art-chart not-prose flex w-full flex-col border-t border-ink pt-3 ${CHART_FIGURE_CLASS}`}>
+      <div className="tabular min-h-0 w-full flex-1">
         <ResponsiveContainer width="100%" height="100%">
           {type === "line" ? (
             <LineChart data={data} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
-              <CartesianGrid stroke="#ece7de" vertical={false} />
-              <XAxis dataKey="name" tick={{ fontSize: 12, fill: "#5a6475" }} tickLine={false} axisLine={{ stroke: "#d8d1c4" }} />
-              <YAxis tick={{ fontSize: 12, fill: "#5a6475" }} tickLine={false} axisLine={false} width={48} tickFormatter={(v) => (isPct ? `${v}%` : fmt(v))} />
-              <Tooltip formatter={(v) => (isPct ? `${fmt(Number(v))}%` : fmt(Number(v)))} contentStyle={{ fontSize: 13, borderColor: "#e3ddd2" }} />
-              <Legend wrapperStyle={{ fontSize: 13 }} />
+              <CartesianGrid stroke={GRID} vertical={false} />
+              <XAxis dataKey="name" tick={TICK} tickLine={false} axisLine={{ stroke: AXIS }} />
+              <YAxis tick={TICK} tickLine={false} axisLine={false} width={48} tickFormatter={tickFmt} />
+              <Tooltip formatter={tipFmt} contentStyle={TOOLTIP} cursor={{ stroke: AXIS }} />
+              <Legend wrapperStyle={LEGEND} iconType="plainline" />
               {keys.map((k, i) => (
-                <Line key={k} type="monotone" dataKey={k} stroke={PALETTE[i % PALETTE.length]} strokeWidth={2.5} dot={{ r: 3.5 }} isAnimationActive={false} />
+                <Line
+                  key={k}
+                  type="monotone"
+                  dataKey={k}
+                  stroke={PALETTE[i % PALETTE.length]}
+                  strokeWidth={2}
+                  dot={{ r: 3, strokeWidth: 0, fill: PALETTE[i % PALETTE.length] }}
+                  activeDot={{ r: 4.5, strokeWidth: 0 }}
+                  isAnimationActive={false}
+                />
               ))}
             </LineChart>
           ) : (
             <BarChart data={data} margin={{ top: 8, right: 12, left: 0, bottom: 0 }} layout={type === "share" ? "vertical" : "horizontal"}>
-              <CartesianGrid stroke="#ece7de" vertical={type === "share"} horizontal={type !== "share"} />
+              <CartesianGrid stroke={GRID} vertical={type === "share"} horizontal={type !== "share"} />
               {type === "share" ? (
                 <>
-                  <XAxis type="number" tick={{ fontSize: 12, fill: "#5a6475" }} tickFormatter={(v) => `${v}%`} axisLine={false} tickLine={false} />
-                  <YAxis type="category" dataKey="name" tick={{ fontSize: 12, fill: "#5a6475" }} width={80} axisLine={false} tickLine={false} />
+                  <XAxis type="number" tick={TICK} tickFormatter={(v) => `${v}%`} axisLine={false} tickLine={false} />
+                  <YAxis type="category" dataKey="name" tick={TICK} width={80} axisLine={{ stroke: AXIS }} tickLine={false} />
                 </>
               ) : (
                 <>
-                  <XAxis dataKey="name" tick={{ fontSize: 12, fill: "#5a6475" }} tickLine={false} axisLine={{ stroke: "#d8d1c4" }} interval={0} />
-                  <YAxis tick={{ fontSize: 12, fill: "#5a6475" }} tickLine={false} axisLine={false} width={56} tickFormatter={(v) => (isPct ? `${v}%` : fmt(v))} />
+                  <XAxis dataKey="name" tick={TICK} tickLine={false} axisLine={{ stroke: AXIS }} interval={0} />
+                  <YAxis tick={TICK} tickLine={false} axisLine={false} width={56} tickFormatter={tickFmt} />
                 </>
               )}
-              <Tooltip cursor={{ fill: "rgba(16,40,74,0.06)" }} formatter={(v) => (isPct ? `${fmt(Number(v))}%` : fmt(Number(v)))} contentStyle={{ fontSize: 13, borderColor: "#e3ddd2" }} />
-              {!single ? <Legend wrapperStyle={{ fontSize: 13 }} /> : null}
+              <Tooltip cursor={{ fill: "rgba(0,0,0,0.04)" }} formatter={tipFmt} contentStyle={TOOLTIP} />
+              {!single ? <Legend wrapperStyle={LEGEND} iconType="square" iconSize={10} /> : null}
               {keys.map((k, i) => (
                 <Bar key={k} dataKey={k} fill={PALETTE[i % PALETTE.length]} maxBarSize={56} isAnimationActive={false}>
-                  {single && hasNegative
-                    ? data.map((d, j) => <Cell key={j} fill={Number(d[k]) < 0 ? "#c3282c" : "#10284a"} />)
-                    : null}
+                  {single && hasNegative ? data.map((d, j) => <Cell key={j} fill={Number(d[k]) < 0 ? DOWN : UP} />) : null}
                 </Bar>
               ))}
             </BarChart>
           )}
         </ResponsiveContainer>
       </div>
-      <figcaption className="mt-2 text-xs text-muted">Chart data as published in the original article.</figcaption>
+      <figcaption className="mt-2 shrink-0 text-xs leading-snug text-muted">Chart data as published in the original article.</figcaption>
     </figure>
   );
 }

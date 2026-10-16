@@ -5,7 +5,9 @@ import type { ComponentProps } from "react";
 import { InView } from "../in-view";
 
 // Charts sit mid-article, so Recharts loads only when a chart comes near the viewport.
-const PLACEHOLDER = "h-[318px] w-full border border-rule bg-white md:h-[370px]";
+// The placeholder is a still paper panel at exactly the figure's height (CHART_FIGURE_CLASS
+// in article-chart.tsx: h-[324px] md:h-[364px]), so nothing moves when the chart arrives.
+const PLACEHOLDER = "art-chart h-[324px] w-full bg-paper-2 md:h-[364px]";
 
 const Chart = dynamic(() => import("./article-chart").then((m) => m.ArticleChart), {
   ssr: false,

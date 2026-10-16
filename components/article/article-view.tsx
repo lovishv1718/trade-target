@@ -22,6 +22,7 @@ import { SectionHeader } from "../section-header";
 import { StoryLink, StoryTile } from "../story";
 import { ArticleBody } from "./article-body";
 import { AuthorAvatar, AuthorBox, DisclaimerBox, FaqSection, KeyTakeaways } from "./article-parts";
+import { ReadingProgress } from "./reading-progress";
 import { ShareButtons } from "./share-buttons";
 import { TableOfContents } from "./toc";
 
@@ -78,94 +79,120 @@ export function ArticleView({ article }: { article: Article }) {
   const updated = new Date(article.modified).getTime() - new Date(article.date).getTime() > 3600_000;
   const credit = article.image?.credit && article.image.credit !== "TradeTarget" ? `Photo: ${article.image.credit}` : "Image: TradeTarget";
 
+  const stamp = (iso: string) => <time dateTime={iso}>{formatDateTime(iso)}</time>;
+
   return (
     <>
+      <ReadingProgress targetId="article-main" />
       <div className="wrap pt-5 md:pt-7">
         <Breadcrumbs items={getArticleCrumbs(article)} current={article.title} />
 
-        <div className="mt-5 grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px] xl:gap-14">
-          <article className="min-w-0 max-w-[760px]">
-            <Kicker label={article.kicker} />
-            <h1 className="headline mt-2 text-[2rem] leading-[1.12] md:text-[2.7rem]">{article.title}</h1>
-            <p className="mt-4 text-[1.15rem] leading-relaxed text-[#3a4453] md:text-[1.25rem]">{article.standfirst}</p>
+        <div className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px] xl:gap-14">
+          <article id="article-main" className="min-w-0 max-w-[760px]">
+            <header>
+              <Kicker label={article.kicker} />
+              <h1 className="headline mt-3 max-w-[22ch] text-balance text-3xl md:text-4xl xl:text-5xl">{article.title}</h1>
+              <p className="mt-4 max-w-[60ch] text-lg leading-normal text-ink-2 md:mt-5 md:text-xl">{article.standfirst}</p>
 
-            <div className="mt-5 flex flex-col gap-4 border-y border-rule py-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-center gap-3">
-                <AuthorAvatar author={author} size={46} />
-                <div className="text-sm leading-snug">
-                  <p>
-                    By{" "}
-                    <Link prefetch={false} href={`/author/${author.slug}/`} className="font-semibold text-ink hover:underline">
-                      {author.name}
-                    </Link>
-                    <span className="text-muted">, {author.role}</span>
-                  </p>
-                  <p className="text-muted">
-                    {updated ? "Updated " : "Published "}
-                    <time dateTime={updated ? article.modified : article.date}>{formatDateTime(updated ? article.modified : article.date)}</time>
-                    <span> · {article.readTime} min read</span>
-                  </p>
+              <div className="mt-6 flex flex-col gap-4 border-y border-rule py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+                <div className="flex min-w-0 items-center gap-3">
+                  <AuthorAvatar author={author} size={44} />
+                  <div className="min-w-0">
+                    <p className="text-md leading-snug text-ink-2">
+                      By{" "}
+                      <Link prefetch={false} href={`/author/${author.slug}/`} className="font-semibold text-ink decoration-1 underline-offset-4 hover:underline">
+                        {author.name}
+                      </Link>
+                      <span className="text-muted">, {author.role}</span>
+                    </p>
+                    <p className="tabular mt-1 flex flex-wrap gap-x-2 text-sm leading-snug text-muted">
+                      <span>Published {stamp(article.date)}</span>
+                      {updated ? (
+                        <>
+                          <span aria-hidden>·</span>
+                          <span>Updated {stamp(article.modified)}</span>
+                        </>
+                      ) : null}
+                      <span aria-hidden>·</span>
+                      <span>{article.readTime} min read</span>
+                    </p>
+                  </div>
+                </div>
+                <div className="shrink-0">
+                  <ShareButtons title={article.title} path={article.path} compact />
                 </div>
               </div>
-              <ShareButtons title={article.title} path={article.path} compact />
-            </div>
+            </header>
 
             {article.image ? (
               <figure className="mt-6">
                 <div className="relative aspect-[16/9] overflow-hidden bg-paper-2">
-                  <Image src={article.image.src} alt={article.image.alt} fill priority sizes="(min-width: 1024px) 760px, 100vw" className="object-cover" />
+                  <Image
+                    src={article.image.src}
+                    alt={article.image.alt}
+                    fill
+                    priority
+                    sizes="(min-width: 1024px) 760px, 100vw"
+                    className="img-fade object-cover"
+                  />
                 </div>
-                <figcaption className="mt-2 text-[0.85rem] leading-snug text-muted">
-                  {article.image.caption && article.image.caption !== article.title ? <span className="text-ink/80">{article.image.caption}. </span> : null}
-                  <span>{credit}</span>
+                <figcaption className="mt-2 text-sm leading-normal text-ink-2">
+                  {article.image.caption && article.image.caption !== article.title ? <span>{article.image.caption}. </span> : null}
+                  <span className="text-xs text-muted">{credit}</span>
                 </figcaption>
               </figure>
             ) : null}
 
-            <div className="mt-6 space-y-4">
-              <TableOfContents headings={headings} variant="inline" />
-              {article.summary ? <KeyTakeaways text={article.summary} /> : null}
-            </div>
+            {/* Reading column: one measure (66ch of body type) for everything the reader reads */}
+            <div className="mt-8 max-w-[66ch] text-lg">
+              {article.summary || headings.length > 1 ? (
+                <div className="mb-8 space-y-6">
+                  {article.summary ? <KeyTakeaways text={article.summary} /> : null}
+                  <TableOfContents headings={headings} variant="inline" />
+                </div>
+              ) : null}
 
-            <div className="mt-7">
               <ArticleBody source={article.body} />
-            </div>
 
-            <FaqSection faqs={article.faqs} />
+              <FaqSection faqs={article.faqs} />
 
-            {article.tags.length ? (
-              <div className="mt-10 flex flex-wrap items-center gap-2">
-                <span className="text-sm font-semibold text-muted">Topics</span>
-                {article.tags.map((t) => (
-                  <span key={t} className="border border-rule bg-white px-2.5 py-1 text-sm text-[#3a4453]">
-                    {t}
-                  </span>
-                ))}
+              <div className="mt-12 space-y-5 border-t border-rule pt-5">
+                {article.tags.length ? (
+                  <div>
+                    <p className="kicker text-muted">Topics</p>
+                    <ul className="mt-2 flex flex-wrap gap-2">
+                      {article.tags.map((t) => (
+                        <li key={t} className="tag">
+                          {t}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
+                <ShareButtons title={article.title} path={article.path} />
               </div>
-            ) : null}
 
-            <div className="mt-8 border-t border-rule pt-5">
-              <ShareButtons title={article.title} path={article.path} />
-            </div>
-
-            <div className="mt-8 space-y-6">
-              <DisclaimerBox />
-              <AuthorBox author={author} />
+              <div className="mt-10 space-y-10">
+                <DisclaimerBox />
+                <AuthorBox author={author} />
+              </div>
             </div>
           </article>
 
-          <aside className="hidden lg:block">
-            <div className="sticky top-16 space-y-8 pt-1">
+          <aside className="hidden lg:block" aria-label="Article tools">
+            <div className="sticky top-20 space-y-10 pt-1">
               <TableOfContents headings={headings} variant="rail" />
               {calcs.length ? (
-                <div className="border-t-[3px] border-accent bg-white p-4">
-                  <p className="kicker text-accent-ink">Work it out</p>
-                  <ul className="mt-2 divide-y divide-rule">
+                <div className="border-t-2 border-ink pt-3">
+                  <p className="kicker text-ink">Work it out</p>
+                  <ul className="mt-2 divide-y divide-rule border-b border-rule">
                     {calcs.map((c) => (
                       <li key={c.slug}>
-                        <Link prefetch={false} href={`/calculators/${c.slug}/`} className="flex items-center justify-between py-2.5 text-[0.95rem] font-semibold hover:text-accent-ink">
-                          {c.name}
-                          <span aria-hidden className="text-accent-ink">→</span>
+                        <Link prefetch={false} href={`/calculators/${c.slug}/`} className="group flex min-h-11 items-center justify-between gap-3 py-2 text-md font-semibold text-ink">
+                          <span className="decoration-1 underline-offset-4 group-hover:underline">{c.name}</span>
+                          <span aria-hidden className="text-muted transition-transform duration-150 ease-out group-hover:translate-x-0.5 group-hover:text-ink motion-reduce:transition-none">
+                            →
+                          </span>
                         </Link>
                       </li>
                     ))}
@@ -177,27 +204,34 @@ export function ArticleView({ article }: { article: Article }) {
         </div>
       </div>
 
-      <div className="mt-14">
-        <NewsletterBand id="article-newsletter" />
+      {/* End of article: what to read next, on the same grid as the article and its rail */}
+      <div className="wrap mt-16 grid gap-12 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-10 xl:gap-14">
+        {related.length ? (
+          <section aria-label="Related stories" className="min-w-0">
+            <SectionHeader title="Related stories" accent="var(--color-ink)" />
+            <div className="mt-5 grid gap-x-6 gap-y-10 sm:grid-cols-2">
+              {related.map((r) => (
+                <StoryTile key={r.slug} story={r} headingSize="text-lg" />
+              ))}
+            </div>
+          </section>
+        ) : null}
+
+        <section aria-label="Latest" className="min-w-0">
+          <SectionHeader title="Latest from TradeTarget" href="/news/" accent="var(--color-ink)" />
+          <ul className="mt-2 grid gap-x-8 sm:grid-cols-2 lg:grid-cols-1">
+            {latest.map((s) => (
+              <li key={s.slug} className="border-b border-rule last:border-b-0">
+                <StoryLink story={s} />
+              </li>
+            ))}
+          </ul>
+        </section>
       </div>
 
-      <section className="wrap mt-12" aria-label="Related stories">
-        <SectionHeader title="Related stories" accent="accent" />
-        <div className="mt-5 grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
-          {related.map((r) => (
-            <StoryTile key={r.slug} story={r} />
-          ))}
-        </div>
-      </section>
-
-      <section className="wrap mt-12" aria-label="Latest">
-        <SectionHeader title="Latest from TradeTarget" href="/news/" />
-        <div className="mt-2 grid gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
-          {latest.slice(0, 3).map((s) => (
-            <StoryLink key={s.slug} story={s} />
-          ))}
-        </div>
-      </section>
+      <div className="mt-16">
+        <NewsletterBand id="article-newsletter" />
+      </div>
 
       <JsonLd
         data={{

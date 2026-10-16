@@ -22,5 +22,10 @@ export function InView({ children, placeholderClass, margin = "300px" }: { child
     return () => obs.disconnect();
   }, [margin]);
   if (visible) return <>{children}</>;
-  return <div ref={ref} aria-hidden className={placeholderClass} />;
+  // A calm, still block that reserves the chart's height: no shimmer or looping animation, hidden from assistive tech.
+  const calm = placeholderClass
+    .split(/\s+/)
+    .filter((c) => c && !/(^|:)animate-/.test(c))
+    .join(" ");
+  return <div ref={ref} aria-hidden="true" data-placeholder="" className={calm} />;
 }
