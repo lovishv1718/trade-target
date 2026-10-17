@@ -40,12 +40,12 @@ export default async function CalculatorPage({ params }: Params) {
     <div className="wrap pt-5 md:pt-7">
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Calculators", href: "/calculators/" }]} current={calc.name} />
       <header className="mt-4 max-w-3xl">
-        <p className="kicker text-accent-ink">{calc.category} calculator</p>
-        <h1 className="headline mt-1 text-[2.1rem] leading-tight md:text-[2.6rem]">{calc.name}</h1>
-        <p className="mt-2 text-[1.08rem] leading-relaxed text-[#3a4453]">{calc.description}</p>
+        <p className="kicker text-learn">{calc.category} calculator</p>
+        <h1 className="headline mt-1.5 text-3xl md:text-4xl">{calc.name}</h1>
+        <p className="mt-3 text-lg leading-relaxed text-ink-2">{calc.description}</p>
       </header>
 
-      <div className="mt-7">
+      <div className="mt-6 md:mt-8">
         <Widget />
       </div>
 
@@ -53,23 +53,25 @@ export default async function CalculatorPage({ params }: Params) {
         <FaqSection faqs={calc.faqs} />
       </div>
 
-      <p className="mt-8 max-w-3xl border-l-4 border-rule pl-4 text-sm text-muted">
+      <p className="mt-8 max-w-3xl border-l-2 border-rule-strong pl-4 text-sm leading-normal text-muted">
         Results are estimates based on the figures you enter and the assumptions stated above. They are not a promise of returns or a quote from any lender, and
         not investment or tax advice.
       </p>
 
       <div className="mt-14 grid gap-10 lg:grid-cols-[1fr_1.4fr]">
         <section aria-label="Related calculators">
-          <SectionHeader title="Related calculators" href="/calculators/" linkLabel="All" accent="accent" />
+          <SectionHeader title="Related calculators" href="/calculators/" linkLabel="All" accent="learn" />
           <ul className="mt-3 divide-y divide-rule">
             {related.map((c) => (
               <li key={c.slug}>
-                <Link prefetch={false} href={`/calculators/${c.slug}/`} className="group flex items-center justify-between gap-4 py-3.5">
+                <Link prefetch={false} href={`/calculators/${c.slug}/`} className="group flex min-h-11 items-center justify-between gap-4 py-3.5">
                   <span>
-                    <span className="headline block text-[1.1rem] group-hover:underline">{c.name}</span>
-                    <span className="text-sm text-muted">{c.short}</span>
+                    <span className="headline block text-lg">{c.name}</span>
+                    <span className="mt-0.5 block text-sm leading-normal text-muted">{c.short}</span>
                   </span>
-                  <span aria-hidden className="text-accent-ink">→</span>
+                  <span aria-hidden className="shrink-0 text-muted transition-transform duration-150 ease-out group-hover:translate-x-0.5 group-hover:text-ink">
+                    →
+                  </span>
                 </Link>
               </li>
             ))}

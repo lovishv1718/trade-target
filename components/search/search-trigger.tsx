@@ -10,7 +10,7 @@ function Glass({ className = "" }: { className?: string }) {
   return (
     <svg aria-hidden className={className} width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8">
       <circle cx="7" cy="7" r="5.2" />
-      <path d="M11 11l3.8 3.8" strokeLinecap="round" />
+      <path d="M11 11l3.8 3.8" strokeLinecap="square" />
     </svg>
   );
 }
@@ -18,21 +18,22 @@ function Glass({ className = "" }: { className?: string }) {
 export function SearchTrigger({ variant }: { variant: "box" | "icon" }) {
   if (variant === "icon") {
     return (
-      <button type="button" onClick={openSearch} aria-label="Search" className="flex h-11 w-11 items-center justify-center hover:bg-white/10">
+      <button type="button" onClick={openSearch} aria-label="Search" className="flex h-11 w-11 shrink-0 items-center justify-center text-ink-2 hover:text-ink">
         <Glass />
       </button>
     );
   }
+  // Drawn as a .field so it reads as the search input it opens
   return (
     <button
       type="button"
       onClick={openSearch}
       aria-label="Search stories, IPOs and calculators"
-      className="hidden w-64 items-center gap-2 border border-rule bg-paper px-3 py-2 text-left text-sm text-muted hover:border-navy/40 md:flex lg:w-80"
+      className="field mt-0 hidden w-64 items-center gap-2.5 text-left text-sm text-muted md:flex lg:w-72 xl:w-80"
     >
-      <Glass className="text-navy" />
-      <span className="flex-1">Search stories, IPOs, calculators</span>
-      <kbd className="border border-rule bg-white px-1.5 text-[0.7rem] text-muted">/</kbd>
+      <Glass className="shrink-0 text-ink" />
+      <span className="min-w-0 flex-1 truncate">Search stories, IPOs, calculators</span>
+      <kbd className="shrink-0 border border-rule-strong bg-paper px-1.5 font-sans text-2xs font-semibold leading-normal text-muted">/</kbd>
     </button>
   );
 }

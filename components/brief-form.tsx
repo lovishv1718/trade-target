@@ -1,15 +1,35 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 
 type Props = { contentTypes: string[]; volumes: string[] };
 
 const FREE_DOMAINS = /@(gmail|yahoo|hotmail|outlook|rediffmail|icloud)\./i;
 
+const FIELDS: { key: string; id: string; label: string }[] = [
+  { key: "name", id: "bf-name", label: "Name" },
+  { key: "company", id: "bf-company", label: "Company" },
+  { key: "email", id: "bf-email", label: "Work email" },
+  { key: "contentType", id: "bf-type", label: "Content type" },
+  { key: "volume", id: "bf-volume", label: "Monthly volume" },
+];
+
 export function BriefForm({ contentTypes, volumes }: Props) {
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [attempt, setAttempt] = useState(0);
   const [name, setName] = useState("");
+  const summaryRef = useRef<HTMLDivElement>(null);
+  const doneRef = useRef<HTMLDivElement>(null);
+
+  // After a failed submit, move focus to the error summary so the problems are read out first.
+  useEffect(() => {
+    if (attempt && Object.keys(errors).length) summaryRef.current?.focus();
+  }, [attempt, errors]);
+
+  useEffect(() => {
+    if (status === "done") doneRef.current?.focus();
+  }, [status]);
 
   function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -23,6 +43,7 @@ export function BriefForm({ contentTypes, volumes }: Props) {
     if (!data.get("contentType")) next.contentType = "Choose a content type";
     if (!data.get("volume")) next.volume = "Choose a monthly volume";
     setErrors(next);
+    setAttempt((n) => n + 1);
     if (Object.keys(next).length) return;
     setName(String(data.get("name")).split(" ")[0]);
     setStatus("sending");
@@ -31,43 +52,89 @@ export function BriefForm({ contentTypes, volumes }: Props) {
 
   if (status === "done") {
     return (
-      <div role="status" className="border-t-[3px] border-results bg-white p-6">
-        <p className="kicker text-results-ink">Brief received</p>
-        <p className="headline mt-1 text-2xl">Thanks, {name}. An editor will reply within one working day.</p>
-        <p className="mt-2 text-muted">
+      <div ref={doneRef} tabIndex={-1} role="status" className="border-t-[3px] border-success bg-white p-5 md:p-6">
+        <p className="kicker text-success">Brief received</p>
+        <p className="headline mt-1.5 text-2xl">Thanks, {name}. An editor will reply within one working day.</p>
+        <p className="mt-2 max-w-prose text-md leading-normal text-ink-2">
           We’ll suggest a writer and an outline for the first piece. This preview does not send the form anywhere yet; on launch it will go to business@tradetarget.in.
         </p>
-        <button type="button" onClick={() => setStatus("idle")} className="mt-4 text-sm font-semibold text-navy underline">
+        <button
+          type="button"
+          onClick={() => {
+            setErrors({});
+            setAttempt(0);
+            setStatus("idle");
+          }}
+          className="btn btn-tertiary mt-3"
+        >
           Send another brief
         </button>
       </div>
     );
   }
 
-  const field = "mt-1.5 block w-full border bg-white px-3 py-2.5 text-[0.98rem] outline-none focus:border-navy";
-  const err = (k: string) => (errors[k] ? <p className="mt-1 text-sm text-down">{errors[k]}</p> : null);
-  const cls = (k: string) => `${field} ${errors[k] ? "border-down" : "border-rule"}`;
+  const sending = status === "sending";
+  const errorId = (k: string) => `bf-${k}-error`;
+  const err = (k: string) =>
+    errors[k] ? (
+      <p id={errorId(k)} className="field-error">
+        {errors[k]}
+      </p>
+    ) : null;
+  const a11y = (k: string, hint?: string) => {
+    const ids = [errors[k] ? errorId(k) : "", hint ?? ""].filter(Boolean).join(" ");
+    return { "aria-invalid": errors[k] ? true : undefined, "aria-describedby": ids || undefined } as const;
+  };
+  const errorList = FIELDS.filter((f) => errors[f.key]);
+  const label = (htmlFor: string, children: ReactNode) => (
+    <label htmlFor={htmlFor} className="field-label">
+      {children}
+    </label>
+  );
 
   return (
-    <form onSubmit={submit} noValidate className="grid gap-4 border-t-[3px] border-accent bg-white p-5 sm:grid-cols-2 md:p-6">
+    <form onSubmit={submit} noValidate aria-busy={sending || undefined} className="grid gap-5 border-t-[3px] border-ink bg-white p-5 sm:grid-cols-2 md:p-6">
+      {errorList.length ? (
+        <div ref={summaryRef} tabIndex={-1} role="alert" className="border-l-[3px] border-error bg-paper px-4 py-3 sm:col-span-2">
+          <p className="text-base font-semibold text-ink">
+            {errorList.length === 1 ? "Check one detail before sending" : `Check ${errorList.length} details before sending`}
+          </p>
+          <ul className="mt-1.5 space-y-1 text-sm">
+            {errorList.map((f) => (
+              <li key={f.key}>
+                <a
+                  href={`#${f.id}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById(f.id)?.focus();
+                  }}
+                  className="link font-semibold text-error decoration-current"
+                >
+                  {f.label}: {errors[f.key]}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
       <div>
-        <label htmlFor="bf-name" className="text-sm font-semibold">Name</label>
-        <input id="bf-name" name="name" autoComplete="name" className={cls("name")} aria-invalid={!!errors.name} />
+        {label("bf-name", "Name")}
+        <input id="bf-name" name="name" autoComplete="name" className="field" {...a11y("name")} />
         {err("name")}
       </div>
       <div>
-        <label htmlFor="bf-company" className="text-sm font-semibold">Company</label>
-        <input id="bf-company" name="company" autoComplete="organization" className={cls("company")} aria-invalid={!!errors.company} />
+        {label("bf-company", "Company")}
+        <input id="bf-company" name="company" autoComplete="organization" className="field" {...a11y("company")} />
         {err("company")}
       </div>
       <div className="sm:col-span-2">
-        <label htmlFor="bf-email" className="text-sm font-semibold">Work email</label>
-        <input id="bf-email" name="email" type="email" autoComplete="email" className={cls("email")} aria-invalid={!!errors.email} />
+        {label("bf-email", "Work email")}
+        <input id="bf-email" name="email" type="email" autoComplete="email" className="field" {...a11y("email")} />
         {err("email")}
       </div>
       <div>
-        <label htmlFor="bf-type" className="text-sm font-semibold">Content type</label>
-        <select id="bf-type" name="contentType" defaultValue="" className={cls("contentType")} aria-invalid={!!errors.contentType}>
+        {label("bf-type", "Content type")}
+        <select id="bf-type" name="contentType" defaultValue="" className="field" {...a11y("contentType")}>
           <option value="" disabled>
             Choose one
           </option>
@@ -78,8 +145,8 @@ export function BriefForm({ contentTypes, volumes }: Props) {
         {err("contentType")}
       </div>
       <div>
-        <label htmlFor="bf-volume" className="text-sm font-semibold">Monthly volume</label>
-        <select id="bf-volume" name="volume" defaultValue="" className={cls("volume")} aria-invalid={!!errors.volume}>
+        {label("bf-volume", "Monthly volume")}
+        <select id="bf-volume" name="volume" defaultValue="" className="field" {...a11y("volume")}>
           <option value="" disabled>
             Choose one
           </option>
@@ -90,21 +157,25 @@ export function BriefForm({ contentTypes, volumes }: Props) {
         {err("volume")}
       </div>
       <div className="sm:col-span-2">
-        <label htmlFor="bf-deadline" className="text-sm font-semibold">
-          First deadline <span className="font-normal text-muted">(optional)</span>
-        </label>
-        <input id="bf-deadline" name="deadline" type="date" className={`${field} border-rule`} />
+        {label(
+          "bf-deadline",
+          <>
+            First deadline <span className="font-normal text-muted">(optional)</span>
+          </>,
+        )}
+        <input id="bf-deadline" name="deadline" type="date" className="field sm:max-w-xs" />
       </div>
       <div className="sm:col-span-2">
-        <label htmlFor="bf-message" className="text-sm font-semibold">
-          What do you need? <span className="font-normal text-muted">(topics, audience, tone, links to examples)</span>
-        </label>
-        <textarea id="bf-message" name="message" rows={5} className={`${field} border-rule`} />
+        {label("bf-message", "What do you need?")}
+        <p id="bf-message-hint" className="field-hint mt-0.5">
+          Topics, audience, tone, links to examples
+        </p>
+        <textarea id="bf-message" name="message" rows={5} aria-describedby="bf-message-hint" className="field" />
       </div>
-      <div className="flex flex-col gap-3 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col-reverse gap-3 border-t border-rule pt-5 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-xs text-muted">We use these details only to reply to your brief.</p>
-        <button type="submit" disabled={status === "sending"} className="bg-accent-ink px-6 py-3 font-semibold text-white hover:bg-accent-700 disabled:opacity-60">
-          {status === "sending" ? "Sending…" : "Send brief"}
+        <button type="submit" disabled={sending} aria-busy={sending || undefined} className="btn btn-lg w-full sm:w-auto">
+          {sending ? "Sending…" : "Send brief"}
         </button>
       </div>
     </form>

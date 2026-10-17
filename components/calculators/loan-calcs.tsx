@@ -192,20 +192,20 @@ export function CarLoanCalculator() {
         results={
           <LoanResult emiValue={r.emi} principal={principal} interest={r.totalInterest} sub={<>on a loan of {formatINRCompact(principal)}</>}>
             {compare ? (
-              <table className="w-full text-sm">
+              <table className="w-full text-sm tabular">
                 <thead>
                   <tr className="text-left text-muted">
-                    <th className="pb-1 font-semibold">Tenure</th>
-                    <th className="pb-1 text-right font-semibold">EMI</th>
-                    <th className="pb-1 text-right font-semibold">Interest</th>
+                    <th scope="col" className="pb-2 pl-2 font-semibold">Tenure</th>
+                    <th scope="col" className="pb-2 text-right font-semibold">EMI</th>
+                    <th scope="col" className="pb-2 pr-2 text-right font-semibold">Interest</th>
                   </tr>
                 </thead>
                 <tbody>
                   {options.map((o) => (
-                    <tr key={o.years} className={`border-t border-rule ${o.years === years ? "font-bold" : ""}`}>
-                      <td className="py-1.5">{o.years} years</td>
-                      <td className="py-1.5 text-right tabular">{formatINR(o.emi)}</td>
-                      <td className="py-1.5 text-right tabular">{formatINR(o.interest)}</td>
+                    <tr key={o.years} className={`border-t border-rule ${o.years === years ? "bg-paper-2 font-bold text-ink" : "text-ink-2"}`} aria-current={o.years === years ? "true" : undefined}>
+                      <td className="py-2 pl-2">{o.years} years</td>
+                      <td className="py-2 text-right">{formatINR(o.emi)}</td>
+                      <td className="py-2 pr-2 text-right">{formatINR(o.interest)}</td>
                     </tr>
                   ))}
                 </tbody>

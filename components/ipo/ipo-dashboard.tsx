@@ -17,11 +17,16 @@ const FILTERS: { key: "all" | IpoStatus; label: string }[] = [
   { key: "listed", label: "Listed" },
 ];
 
+function signedText(value: number, digits: number) {
+  return `${value > 0 ? "+" : value < 0 ? "−" : ""}${formatNumber(Math.abs(value), digits)}`;
+}
+
+/** Signed figure: sign and colour together, never colour alone. */
 function Signed({ value, suffix = "", prefix = "" }: { value: number | null; suffix?: string; prefix?: string }) {
   if (value === null) return <span className="text-muted">–</span>;
-  const cls = value > 0 ? "text-up-ink" : value < 0 ? "text-down" : "text-muted";
+  const cls = value > 0 ? "text-up" : value < 0 ? "text-down" : "text-ink";
   return (
-    <span className={`font-semibold ${cls}`}>
+    <span className={`font-semibold tabular ${cls}`}>
       {value > 0 ? "+" : value < 0 ? "−" : ""}
       {prefix}
       {formatNumber(Math.abs(value), suffix === "%" ? 1 : 0)}
@@ -36,6 +41,8 @@ function dateRange(ipo: Ipo) {
   if (close) return `Closed ${formatDayMonth(close)}`;
   return "–";
 }
+
+const BOARD_LABEL = { mainboard: "Mainboard", sme: "SME" } as const;
 
 export function IpoDashboard({ ipos, buildDate }: { ipos: Ipo[]; buildDate: string }) {
   const params = useSearchParams();
@@ -55,142 +62,185 @@ export function IpoDashboard({ ipos, buildDate }: { ipos: Ipo[]; buildDate: stri
   const summary = summarise(boardIpos, today);
   const year = today.slice(0, 4);
   const withBrokers = boardIpos.filter((i) => i.brokers);
+  const boardName = BOARD_LABEL[board];
+  const filterLabel = FILTERS.find((f) => f.key === filter)?.label ?? "All";
 
-  const cards = [
-    { label: `Listed in ${year}`, value: summary.listedThisYear, tone: "border-navy" },
-    { label: "Open now", value: summary.open, tone: "border-ipo" },
-    { label: "Upcoming", value: summary.upcoming, tone: "border-gold" },
-    { label: "Gained on listing", value: summary.gained, tone: "border-up", valueClass: "text-up-ink" },
-    { label: "Fell on listing", value: summary.fell, tone: "border-down", valueClass: "text-down" },
+  const cards: { label: string; value: number; valueClass?: string }[] = [
+    { label: `Listed in ${year}`, value: summary.listedThisYear },
+    { label: "Open now", value: summary.open },
+    { label: "Upcoming", value: summary.upcoming },
+    { label: "Gained on listing", value: summary.gained, valueClass: "text-up" },
+    { label: "Fell on listing", value: summary.fell, valueClass: "text-down" },
   ];
 
   return (
     <div>
-      <div role="tablist" aria-label="IPO board" className="flex border-b border-rule">
-        {(["mainboard", "sme"] as const).map((b) => (
-          <button
-            key={b}
-            role="tab"
-            type="button"
-            aria-selected={board === b}
-            onClick={() => {
-              setBoard(b);
-              setFilter("all");
-              window.history.replaceState(null, "", b === "sme" ? "?board=sme" : window.location.pathname);
-            }}
-            className={`-mb-px border-b-[3px] px-4 py-2.5 text-[1rem] font-semibold ${board === b ? "border-ipo text-ink" : "border-transparent text-muted hover:text-ink"}`}
-          >
-            {b === "mainboard" ? "Mainboard" : "SME"}
-            <span className="ml-1.5 text-sm font-normal text-muted">({ipos.filter((i) => i.board === b).length})</span>
-          </button>
-        ))}
+      {/* Filters: board, then status */}
+      <div className="flex flex-col gap-3 border-y border-rule py-3 md:flex-row md:flex-wrap md:items-center md:gap-x-8">
+        <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Board">
+          <span className="kicker mr-1 w-14 text-muted md:w-auto">Board</span>
+          {(["mainboard", "sme"] as const).map((b) => (
+            <button
+              key={b}
+              type="button"
+              aria-pressed={board === b}
+              onClick={() => {
+                setBoard(b);
+                setFilter("all");
+                window.history.replaceState(null, "", b === "sme" ? "?board=sme" : window.location.pathname);
+              }}
+              className="chip"
+            >
+              {BOARD_LABEL[b]}
+              <span className="font-normal tabular opacity-80">{ipos.filter((i) => i.board === b).length}</span>
+            </button>
+          ))}
+        </div>
+        <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Filter by status">
+          <span className="kicker mr-1 w-14 text-muted md:w-auto">Status</span>
+          {FILTERS.map((f) => (
+            <button key={f.key} type="button" aria-pressed={filter === f.key} onClick={() => setFilter(f.key)} className="chip">
+              {f.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       <dl className="mt-5 grid grid-cols-2 gap-px border border-rule bg-rule sm:grid-cols-3 lg:grid-cols-5">
         {cards.map((c) => (
-          <div key={c.label} className={`border-t-[3px] bg-white px-4 py-3.5 ${c.tone}`}>
-            <dt className="text-[0.82rem] font-semibold text-muted">{c.label}</dt>
-            <dd className={`headline mt-1 text-[2rem] leading-none tabular ${c.valueClass ?? ""}`}>{c.value}</dd>
+          <div key={c.label} className="bg-white px-4 py-3">
+            <dt className="text-xs font-semibold text-muted">{c.label}</dt>
+            <dd className={`mt-1 text-3xl font-semibold leading-tight tabular ${c.valueClass ?? "text-ink"}`}>{c.value}</dd>
           </div>
         ))}
       </dl>
 
-      <div className="mt-6 flex flex-wrap items-center gap-2" role="group" aria-label="Filter by status">
-        <span className="mr-1 text-sm font-semibold text-muted">Status</span>
-        {FILTERS.map((f) => (
-          <button
-            key={f.key}
-            type="button"
-            aria-pressed={filter === f.key}
-            onClick={() => setFilter(f.key)}
-            className={`border px-3 py-1.5 text-sm font-semibold ${filter === f.key ? "border-navy bg-navy text-white" : "border-rule bg-white text-ink hover:border-navy/50"}`}
-          >
-            {f.label}
-          </button>
-        ))}
+      <div className="mt-6 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+        <h2 className="headline text-2xl">{boardName} IPOs</h2>
+        <p className="text-xs text-muted tabular" aria-live="polite">
+          {rows.length} of {boardIpos.length} shown · Status: {filterLabel}
+        </p>
       </div>
+      <p className="mt-1 text-xs text-muted sm:hidden">Swipe the table sideways for more columns. The company name stays in view.</p>
 
-      <div className="table-wrap mt-4">
+      <div className="table-wrap table-scroll mt-3" tabIndex={0} role="region" aria-label={`${boardName} IPOs table`}>
         <table className="data-table min-w-[960px]">
+          <caption className="sr-only">
+            {boardName} IPOs, status filter: {filterLabel}. GMP and listing gain show a plus or minus sign.
+          </caption>
           <thead>
             <tr>
-              <th className="sticky left-0 z-10 bg-navy">Company</th>
-              <th>Dates</th>
-              <th>Price band</th>
-              <th className="text-right">Lot size</th>
-              <th className="text-right">GMP</th>
-              <th className="text-right">Subscription</th>
-              <th>Listing</th>
-              <th className="text-right">Listing gain</th>
-              <th>Status</th>
+              <th scope="col" className="sticky-col">
+                Company
+              </th>
+              <th scope="col">Dates</th>
+              <th scope="col" className="num">
+                Price band
+              </th>
+              <th scope="col" className="num">
+                Lot size
+              </th>
+              <th scope="col" className="num">
+                GMP
+              </th>
+              <th scope="col" className="num">
+                Subscription
+              </th>
+              <th scope="col">Listing</th>
+              <th scope="col" className="num">
+                Listing gain
+              </th>
+              <th scope="col">Status</th>
             </tr>
           </thead>
           <tbody>
             {rows.length === 0 ? (
               <tr>
-                <td colSpan={9} className="py-8 text-center text-muted">
-                  No {board === "sme" ? "SME" : "mainboard"} IPOs match this status{filter === "open" || filter === "upcoming" ? " this week" : ""}.
+                <td colSpan={9} className="px-4 py-8">
+                  <p className="font-semibold text-ink">
+                    No {board === "sme" ? "SME" : "mainboard"} IPOs match this status{filter === "open" || filter === "upcoming" ? " this week" : ""}.
+                  </p>
+                  <p className="mt-1 text-sm text-muted">Try another status, or switch board.</p>
+                  <button type="button" className="chip mt-3" onClick={() => setFilter("all")}>
+                    Show all {board === "sme" ? "SME" : "mainboard"} IPOs
+                  </button>
                 </td>
               </tr>
             ) : (
-              rows.map(({ ipo, status }) => (
-                <tr key={ipo.slug}>
-                  <td className="sticky left-0 z-[1] bg-inherit">
-                    <Link prefetch={false} href={`/ipo/${ipo.slug}/`} className="font-semibold text-ink hover:text-ipo hover:underline">
-                      {ipo.name}
-                    </Link>
-                    <span className="block text-xs text-muted">
-                      {ipo.sector}
-                      {ipo.sample ? <span className="ml-1.5 border border-gold/70 px-1 text-[0.65rem] font-bold uppercase text-[#7a5300]">Sample</span> : null}
-                    </span>
-                  </td>
-                  <td className="whitespace-nowrap">{dateRange(ipo)}</td>
-                  <td className="whitespace-nowrap">{priceBandLabel(ipo)}</td>
-                  <td className="text-right">{ipo.lotSize ? formatNumber(ipo.lotSize) : "–"}</td>
-                  <td className="whitespace-nowrap text-right">
-                    {ipo.gmp === null ? (
-                      <span className="text-muted">–</span>
-                    ) : (
-                      <>
-                        <Signed value={ipo.gmp} prefix="₹" />
-                        <span className="block text-xs text-muted">{gmpPct(ipo) !== null ? `${gmpPct(ipo)!.toFixed(1)}%` : ""}</span>
-                      </>
-                    )}
-                  </td>
-                  <td className="text-right">{ipo.subscription?.total != null ? `${ipo.subscription.total.toFixed(2)}x` : <span className="text-muted">–</span>}</td>
-                  <td className="whitespace-nowrap">{ipo.dates.listing ? formatDayMonth(ipo.dates.listing) + (ipo.dates.listing.slice(0, 4) !== year ? ` ${ipo.dates.listing.slice(0, 4)}` : "") : "–"}</td>
-                  <td className="text-right">
-                    <Signed value={listingGainPct(ipo)} suffix="%" />
-                  </td>
-                  <td>
-                    <StatusPill status={status} />
-                  </td>
-                </tr>
-              ))
+              rows.map(({ ipo, status }) => {
+                const pct = gmpPct(ipo);
+                return (
+                  <tr key={ipo.slug}>
+                    <th scope="row" className="sticky-col min-w-36 font-normal sm:min-w-52">
+                      <Link prefetch={false} href={`/ipo/${ipo.slug}/`} className="font-semibold text-ink hover:text-ipo hover:underline">
+                        {ipo.name}
+                      </Link>
+                      <span className="mt-0.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-xs font-normal text-muted">
+                        {ipo.sector}
+                        {ipo.sample ? <span className="border border-company-mark px-1 text-2xs font-bold uppercase leading-snug tracking-caps text-company">Sample</span> : null}
+                      </span>
+                    </th>
+                    <td className="whitespace-nowrap tabular">{dateRange(ipo)}</td>
+                    <td className="num">{priceBandLabel(ipo)}</td>
+                    <td className="num">{ipo.lotSize ? formatNumber(ipo.lotSize) : "–"}</td>
+                    <td className="num">
+                      {ipo.gmp === null ? (
+                        <span className="text-muted">–</span>
+                      ) : (
+                        <>
+                          <Signed value={ipo.gmp} prefix="₹" />
+                          <span className="block text-xs text-muted">{pct !== null ? `${signedText(pct, 1)}%` : ""}</span>
+                        </>
+                      )}
+                    </td>
+                    <td className="num">{ipo.subscription?.total != null ? `${ipo.subscription.total.toFixed(2)}x` : <span className="text-muted">–</span>}</td>
+                    <td className="whitespace-nowrap tabular">
+                      {ipo.dates.listing ? formatDayMonth(ipo.dates.listing) + (ipo.dates.listing.slice(0, 4) !== year ? ` ${ipo.dates.listing.slice(0, 4)}` : "") : "–"}
+                    </td>
+                    <td className="num">
+                      <Signed value={listingGainPct(ipo)} suffix="%" />
+                    </td>
+                    <td>
+                      <StatusPill status={status} />
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>
       </div>
-      <p className="mt-2 text-xs text-muted">
+      <p className="mt-2 max-w-3xl text-xs leading-normal text-muted">
         GMP is the unofficial grey market premium per share and is not an indicator of listing price. Subscription is the overall number of times the issue was
         bid. Status is worked out from the issue dates and today’s date ({formatDayMonth(today)}).
       </p>
 
       {withBrokers.length ? (
-        <section className="mt-10" aria-labelledby="broker-heading">
-          <h2 id="broker-heading" className="headline text-[1.45rem]">
+        <section className="mt-12" aria-labelledby="broker-heading">
+          <h2 id="broker-heading" className="headline border-t border-ink pt-3 text-2xl">
             What brokers are saying
           </h2>
           <p className="mt-1 text-sm text-muted">Count of brokerage notes by view. Sample data.</p>
-          <div className="table-wrap mt-3">
+          <div className="table-wrap mt-3" tabIndex={0} role="region" aria-labelledby="broker-heading">
             <table className="data-table min-w-[640px]">
+              <caption className="sr-only">Brokerage notes by view for {boardName.toLowerCase()} IPOs</caption>
               <thead>
                 <tr>
-                  <th>Company</th>
-                  <th className="text-right">Apply</th>
-                  <th className="text-right">Neutral</th>
-                  <th className="text-right">Avoid</th>
-                  <th className="w-[40%]">Split</th>
+                  <th scope="col" className="sticky-col">
+                    Company
+                  </th>
+                  <th scope="col" className="num">
+                    Apply
+                  </th>
+                  <th scope="col" className="num">
+                    Neutral
+                  </th>
+                  <th scope="col" className="num">
+                    Avoid
+                  </th>
+                  <th scope="col" className="w-[40%]">
+                    Split
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -199,19 +249,19 @@ export function IpoDashboard({ ipos, buildDate }: { ipos: Ipo[]; buildDate: stri
                   const total = b.apply + b.neutral + b.avoid || 1;
                   return (
                     <tr key={ipo.slug}>
-                      <td>
-                        <Link prefetch={false} href={`/ipo/${ipo.slug}/`} className="font-semibold hover:text-ipo hover:underline">
+                      <th scope="row" className="sticky-col min-w-36 sm:min-w-52">
+                        <Link prefetch={false} href={`/ipo/${ipo.slug}/`} className="font-semibold text-ink hover:text-ipo hover:underline">
                           {ipo.name}
                         </Link>
-                      </td>
-                      <td className="text-right font-semibold">{b.apply}</td>
-                      <td className="text-right">{b.neutral}</td>
-                      <td className="text-right">{b.avoid}</td>
-                      <td>
-                        <div role="img" className="flex h-3 w-full overflow-hidden bg-paper-2" aria-label={`${b.apply} apply, ${b.neutral} neutral, ${b.avoid} avoid`}>
-                          <span className="bg-navy" style={{ width: `${(b.apply / total) * 100}%` }} />
-                          <span className="bg-gold" style={{ width: `${(b.neutral / total) * 100}%` }} />
-                          <span className="bg-accent-ink" style={{ width: `${(b.avoid / total) * 100}%` }} />
+                      </th>
+                      <td className="num font-semibold">{b.apply}</td>
+                      <td className="num">{b.neutral}</td>
+                      <td className="num">{b.avoid}</td>
+                      <td className="align-middle">
+                        <div role="img" className="flex h-2.5 w-full overflow-hidden bg-paper-2" aria-label={`${b.apply} apply, ${b.neutral} neutral, ${b.avoid} avoid`}>
+                          <span className="bg-up" style={{ width: `${(b.apply / total) * 100}%` }} />
+                          <span className="bg-rule-strong" style={{ width: `${(b.neutral / total) * 100}%` }} />
+                          <span className="bg-down" style={{ width: `${(b.avoid / total) * 100}%` }} />
                         </div>
                       </td>
                     </tr>
@@ -222,18 +272,18 @@ export function IpoDashboard({ ipos, buildDate }: { ipos: Ipo[]; buildDate: stri
           </div>
           <p className="mt-2 flex flex-wrap gap-4 text-xs text-muted">
             <span className="inline-flex items-center gap-1.5">
-              <span className="inline-block h-2.5 w-2.5 bg-navy" /> Apply
+              <span aria-hidden className="inline-block size-2.5 bg-up" /> Apply
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <span className="inline-block h-2.5 w-2.5 bg-gold" /> Neutral
+              <span aria-hidden className="inline-block size-2.5 bg-rule-strong" /> Neutral
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <span className="inline-block h-2.5 w-2.5 bg-accent-ink" /> Avoid
+              <span aria-hidden className="inline-block size-2.5 bg-down" /> Avoid
             </span>
           </p>
         </section>
       ) : (
-        <p className="mt-10 border border-rule bg-white px-4 py-3 text-sm text-muted">No brokerage views are tracked for {board === "sme" ? "SME" : "mainboard"} issues on this board yet.</p>
+        <p className="mt-12 border border-rule bg-white px-4 py-3 text-sm text-muted">No brokerage views are tracked for {board === "sme" ? "SME" : "mainboard"} issues on this board yet.</p>
       )}
     </div>
   );

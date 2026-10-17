@@ -20,27 +20,44 @@ export default function PhotoCreditsPage() {
   const credits = getPhotoCredits();
   const ipos = getIpos();
   return (
-    <div className="wrap pt-5 md:pt-7">
+    <div className="wrap pb-16 pt-5 md:pb-20 md:pt-7">
       <Breadcrumbs items={[{ label: "Home", href: "/" }]} current="Photo credits" />
-      <header className="mt-4 max-w-3xl">
-        <h1 className="headline text-[2.2rem] leading-tight md:text-[2.7rem]">Photo credits</h1>
-        <p className="mt-2 text-[1.05rem] text-[#3a4453]">
-          Photographs below come from Wikimedia Commons and are used under the licence shown. Graphics on other stories are TradeTarget’s own, carried over from
-          tradetarget.in. Team photos and client logos belong to TradeTarget and the respective companies.
+      <header className="mt-6 grid gap-4 border-b border-ink pb-6 md:mt-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-16">
+        <div className="max-w-3xl">
+          <h1 className="headline text-3xl md:text-4xl">Photo credits</h1>
+          <p className="mt-3 max-w-[66ch] text-lg leading-normal text-ink-2">
+            Photographs below come from Wikimedia Commons and are used under the licence shown. Graphics on other stories are TradeTarget’s own, carried over from
+            tradetarget.in. Team photos and client logos belong to TradeTarget and the respective companies.
+          </p>
+        </div>
+        <p className="text-sm tabular-nums text-muted">
+          <span className="font-semibold text-ink">{credits.length}</span> photographs credited
         </p>
       </header>
-      <div className="table-wrap mt-8">
-        <table className="data-table min-w-[880px]">
+      {/* Scrolls sideways on phones; focusable so keyboard users can scroll it too */}
+      <div className="-mx-4 overflow-x-auto px-4 md:mx-0 md:px-0" role="region" aria-label="Photo credits table" tabIndex={0}>
+        <table className="w-full min-w-[56rem] border-collapse text-left text-sm tabular-nums">
+          <caption className="sr-only">Photographs used on TradeTarget, with photographer, licence and the pages they appear on</caption>
           <thead>
-            <tr>
-              <th>Photo</th>
-              <th>Subject</th>
-              <th>Photographer</th>
-              <th>Licence</th>
-              <th>Used on</th>
+            <tr className="border-b border-rule-strong text-xs text-muted">
+              <th scope="col" className="w-36 py-3 pr-5 font-semibold">
+                Photo
+              </th>
+              <th scope="col" className="py-3 pr-5 font-semibold">
+                Subject and source
+              </th>
+              <th scope="col" className="py-3 pr-5 font-semibold">
+                Photographer
+              </th>
+              <th scope="col" className="py-3 pr-5 font-semibold">
+                Licence
+              </th>
+              <th scope="col" className="py-3 font-semibold">
+                Used on
+              </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-rule">
             {credits.map((c) => {
               const uses = [
                 ...c.usedOn.map((p) => ({ label: p.replace(/^\/|\/$/g, "").split("/").at(-1)!.replace(/-/g, " "), href: p })),
@@ -48,32 +65,38 @@ export default function PhotoCreditsPage() {
                 ...(SITE_USES[c.id] ?? []),
               ];
               return (
-                <tr key={c.id}>
-                  <td className="w-28">
-                    <Image src={c.src} alt={c.subject} width={112} height={Math.round((112 * c.height) / c.width)} className="h-auto w-28 object-cover" />
+                <tr key={c.id} className="align-top">
+                  <td className="py-4 pr-5">
+                    <Image
+                      src={c.src}
+                      alt={c.subject}
+                      width={112}
+                      height={Math.round((112 * c.height) / c.width)}
+                      className="img-fade h-auto w-28 bg-paper-2 object-cover"
+                    />
                   </td>
-                  <td>
-                    <span className="font-semibold">{c.subject}</span>
-                    <a href={c.sourceUrl} target="_blank" rel="noopener noreferrer" className="block text-xs text-ipo underline">
+                  <td className="py-4 pr-5">
+                    <span className="block text-md font-semibold leading-snug text-ink">{c.subject}</span>
+                    <a href={c.sourceUrl} target="_blank" rel="noopener noreferrer" className="link mt-1 inline-block text-xs text-ink-2">
                       {c.title}
                     </a>
                   </td>
-                  <td>{c.author}</td>
-                  <td className="whitespace-nowrap">
+                  <td className="py-4 pr-5 text-ink-2">{c.author}</td>
+                  <td className="whitespace-nowrap py-4 pr-5">
                     {c.licenseUrl ? (
-                      <a href={c.licenseUrl} target="_blank" rel="noopener noreferrer" className="text-ipo underline">
+                      <a href={c.licenseUrl} target="_blank" rel="noopener noreferrer" className="link">
                         {c.license}
                       </a>
                     ) : (
-                      c.license
+                      <span className="text-ink-2">{c.license}</span>
                     )}
                   </td>
-                  <td className="text-sm">
+                  <td className="py-4">
                     {uses.length ? (
-                      <ul className="space-y-0.5">
+                      <ul className="space-y-1">
                         {uses.map((u) => (
                           <li key={u.href}>
-                            <Link href={u.href} className="capitalize hover:underline">
+                            <Link href={u.href} className="link capitalize">
                               {u.label}
                             </Link>
                           </li>

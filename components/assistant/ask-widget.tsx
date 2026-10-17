@@ -25,13 +25,26 @@ export function AskWidget() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [thinking, setThinking] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const launcherRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const wasOpen = useRef(false);
 
   useEffect(() => {
-    listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: reduce ? "auto" : "smooth" });
   }, [messages, thinking]);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open) {
+      // Focus goes back to the launcher only after the panel has been open.
+      if (wasOpen.current) launcherRef.current?.focus({ preventScroll: true });
+      return;
+    }
+    wasOpen.current = true;
+    // Mouse and keyboard: straight into the question field. Touch: the panel, so the keyboard does not cover the sheet.
+    const fine = window.matchMedia("(pointer: fine)").matches;
+    (fine ? inputRef.current : panelRef.current)?.focus({ preventScroll: true });
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
@@ -67,70 +80,91 @@ export function AskWidget() {
     <>
       {!open ? (
         <button
+          ref={launcherRef}
           type="button"
+          aria-haspopup="dialog"
           onClick={() => setOpen(true)}
-          className="fixed bottom-4 right-4 z-40 flex items-center gap-2 bg-navy px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-navy/25 hover:bg-navy-800 md:bottom-6 md:right-6"
+          className="btn fixed right-4 bottom-4 z-40 shadow-overlay transition-[opacity,transform] duration-200 ease-out starting:translate-y-2 starting:opacity-0 motion-reduce:transition-none md:right-6 md:bottom-6"
         >
-          <span aria-hidden className="inline-block h-2 w-2 bg-gold" />
+          <svg aria-hidden width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6">
+            <path d="M2 2.5h12v8.5H7l-3.5 3v-3H2z" strokeLinejoin="miter" />
+          </svg>
           Ask TradeTarget
         </button>
       ) : null}
 
       {open ? (
         <div
+          ref={panelRef}
+          tabIndex={-1}
           role="dialog"
-          aria-label="Ask TradeTarget"
-          className="fixed inset-x-0 bottom-0 z-50 flex h-[85vh] flex-col border border-rule bg-white shadow-2xl sm:inset-x-auto sm:bottom-6 sm:right-6 sm:h-[560px] sm:w-[380px]"
+          aria-labelledby="ask-title"
+          aria-describedby="ask-notice"
+          className="fixed inset-x-0 bottom-0 z-50 flex h-[85vh] flex-col border border-ink bg-paper shadow-overlay transition-[opacity,transform] duration-200 ease-out starting:translate-y-2 starting:opacity-0 motion-reduce:transition-none sm:inset-x-auto sm:right-6 sm:bottom-6 sm:h-[560px] sm:max-h-[calc(100vh-3rem)] sm:w-[380px]"
         >
-          <div className="flex items-start justify-between gap-3 bg-navy px-4 py-3 text-white">
-            <div>
-              <p className="font-serif text-lg font-semibold leading-tight">
-                Ask Trade<span className="text-gold">Target</span>
-              </p>
-              <p className="mt-0.5 text-xs text-white/75">Preview · answers from our articles</p>
+          <div className="surface-ink flex items-start justify-between gap-3 px-4 py-3">
+            <div className="min-w-0">
+              <h2 id="ask-title" className="headline text-lg leading-snug">
+                Ask TradeTarget
+              </h2>
+              <p className="mt-0.5 text-xs text-muted">Preview · answers from our articles</p>
             </div>
-            <button type="button" onClick={() => setOpen(false)} className="px-1 text-sm font-semibold text-white/80 hover:text-white">
+            <button type="button" onClick={() => setOpen(false)} aria-label="Close Ask TradeTarget" className="btn btn-secondary btn-sm shrink-0">
               Close
             </button>
           </div>
-          <p className="border-b border-rule bg-gold/15 px-4 py-2 text-[0.8rem] leading-snug text-ink">
-            Explains market terms and personal finance rules. <strong>It does not give buy or sell advice.</strong>
+          <p id="ask-notice" className="border-b border-rule border-l-[3px] border-l-ink bg-paper-2 px-4 py-2.5 text-sm leading-snug text-ink-2">
+            Explains market terms and personal finance rules. <strong className="font-semibold text-ink">It does not give buy or sell advice.</strong>
           </p>
 
-          <div ref={listRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
+          <div ref={listRef} className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4">
             {messages.length === 0 ? (
               <div>
                 <p className="text-sm text-muted">Try one of these:</p>
-                <ul className="mt-2 space-y-2">
+                <ul className="mt-2 border-t border-rule">
                   {SUGGESTED.map((s) => (
-                    <li key={s}>
-                      <button type="button" onClick={() => ask(s)} className="w-full border border-rule px-3 py-2 text-left text-sm hover:border-navy hover:bg-paper">
-                        {s}
+                    <li key={s} className="border-b border-rule">
+                      <button
+                        type="button"
+                        onClick={() => ask(s)}
+                        className="group flex min-h-11 w-full items-center justify-between gap-3 py-2.5 text-left text-sm font-semibold leading-snug text-ink"
+                      >
+                        <span className="underline-offset-2 group-hover:underline">{s}</span>
+                        <span aria-hidden className="shrink-0 text-muted transition-transform duration-150 ease-out group-hover:translate-x-0.5 motion-reduce:transition-none">
+                          →
+                        </span>
                       </button>
                     </li>
                   ))}
                 </ul>
               </div>
             ) : null}
-            {messages.map((m, i) => (
-              <div key={i} className={m.role === "user" ? "flex justify-end" : ""}>
-                <div className={`max-w-[88%] px-3 py-2 text-sm leading-relaxed ${m.role === "user" ? "bg-navy text-white" : "border border-rule bg-paper"}`}>
-                  <p>{m.text}</p>
-                  {m.links?.length ? (
-                    <ul className="mt-2 space-y-1.5">
-                      {m.links.map((l) => (
-                        <li key={l.href}>
-                          <Link href={l.href} onClick={() => setOpen(false)} className="font-semibold text-ipo underline decoration-ipo/40 underline-offset-2 hover:decoration-ipo">
-                            {l.title}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : null}
+            <div role="log" aria-live="polite" aria-label="Conversation" className="space-y-3">
+              {messages.map((m, i) => (
+                <div key={i} className={m.role === "user" ? "flex justify-end" : ""}>
+                  <div className={`max-w-[88%] px-3 py-2 text-sm leading-relaxed ${m.role === "user" ? "bg-ink text-paper" : "border border-rule bg-white text-ink-2"}`}>
+                    <p>{m.text}</p>
+                    {m.links?.length ? (
+                      <ul className="mt-2 space-y-1.5 border-t border-rule pt-2">
+                        {m.links.map((l) => (
+                          <li key={l.href}>
+                            <Link href={l.href} onClick={() => setOpen(false)} className="link font-semibold">
+                              {l.title}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
+                  </div>
                 </div>
-              </div>
-            ))}
-            {thinking ? <p className="text-sm text-muted">Looking through our articles…</p> : null}
+              ))}
+              {thinking ? (
+                <p className="flex items-center gap-2 text-sm text-muted">
+                  <span aria-hidden className="inline-block size-1.5 animate-pulse bg-muted motion-reduce:animate-none" />
+                  Looking through our articles…
+                </p>
+              ) : null}
+            </div>
           </div>
 
           <form
@@ -138,19 +172,21 @@ export function AskWidget() {
               e.preventDefault();
               ask(input);
             }}
-            className="flex gap-2 border-t border-rule p-3"
+            className="flex items-start gap-2 border-t border-rule bg-paper p-3"
           >
             <label htmlFor="ask-input" className="sr-only">
               Your question
             </label>
             <input
+              ref={inputRef}
               id="ask-input"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask about IPOs, tax, EPF…"
-              className="min-w-0 flex-1 border border-rule px-3 py-2 text-sm outline-none focus:border-navy"
+              autoComplete="off"
+              className="field mt-0 min-w-0 flex-1"
             />
-            <button type="submit" disabled={!input.trim() || thinking} className="bg-accent-ink px-4 text-sm font-semibold text-white disabled:opacity-50">
+            <button type="submit" disabled={!input.trim() || thinking} aria-busy={thinking || undefined} className="btn shrink-0">
               Ask
             </button>
           </form>

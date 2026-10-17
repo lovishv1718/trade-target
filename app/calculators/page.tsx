@@ -26,47 +26,62 @@ export default function CalculatorsHub() {
     <div className="wrap pt-5 md:pt-7">
       <Breadcrumbs items={[{ label: "Home", href: "/" }]} current="Calculators" />
       <header className="mt-4 max-w-3xl">
-        <p className="kicker text-accent-ink">Tools</p>
-        <h1 className="headline mt-1 text-[2.2rem] leading-tight md:text-[2.7rem]">Calculators</h1>
-        <p className="mt-2 text-[1.08rem] leading-relaxed text-[#3a4453]">
+        <p className="kicker text-learn">Tools</p>
+        <h1 className="headline mt-1.5 text-3xl md:text-4xl lg:text-5xl">Calculators</h1>
+        <p className="mt-3 text-lg leading-relaxed text-ink-2">
           {calcs.length} calculators for investing, savings, retirement, loans and tax. Every result comes with a year-by-year table you can download and the formula,
           worked through with your numbers.
         </p>
       </header>
 
-      <section aria-label="Most used" className="mt-8 grid gap-px border border-rule bg-rule md:grid-cols-3">
-        {featured.map((c, i) => (
-          <Link prefetch={false} key={c.slug} href={`/calculators/${c.slug}/`} className="group flex flex-col justify-between bg-white p-6 hover:bg-paper">
-            <div>
-              <p className="kicker text-muted">Most used · {String(i + 1).padStart(2, "0")}</p>
-              <h2 className="headline mt-2 text-[1.6rem] leading-tight group-hover:underline">{c.name}</h2>
-              <p className="mt-2 text-[0.98rem] text-muted">{c.description}</p>
-            </div>
-            <span className="mt-5 text-sm font-semibold text-accent-ink">Open calculator →</span>
-          </Link>
-        ))}
+      <section aria-labelledby="most-used" className="mt-8 border-t-3 border-learn md:mt-10">
+        <h2 id="most-used" className="sr-only">
+          Most used
+        </h2>
+        <div className="grid gap-px border-x border-b border-rule bg-rule md:grid-cols-3">
+          {featured.map((c, i) => (
+            <Link prefetch={false} key={c.slug} href={`/calculators/${c.slug}/`} className="group flex flex-col justify-between bg-white p-5 hover:bg-paper md:p-6">
+              <div>
+                <p className="kicker text-muted tabular">Most used · {String(i + 1).padStart(2, "0")}</p>
+                <h3 className="headline mt-2 text-2xl">{c.name}</h3>
+                <p className="mt-2 text-md leading-normal text-ink-2">{c.description}</p>
+              </div>
+              <span className="mt-5 inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-ink">
+                Open calculator
+                <span aria-hidden className="inline-block transition-transform duration-150 ease-out group-hover:translate-x-0.5">
+                  →
+                </span>
+              </span>
+            </Link>
+          ))}
+        </div>
       </section>
 
-      <div className="mt-12 space-y-10">
+      <div className="mt-12 space-y-10 md:mt-14 md:space-y-12">
         {ORDER.map((group) => {
           const list = calcs.filter((c) => c.category === group);
           return (
-            <section key={group} aria-labelledby={`g-${group}`} className="grid gap-4 border-t-[3px] border-navy pt-3 md:grid-cols-[240px_1fr]">
+            <section key={group} aria-labelledby={`g-${group}`} className="grid gap-x-8 gap-y-3 border-t border-ink pt-3 md:grid-cols-[15rem_1fr]">
               <div>
-                <h2 id={`g-${group}`} className="headline text-[1.45rem]">
+                <h2 id={`g-${group}`} className="headline text-xl md:text-2xl">
                   {group}
                 </h2>
-                <p className="mt-1 text-sm text-muted">{GROUP_NOTES[group]}</p>
+                <p className="mt-1 text-sm leading-normal text-muted">{GROUP_NOTES[group]}</p>
+                <p className="kicker mt-2 text-learn tabular">
+                  {list.length} {list.length === 1 ? "calculator" : "calculators"}
+                </p>
               </div>
               <ul className="grid gap-x-8 sm:grid-cols-2">
                 {list.map((c) => (
                   <li key={c.slug} className="border-b border-rule">
-                    <Link prefetch={false} href={`/calculators/${c.slug}/`} className="group flex items-center justify-between gap-3 py-3">
+                    <Link prefetch={false} href={`/calculators/${c.slug}/`} className="group flex min-h-11 items-center justify-between gap-3 py-3">
                       <span>
-                        <span className="block font-semibold group-hover:text-accent-ink">{c.name}</span>
-                        <span className="text-sm text-muted">{c.short}</span>
+                        <span className="block text-md font-semibold leading-snug text-ink group-hover:underline group-hover:underline-offset-3">{c.name}</span>
+                        <span className="mt-0.5 block text-sm leading-normal text-muted">{c.short}</span>
                       </span>
-                      <span aria-hidden className="text-accent-ink">→</span>
+                      <span aria-hidden className="shrink-0 text-muted transition-transform duration-150 ease-out group-hover:translate-x-0.5 group-hover:text-ink">
+                        →
+                      </span>
                     </Link>
                   </li>
                 ))}

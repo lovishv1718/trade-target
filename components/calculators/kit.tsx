@@ -5,8 +5,10 @@ import { amountInWords, formatINR, formatNumber } from "@/lib/format";
 
 // ---------------------------------------------------------------------------
 // Animated numbers
+// A result eases to its new value in at most 240ms (ease-out), so a change reads
+// as movement from the old figure. Under reduced motion it jumps straight there.
 
-function useAnimatedNumber(target: number, duration = 450) {
+function useAnimatedNumber(target: number, duration = 240) {
   const [value, setValue] = useState(target);
   const from = useRef(target);
   const frame = useRef<number | null>(null);
@@ -69,6 +71,7 @@ export function SliderField({
   unit = "inr",
   decimals = 0,
   hint,
+  disabled = false,
 }: {
   label: string;
   value: number;
@@ -79,8 +82,10 @@ export function SliderField({
   unit?: Unit;
   decimals?: number;
   hint?: string;
+  disabled?: boolean;
 }) {
   const id = useId();
+  const hintId = `${id}-hint`;
   const [draft, setDraft] = useState<string | null>(null);
   const pct = ((clamp(value, min, max) - min) / (max - min)) * 100;
   const suffix = unit === "pct" ? "%" : unit === "years" ? (value === 1 ? "yr" : "yrs") : unit === "months" ? "mo" : "";
@@ -95,16 +100,18 @@ export function SliderField({
     unit === "inr" ? amountInWords(value) : unit === "years" ? `${value} ${value === 1 ? "year" : "years"}` : unit === "months" ? `${value} months${value >= 12 ? ` (${(value / 12).toFixed(value % 12 ? 1 : 0)} yrs)` : ""}` : null;
 
   return (
-    <div className="py-3.5">
+    <div className="calc-field py-4">
       <div className="flex items-center justify-between gap-3">
-        <label htmlFor={id} className="text-[0.95rem] font-semibold text-ink">
+        <label htmlFor={id} className="text-md font-semibold leading-snug text-ink">
           {label}
         </label>
-        <div className="flex items-center border border-rule bg-paper focus-within:border-navy">
-          {unit === "inr" ? <span className="pl-2.5 text-muted">₹</span> : null}
+        <div className="calc-num shrink-0">
+          {unit === "inr" ? <span className="calc-num-affix">₹</span> : null}
           <input
             id={id}
             inputMode="decimal"
+            disabled={disabled}
+            aria-describedby={hint ? hintId : undefined}
             value={draft ?? display(value, unit, decimals)}
             onChange={(e) => setDraft(e.target.value)}
             onFocus={(e) => {
@@ -115,9 +122,9 @@ export function SliderField({
             onKeyDown={(e) => {
               if (e.key === "Enter") (e.target as HTMLInputElement).blur();
             }}
-            className="w-[7.5rem] bg-transparent px-2 py-1.5 text-right text-[1rem] font-semibold tabular outline-none"
+            className="calc-num-input"
           />
-          {suffix ? <span className="pr-2.5 text-sm text-muted">{suffix}</span> : null}
+          {suffix ? <span className="calc-num-affix">{suffix}</span> : null}
         </div>
       </div>
       <input
@@ -126,35 +133,34 @@ export function SliderField({
         max={max}
         step={step}
         value={clamp(value, min, max)}
+        disabled={disabled}
         onChange={(e) => onChange(Number(e.target.value))}
         aria-label={`${label} slider`}
-        className="tt-range mt-3 w-full"
+        aria-valuetext={unit === "inr" ? `₹${formatNumber(value)}` : `${value}${suffix ? ` ${suffix}` : ""}`}
+        className="calc-range mt-1"
         style={{ ["--pct" as string]: `${pct}%` }}
       />
-      <div className="mt-1 flex justify-between text-[0.75rem] text-muted">
+      <div className="flex justify-between gap-2 text-xs text-muted tabular">
         <span>{unit === "inr" ? `₹${amountInWords(min)}` : `${min}${suffix && ` ${suffix}`}`}</span>
-        {words ? <span className="font-semibold text-accent-ink">{unit === "inr" ? `₹${words}` : words}</span> : null}
-        <span>{unit === "inr" ? `₹${amountInWords(max)}` : `${max}${suffix && ` ${suffix}`}`}</span>
+        {words ? <span className="text-center font-semibold text-ink-2">{unit === "inr" ? `₹${words}` : words}</span> : null}
+        <span className="text-right">{unit === "inr" ? `₹${amountInWords(max)}` : `${max}${suffix && ` ${suffix}`}`}</span>
       </div>
-      {hint ? <p className="mt-1.5 text-xs text-muted">{hint}</p> : null}
+      {hint ? (
+        <p id={hintId} className="mt-2 text-xs leading-normal text-muted">
+          {hint}
+        </p>
+      ) : null}
     </div>
   );
 }
 
 export function Segmented<T extends string>({ label, options, value, onChange }: { label: string; options: { value: T; label: string }[]; value: T; onChange: (v: T) => void }) {
   return (
-    <div className="py-3">
-      <p className="text-[0.95rem] font-semibold">{label}</p>
-      <div role="radiogroup" aria-label={label} className="mt-2 flex flex-wrap gap-1.5">
+    <div className="calc-field py-4">
+      <p className="text-md font-semibold leading-snug text-ink">{label}</p>
+      <div role="radiogroup" aria-label={label} className="calc-seg mt-2.5 flex flex-wrap gap-2">
         {options.map((o) => (
-          <button
-            key={o.value}
-            type="button"
-            role="radio"
-            aria-checked={value === o.value}
-            onClick={() => onChange(o.value)}
-            className={`border px-3 py-1.5 text-sm font-semibold ${value === o.value ? "border-navy bg-navy text-white" : "border-rule bg-white hover:border-navy/50"}`}
-          >
+          <button key={o.value} type="button" role="radio" aria-checked={value === o.value} onClick={() => onChange(o.value)} className="chip aria-checked:border-ink aria-checked:bg-ink aria-checked:text-paper">
             {o.label}
           </button>
         ))}
@@ -163,17 +169,17 @@ export function Segmented<T extends string>({ label, options, value, onChange }:
   );
 }
 
-export function Toggle({ label, checked, onChange, description }: { label: string; checked: boolean; onChange: (v: boolean) => void; description?: string }) {
+export function Toggle({ label, checked, onChange, description, disabled = false }: { label: string; checked: boolean; onChange: (v: boolean) => void; description?: string; disabled?: boolean }) {
   return (
-    <label className="flex cursor-pointer items-start justify-between gap-4 py-3">
+    <label className="calc-toggle flex min-h-11 items-center justify-between gap-4 py-3.5">
       <span>
-        <span className="block text-[0.95rem] font-semibold">{label}</span>
-        {description ? <span className="block text-xs text-muted">{description}</span> : null}
+        <span className="block text-md font-semibold leading-snug text-ink">{label}</span>
+        {description ? <span className="mt-0.5 block text-sm leading-normal text-muted">{description}</span> : null}
       </span>
-      <span className="relative mt-0.5 inline-flex shrink-0">
-        <input type="checkbox" role="switch" aria-label={label} checked={checked} onChange={(e) => onChange(e.target.checked)} className="peer sr-only" />
-        <span className="h-6 w-11 bg-rule transition-colors peer-checked:bg-navy peer-focus-visible:outline-2 peer-focus-visible:outline-accent" />
-        <span className="absolute left-0.5 top-0.5 h-5 w-5 bg-white shadow transition-transform peer-checked:translate-x-5" />
+      <span className="calc-switch">
+        <input type="checkbox" role="switch" aria-label={label} checked={checked} disabled={disabled} onChange={(e) => onChange(e.target.checked)} className="calc-switch-input sr-only" />
+        <span aria-hidden className="calc-switch-track" />
+        <span aria-hidden className="calc-switch-thumb" />
       </span>
     </label>
   );
@@ -182,11 +188,11 @@ export function Toggle({ label, checked, onChange, description }: { label: strin
 export function SelectField({ label, value, onChange, options }: { label: string; value: string; onChange: (v: string) => void; options: { value: string; label: string }[] }) {
   const id = useId();
   return (
-    <div className="py-3">
-      <label htmlFor={id} className="text-[0.95rem] font-semibold">
+    <div className="calc-field py-4">
+      <label htmlFor={id} className="block text-md font-semibold leading-snug text-ink">
         {label}
       </label>
-      <select id={id} value={value} onChange={(e) => onChange(e.target.value)} className="mt-2 block w-full border border-rule bg-white px-3 py-2 text-[0.95rem] font-semibold outline-none focus:border-navy">
+      <select id={id} value={value} onChange={(e) => onChange(e.target.value)} className="field mt-2 font-semibold">
         {options.map((o) => (
           <option key={o.value} value={o.value}>
             {o.label}
@@ -200,26 +206,32 @@ export function SelectField({ label, value, onChange, options }: { label: string
 // ---------------------------------------------------------------------------
 // Layout
 
+/**
+ * Inputs beside the result on wide screens, the result column sticky.
+ * Below lg the result column and panel dissolve (display: contents) so the black
+ * result band becomes a grid item that sticks to the bottom of the screen while
+ * the inputs scroll past: the number stays in view, under the thumb, while dragging.
+ */
 export function CalcLayout({ inputs, results }: { inputs: ReactNode; results: ReactNode }) {
   return (
-    <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] xl:gap-8">
-      <div className="border border-rule bg-white px-5 py-2 md:px-6">{inputs}</div>
-      <div className="lg:sticky lg:top-16">{results}</div>
+    <div className="grid items-start lg:grid-cols-2 lg:gap-x-6 xl:gap-x-8">
+      <div className="border border-rule bg-white px-4 py-1 md:px-6">{inputs}</div>
+      <div className="max-lg:contents lg:sticky lg:top-16">{results}</div>
     </div>
   );
 }
 
 export function ResultPanel({ label, value, format = "inr", decimals = 0, sub, children }: { label: string; value: number; format?: "inr" | "pct" | "num"; decimals?: number; sub?: ReactNode; children?: ReactNode }) {
   return (
-    <div className="bg-navy text-white">
-      <div className="px-5 pb-5 pt-5 md:px-6">
-        <p className="text-[0.9rem] font-semibold text-white/75">{label}</p>
-        <p className="mt-1 font-serif text-[2.4rem] font-semibold leading-none md:text-[2.9rem]">
+    <div className="max-lg:contents">
+      <div className="surface-ink z-10 px-4 py-4 max-lg:sticky max-lg:bottom-0 max-lg:z-[45] md:px-6 lg:py-5">
+        <p className="text-sm font-semibold leading-snug text-muted">{label}</p>
+        <p className="mt-1.5 text-4xl font-semibold leading-none text-ink lg:text-5xl">
           <AnimatedValue value={value} format={format} decimals={decimals} />
         </p>
-        {sub ? <div className="mt-2 text-sm text-white/75">{sub}</div> : null}
+        {sub ? <div className="mt-2 text-sm leading-normal text-ink-2">{sub}</div> : null}
       </div>
-      {children ? <div className="border-t border-white/10 bg-white px-5 py-4 text-ink md:px-6">{children}</div> : null}
+      {children ? <div className="border border-t-0 border-rule bg-white px-4 py-5 md:px-6">{children}</div> : null}
     </div>
   );
 }
@@ -228,12 +240,12 @@ export function StatRows({ rows }: { rows: { label: string; value: number; forma
   return (
     <dl className="divide-y divide-rule">
       {rows.map((r) => (
-        <div key={r.label} className="flex items-center justify-between gap-3 py-2">
-          <dt className="flex items-center gap-2 text-[0.92rem] text-muted">
-            {r.swatch ? <span aria-hidden className="inline-block h-2.5 w-2.5" style={{ background: r.swatch }} /> : null}
+        <div key={r.label} className="flex min-h-11 items-center justify-between gap-3 py-2">
+          <dt className={`flex items-center gap-2 text-sm leading-snug ${r.strong ? "font-semibold text-ink" : "text-ink-2"}`}>
+            {r.swatch ? <span aria-hidden className="inline-block h-2.5 w-2.5 shrink-0" style={{ background: r.swatch }} /> : null}
             {r.label}
           </dt>
-          <dd className={`text-right ${r.strong ? "text-[1.05rem] font-bold" : "font-semibold"}`}>
+          <dd className={`shrink-0 text-right text-ink ${r.strong ? "text-lg font-bold" : "text-md font-semibold"}`}>
             <AnimatedValue value={r.value} format={r.format ?? "inr"} decimals={r.decimals ?? 0} />
             {r.suffix ? <span className="ml-1 text-sm font-normal text-muted">{r.suffix}</span> : null}
           </dd>
@@ -245,9 +257,9 @@ export function StatRows({ rows }: { rows: { label: string; value: number; forma
 
 export function CalcSection({ title, children, aside }: { title: string; children: ReactNode; aside?: ReactNode }) {
   return (
-    <section className="mt-12">
-      <div className="flex flex-wrap items-end justify-between gap-3 border-b border-rule pb-2">
-        <h2 className="headline text-[1.45rem]">{title}</h2>
+    <section className="mt-12 md:mt-14">
+      <div className="flex flex-wrap items-end justify-between gap-3 border-t border-ink pt-3">
+        <h2 className="headline text-xl md:text-2xl">{title}</h2>
         {aside}
       </div>
       <div className="mt-5">{children}</div>
@@ -256,7 +268,7 @@ export function CalcSection({ title, children, aside }: { title: string; childre
 }
 
 export function Insight({ children }: { children: ReactNode }) {
-  return <p className="border-l-4 border-gold bg-white px-4 py-3 text-[0.95rem] leading-relaxed">{children}</p>;
+  return <p className="max-w-3xl border-l-2 border-ink bg-white px-4 py-3 text-md leading-relaxed text-ink-2">{children}</p>;
 }
 
 // ---------------------------------------------------------------------------
@@ -291,11 +303,12 @@ export function downloadCsv(filename: string, header: string[], rows: (string | 
 
 export function BreakdownTable<T>({ rows, columns, filename, initial = 6, unitLabel = "year" }: { rows: T[]; columns: Column<T>[]; filename: string; initial?: number; unitLabel?: string }) {
   const [expanded, setExpanded] = useState(false);
+  const tableId = useId();
   const shown = expanded ? rows : rows.slice(0, initial);
   return (
     <div>
       <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-muted">
+        <p className="text-sm text-muted tabular">
           {rows.length} {unitLabel}
           {rows.length === 1 ? "" : "s"}
         </p>
@@ -308,7 +321,7 @@ export function BreakdownTable<T>({ rows, columns, filename, initial = 6, unitLa
               rows.map((r) => columns.map((c) => c.value(r))),
             )
           }
-          className="inline-flex items-center gap-2 border border-navy px-3 py-1.5 text-sm font-semibold text-navy hover:bg-navy hover:text-white"
+          className="btn btn-secondary btn-sm"
         >
           <svg aria-hidden width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6">
             <path d="M7 1v8M3.5 5.5L7 9l3.5-3.5M1.5 12.5h11" />
@@ -316,12 +329,13 @@ export function BreakdownTable<T>({ rows, columns, filename, initial = 6, unitLa
           Download as CSV
         </button>
       </div>
-      <div className="table-wrap">
+      {/* Scrolls sideways on narrow screens; focusable so the keyboard can scroll it too */}
+      <div id={tableId} className="table-wrap" role="region" aria-label={`${unitLabel[0].toUpperCase()}${unitLabel.slice(1)}-by-${unitLabel} breakdown`} tabIndex={0}>
         <table className="data-table">
           <thead>
             <tr>
               {columns.map((c, i) => (
-                <th key={c.label} className={i === 0 ? "" : "text-right"}>
+                <th key={c.label} scope="col" className={i === 0 ? "" : "text-right"}>
                   {c.label}
                 </th>
               ))}
@@ -331,7 +345,7 @@ export function BreakdownTable<T>({ rows, columns, filename, initial = 6, unitLa
             {shown.map((r, i) => (
               <tr key={i}>
                 {columns.map((c, j) => (
-                  <td key={c.label} className={j === 0 ? "font-semibold" : "text-right"}>
+                  <td key={c.label} className={`whitespace-nowrap tabular ${j === 0 ? "font-semibold text-ink" : "text-right"}`}>
                     {cell(c.value(r), c.format, c.decimals)}
                   </td>
                 ))}
@@ -341,7 +355,7 @@ export function BreakdownTable<T>({ rows, columns, filename, initial = 6, unitLa
         </table>
       </div>
       {rows.length > initial ? (
-        <button type="button" onClick={() => setExpanded((e) => !e)} className="mt-3 w-full border border-rule bg-white py-2.5 text-sm font-semibold text-navy hover:border-navy">
+        <button type="button" aria-expanded={expanded} aria-controls={tableId} onClick={() => setExpanded((e) => !e)} className="btn btn-secondary btn-block mt-3">
           {expanded ? "Show fewer rows" : `Show all ${rows.length} ${unitLabel}s`}
         </button>
       ) : null}
@@ -354,25 +368,26 @@ export function BreakdownTable<T>({ rows, columns, filename, initial = 6, unitLa
 
 export function Formula({ formula, legend, steps }: { formula: string; legend: [string, string][]; steps: { label: string; expr: string }[] }) {
   return (
-    <div className="grid gap-6 md:grid-cols-[1.1fr_1fr]">
+    <div className="grid gap-6 md:grid-cols-2 lg:gap-8">
       <div>
-        <div className="overflow-x-auto border border-rule bg-white px-5 py-4 font-serif text-[1.25rem] italic text-navy">{formula}</div>
-        <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm">
+        <p className="kicker text-muted">Formula</p>
+        <div className="mt-2 overflow-x-auto border border-rule bg-white px-4 py-4 font-serif text-xl italic text-ink md:px-5">{formula}</div>
+        <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-sm leading-normal">
           {legend.map(([sym, desc]) => (
             <div key={sym} className="contents">
-              <dt className="font-serif font-semibold italic text-navy">{sym}</dt>
-              <dd className="text-muted">{desc}</dd>
+              <dt className="font-serif font-semibold italic text-ink">{sym}</dt>
+              <dd className="text-ink-2">{desc}</dd>
             </div>
           ))}
         </dl>
       </div>
-      <div className="border-l-4 border-accent bg-white px-5 py-4">
-        <p className="kicker text-accent-ink">With your numbers</p>
-        <ol className="mt-2 space-y-2 text-[0.95rem]">
+      <div>
+        <p className="kicker text-learn">With your numbers</p>
+        <ol className="mt-2 divide-y divide-rule border-y border-rule">
           {steps.map((s) => (
-            <li key={s.label}>
-              <span className="text-muted">{s.label}</span>
-              <span className="block overflow-x-auto whitespace-nowrap font-semibold tabular">{s.expr}</span>
+            <li key={s.label} className="py-2.5">
+              <span className="block text-sm leading-snug text-muted">{s.label}</span>
+              <span className="mt-0.5 block overflow-x-auto whitespace-nowrap text-md font-semibold text-ink tabular">{s.expr}</span>
             </li>
           ))}
         </ol>
@@ -382,4 +397,5 @@ export function Formula({ formula, legend, steps }: { formula: string; legend: [
 }
 
 export const inr = (n: number) => formatINR(n);
-export const COLORS = { invested: "#10284a", returns: "#f2b233", interest: "#d9480f", other: "#0c7c8c", muted: "#c9c2b5" };
+/** Chart and swatch colours (literal hex: SVG attributes cannot read CSS variables). */
+export const COLORS = { invested: "#000000", returns: "#d99a12", interest: "#5a37a3", other: "#0b6676", muted: "#c8c0b0" };

@@ -14,33 +14,45 @@ function pageList(current: number, total: number): (number | "…")[] {
   return out;
 }
 
+/** Scroll a list back into view, without smooth scrolling for people who asked for less motion. */
+export function scrollToList(el: HTMLElement | null) {
+  if (!el) return;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+}
+
+const pageBtn = "chip tabular min-h-11 min-w-11 justify-center px-3 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-rule-strong";
+
 export function Pagination({ page, total, onChange }: { page: number; total: number; onChange: (p: number) => void }) {
   if (total <= 1) return null;
-  const btn = "flex h-10 min-w-10 items-center justify-center border px-3 text-sm font-semibold";
   return (
-    <nav aria-label="Pagination" className="mt-6 flex flex-wrap items-center gap-1.5">
-      <button type="button" disabled={page === 1} onClick={() => onChange(page - 1)} className={`${btn} border-rule bg-white disabled:opacity-40`}>
-        ← Newer
+    <nav aria-label="Pagination" className="mt-8 flex flex-wrap items-center justify-between gap-x-2 gap-y-3 border-t border-rule pt-5 sm:justify-start">
+      <button type="button" disabled={page === 1} onClick={() => onChange(page - 1)} className={pageBtn}>
+        <span aria-hidden>←</span> Newer
       </button>
-      {pageList(page, total).map((p, i) =>
-        p === "…" ? (
-          <span key={`e${i}`} className="px-1 text-muted">
-            …
-          </span>
-        ) : (
-          <button
-            key={p}
-            type="button"
-            aria-current={p === page ? "page" : undefined}
-            onClick={() => onChange(p)}
-            className={`${btn} ${p === page ? "border-navy bg-navy text-white" : "border-rule bg-white hover:border-navy/50"}`}
-          >
-            {p}
-          </button>
-        ),
-      )}
-      <button type="button" disabled={page === total} onClick={() => onChange(page + 1)} className={`${btn} border-rule bg-white disabled:opacity-40`}>
-        Older →
+      <ol className="order-first flex w-full flex-wrap items-center gap-1 sm:order-none sm:w-auto">
+        {pageList(page, total).map((p, i) =>
+          p === "…" ? (
+            <li key={`e${i}`} aria-hidden className="flex w-6 justify-center text-sm text-muted">
+              …
+            </li>
+          ) : (
+            <li key={p}>
+              <button
+                type="button"
+                aria-label={`Page ${p}`}
+                aria-current={p === page ? "page" : undefined}
+                onClick={() => onChange(p)}
+                className={pageBtn}
+              >
+                {p}
+              </button>
+            </li>
+          ),
+        )}
+      </ol>
+      <button type="button" disabled={page === total} onClick={() => onChange(page + 1)} className={pageBtn}>
+        Older <span aria-hidden>→</span>
       </button>
     </nav>
   );
@@ -52,8 +64,16 @@ export function PaginatedStories({ stories, perPage = 8 }: { stories: ArticleCar
   const top = useRef<HTMLDivElement>(null);
   const total = Math.ceil(stories.length / perPage);
   const shown = stories.slice((page - 1) * perPage, page * perPage);
+  if (!stories.length) {
+    return <p className="border-b border-rule py-8 text-md text-muted">No stories here yet.</p>;
+  }
   return (
     <div ref={top} className="scroll-mt-20">
+      {total > 1 ? (
+        <p aria-live="polite" className="tabular mt-3 text-sm text-muted">
+          Showing {(page - 1) * perPage + 1}–{Math.min(page * perPage, stories.length)} of {stories.length} stories
+        </p>
+      ) : null}
       <div className="divide-y divide-rule">
         {shown.map((s) => (
           <StoryRow key={s.slug} story={s} standfirst />
@@ -64,7 +84,7 @@ export function PaginatedStories({ stories, perPage = 8 }: { stories: ArticleCar
         total={total}
         onChange={(p) => {
           setPage(p);
-          top.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+          scrollToList(top.current);
         }}
       />
     </div>

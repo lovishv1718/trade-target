@@ -46,7 +46,7 @@ export default async function SubcategoryPage({ params }: Params) {
       <SectionMasthead
         title={sub.name}
         description={sub.description}
-        accent="funds"
+        accent="money"
         crumbs={[
           { label: "Home", href: "/" },
           { label: "Personal Finance", href: "/personal-finance/" },
@@ -61,15 +61,21 @@ export default async function SubcategoryPage({ params }: Params) {
             <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2">
               {stories.map((s, i) => (
                 <div key={s.slug} className={i === 0 ? "sm:col-span-2" : ""}>
-                  <StoryTile story={s} standfirst aspect={i === 0 ? "aspect-[2/1]" : "aspect-[3/2]"} headingSize={i === 0 ? "text-[1.7rem]" : "text-[1.15rem]"} sizes={i === 0 ? "(min-width: 1024px) 860px, 100vw" : "(min-width: 640px) 420px, 100vw"} />
+                  <StoryTile story={s} standfirst aspect={i === 0 ? "aspect-[2/1]" : "aspect-[3/2]"} headingSize={i === 0 ? "text-2xl md:text-3xl" : "text-lg"} sizes={i === 0 ? "(min-width: 1024px) 860px, 100vw" : "(min-width: 640px) 420px, 100vw"} />
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-muted">No stories in this topic yet.</p>
+            <div role="status" className="border-b border-rule pb-10 pt-4">
+              <p className="headline text-xl">No stories in this topic yet.</p>
+              <p className="mt-1.5 text-md text-ink-2">Every Personal Finance guide is listed on the section page.</p>
+              <Link prefetch={false} href="/personal-finance/" className="link-more mt-2">
+                All of Personal Finance <span className="arrow" aria-hidden>→</span>
+              </Link>
+            </div>
           )}
           <section className="mt-14" aria-label="More personal finance">
-            <SectionHeader title="More in Personal Finance" href="/personal-finance/" accent="funds" />
+            <SectionHeader title="More in Personal Finance" href="/personal-finance/" accent="money" />
             <div className="divide-y divide-rule">
               {more.map((s) => (
                 <StoryRow key={s.slug} story={s} />
@@ -79,14 +85,14 @@ export default async function SubcategoryPage({ params }: Params) {
         </div>
         <aside>
           {calcs.length ? (
-            <section className="border-t-[3px] border-accent bg-white p-5">
-              <p className="kicker text-accent-ink">Calculators</p>
+            <section aria-label="Calculators" className="border-t-[3px] border-learn pt-3">
+              <p className="kicker text-learn">Calculators</p>
               <ul className="mt-2 divide-y divide-rule">
                 {calcs.map((c) => (
                   <li key={c.slug}>
-                    <Link prefetch={false} href={`/calculators/${c.slug}/`} className="block py-2.5 hover:text-accent-ink">
-                      <span className="block font-semibold">{c.name}</span>
-                      <span className="text-sm text-muted">{c.short}</span>
+                    <Link prefetch={false} href={`/calculators/${c.slug}/`} className="group block py-3">
+                      <span className="block font-semibold underline-offset-2 group-hover:underline">{c.name}</span>
+                      <span className="mt-0.5 block text-sm leading-normal text-muted">{c.short}</span>
                     </Link>
                   </li>
                 ))}

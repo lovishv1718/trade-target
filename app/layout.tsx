@@ -7,8 +7,9 @@ import { Header } from "@/components/layout/header";
 import { SearchOverlay } from "@/components/search/search-overlay";
 import "./globals.css";
 
-// Variable fonts: one file per family covers every weight used
-const serif = Source_Serif_4({ subsets: ["latin"], variable: "--font-source-serif", display: "swap" });
+// Variable fonts: one file per family covers every weight used. The serif also carries its
+// optical-size axis, so display headlines get the tighter Display cut automatically.
+const serif = Source_Serif_4({ subsets: ["latin"], axes: ["opsz"], variable: "--font-source-serif", display: "swap" });
 const sans = Source_Sans_3({ subsets: ["latin"], variable: "--font-source-sans", display: "swap" });
 
 export const metadata: Metadata = {
@@ -21,15 +22,25 @@ export const metadata: Metadata = {
   openGraph: { siteName: "TradeTarget", type: "website", locale: "en_IN" },
   twitter: { card: "summary_large_image", site: "@tradetarget3" },
   alternates: { canonical: "/" },
+  icons: { icon: [{ url: "/brand/trade-target-mark.webp", type: "image/webp" }] },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#10284a",
+  themeColor: "#000000",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en-IN" className={`${serif.variable} ${sans.variable}`}>
+      <head>
+        {/* Marks .img-fade images as loaded so they fade in on decode. Registered before any image
+            parses and independent of hydration, so images are never held back. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `document.addEventListener("load",function(e){var t=e.target;if(t&&t.classList&&t.classList.contains("img-fade"))t.setAttribute("data-loaded","")},true);`,
+          }}
+        />
+      </head>
       <body className="min-h-screen">
         <Header />
         <main id="main">{children}</main>

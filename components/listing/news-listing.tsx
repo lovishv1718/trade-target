@@ -3,9 +3,8 @@
 import { useSearchParams } from "next/navigation";
 import { useMemo, useRef, useState } from "react";
 import type { ArticleCard } from "@/lib/content";
-import { kickerColor } from "../kicker";
 import { StoryRow } from "../story";
-import { Pagination } from "./paginated-stories";
+import { Pagination, scrollToList } from "./paginated-stories";
 
 const PER_PAGE = 8;
 
@@ -30,42 +29,62 @@ export function NewsListing({ stories, topics }: { stories: ArticleCard[]; topic
     window.history.replaceState(null, "", qs ? `?${qs}` : window.location.pathname);
   };
 
+  const choose = (t: string) => {
+    setTopic(t);
+    setPage(1);
+    sync(t, 1);
+  };
+
   return (
     <div ref={top} className="scroll-mt-20">
-      <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 md:mx-0 md:flex-wrap md:px-0" role="group" aria-label="Filter by topic">
-        {["All", ...topics.filter((t) => counts[t])].map((t) => (
-          <button
-            key={t}
-            type="button"
-            aria-pressed={topic === t}
-            onClick={() => {
-              setTopic(t);
-              setPage(1);
-              sync(t, 1);
-            }}
-            className={`shrink-0 border px-3.5 py-1.5 text-sm font-semibold ${topic === t ? "border-navy bg-navy text-white" : `border-rule bg-white hover:border-navy/50 ${t === "All" ? "" : kickerColor(t)}`}`}
-          >
-            {t}
-            <span className={`ml-1.5 font-normal ${topic === t ? "text-white/70" : "text-muted"}`}>{t === "All" ? stories.length : counts[t]}</span>
-          </button>
-        ))}
+      <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 py-1 md:mx-0 md:flex-wrap md:overflow-visible md:px-0" role="group" aria-label="Filter by topic">
+        {["All", ...topics.filter((t) => counts[t])].map((t) => {
+          const on = topic === t;
+          return (
+            <button key={t} type="button" aria-pressed={on} onClick={() => choose(t)} className="chip shrink-0">
+              {t}
+              <span className={`tabular font-normal ${on ? "text-paper/75" : "text-muted"}`}>{t === "All" ? stories.length : counts[t]}</span>
+            </button>
+          );
+        })}
       </div>
-      <p className="mt-4 text-sm text-muted">
-        Showing {(current - 1) * PER_PAGE + 1}–{Math.min(current * PER_PAGE, filtered.length)} of {filtered.length} stories
-        {topic !== "All" ? ` in ${topic}` : ""}
-      </p>
-      <div className="mt-1 divide-y divide-rule">
-        {shown.map((s) => (
-          <StoryRow key={s.slug} story={s} standfirst />
-        ))}
-      </div>
+
+      {filtered.length ? (
+        <>
+          <p aria-live="polite" className="tabular mt-4 border-b border-rule pb-2 text-sm text-muted">
+            Showing {(current - 1) * PER_PAGE + 1}–{Math.min(current * PER_PAGE, filtered.length)} of {filtered.length} stories
+            {topic !== "All" ? (
+              <>
+                {" "}
+                in <span className="font-semibold text-ink-2">{topic}</span>
+              </>
+            ) : null}
+          </p>
+          <div className="divide-y divide-rule">
+            {shown.map((s) => (
+              <StoryRow key={s.slug} story={s} standfirst />
+            ))}
+          </div>
+        </>
+      ) : (
+        <div role="status" className="mt-4 border-y border-rule py-10">
+          <p className="headline text-xl">No stories in this topic yet</p>
+          <p className="mt-1.5 text-md text-ink-2">{topic !== "All" ? `Nothing filed under ${topic} so far.` : "Nothing has been filed here so far."}</p>
+          {topic !== "All" ? (
+            <button type="button" onClick={() => choose("All")} className="btn btn-secondary btn-sm mt-4">
+              Show all stories
+            </button>
+          ) : null}
+        </div>
+      )}
+
       <Pagination
         page={current}
         total={total}
         onChange={(p) => {
           setPage(p);
           sync(topic, p);
-          top.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+          scrollToList(top.current);
         }}
       />
     </div>

@@ -19,8 +19,8 @@ export function ShareButtons({ title, path, compact = false }: { title: string; 
     { name: "WhatsApp", href: `https://wa.me/?text=${encodeURIComponent(`${title} ${url}`)}` },
   ];
   return (
-    <div className="flex items-center gap-1.5">
-      {!compact ? <span className="mr-1 text-sm font-semibold text-muted">Share</span> : null}
+    <div className="flex flex-wrap items-center gap-2">
+      {!compact ? <span className="kicker mr-1 text-muted">Share</span> : null}
       {links.map((l) => (
         <a
           key={l.name}
@@ -28,9 +28,9 @@ export function ShareButtons({ title, path, compact = false }: { title: string; 
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`Share on ${l.name}`}
-          className="flex h-9 w-9 items-center justify-center border border-rule bg-white text-navy hover:border-navy hover:bg-navy hover:text-white"
+          className="flex h-11 w-11 shrink-0 items-center justify-center border border-rule-strong text-ink hover:border-ink hover:bg-ink hover:text-paper"
         >
-          <svg aria-hidden width="17" height="17" viewBox="0 0 20 20" fill="currentColor">
+          <svg aria-hidden width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
             <path d={PATHS[l.name]} />
           </svg>
         </a>
@@ -46,10 +46,13 @@ export function ShareButtons({ title, path, compact = false }: { title: string; 
             setCopied(false);
           }
         }}
-        className="h-9 border border-rule bg-white px-3 text-sm font-semibold text-navy hover:border-navy"
+        className="btn btn-secondary btn-sm min-h-11 min-w-[6.75rem] justify-center"
       >
         {copied ? "Copied" : "Copy link"}
       </button>
+      <span role="status" className="sr-only">
+        {copied ? "Link copied to clipboard" : ""}
+      </span>
     </div>
   );
 }
