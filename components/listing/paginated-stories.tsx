@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import type { ArticleCard } from "@/lib/content";
 import { StoryRow } from "../story";
+import { Stagger } from "./stagger";
 
 function pageList(current: number, total: number): (number | "…")[] {
   if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
@@ -78,11 +79,11 @@ export function PaginatedStories({ stories, perPage = 8 }: { stories: ArticleCar
           Showing {(page - 1) * perPage + 1}–{Math.min(page * perPage, stories.length)} of {stories.length} stories
         </p>
       ) : null}
-      <div className="divide-y divide-rule">
+      <Stagger className="divide-y divide-rule">
         {shown.map((s) => (
           <StoryRow key={s.slug} story={s} standfirst />
         ))}
-      </div>
+      </Stagger>
       <Pagination
         page={page}
         total={total}

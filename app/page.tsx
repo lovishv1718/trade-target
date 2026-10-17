@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import hire from "@/content/hire.json";
+import { FrontHero } from "@/components/home/front-hero";
 import { IpoPreviewTable, IpoThisWeek } from "@/components/home/ipo-week";
 import { MarketsBoard } from "@/components/home/markets-board";
 import { MiniSip } from "@/components/home/mini-sip";
@@ -8,37 +9,12 @@ import { JsonLd } from "@/components/json-ld";
 import { Kicker } from "@/components/kicker";
 import { NewsletterBand } from "@/components/newsletter-band";
 import { Photo } from "@/components/photo";
+import { Seen, Stagger } from "@/components/listing/stagger";
 import { Scroller } from "@/components/scroller";
 import { SectionEnd, SectionHeader } from "@/components/section-header";
-import { LeadStory, StoryLink, StoryMeta, StoryRow, StoryTile } from "@/components/story";
-import { getArticleBySlug, getArticleCards, getArticlesBySection, getCalculators, getEditorial, getSubsections, toCard, type ArticleCard } from "@/lib/content";
+import { StoryLink, StoryMeta, StoryRow, StoryTile } from "@/components/story";
+import { getArticleBySlug, getArticleCards, getArticlesBySection, getCalculators, getEditorial, getSubsections, toCard } from "@/lib/content";
 import { getIpos, istToday } from "@/lib/ipo";
-
-/**
- * Second column of the front page. The first story carries a picture and its standfirst; the rest
- * are set tighter, hairline separated. Phones: every story is a compact row with a thumbnail, so the
- * page still reads as a front page. 1024 to 1279: three across under the lead.
- */
-function SecondaryStory({ story, first }: { story: ArticleCard; first: boolean }) {
-  return (
-    <article className={`story group ${first ? "py-4 md:pb-5 md:pt-0 lg:px-5 lg:py-0 lg:pl-0 xl:px-0 xl:pb-5" : "py-3.5 lg:px-5 lg:py-0 lg:last:pr-0 xl:px-0 xl:py-3.5"}`}>
-      <Link prefetch={false} href={story.path} className={`flex items-start gap-4 ${first ? "md:flex-col md:items-stretch md:gap-0" : ""}`}>
-        <div className="min-w-0 flex-1">
-          <Kicker label={story.kicker} className={first ? "md:mt-3 md:block" : ""} />
-          <h2 className={`headline mt-1 text-lg ${first ? "md:text-2xl md:leading-tight lg:text-xl xl:text-2xl" : "md:text-lg md:leading-snug"}`}>{story.title}</h2>
-          {first ? <p className="mt-2 hidden text-md text-ink-2 md:line-clamp-3">{story.standfirst}</p> : null}
-          <StoryMeta story={story} className="mt-1.5" showRead={first} />
-        </div>
-        <Photo
-          image={story.image}
-          sizes={first ? "(min-width: 1280px) 290px, (min-width: 1024px) 200px, (min-width: 768px) 260px, 112px" : "112px"}
-          crop={first ? { base: "compact", md: "standard" } : "compact"}
-          className={`w-24 shrink-0 sm:w-28 ${first ? "md:order-first md:w-full" : "md:hidden"}`}
-        />
-      </Link>
-    </article>
-  );
-}
 
 export default function HomePage() {
   const ed = getEditorial().homepage;
@@ -71,21 +47,10 @@ export default function HomePage() {
     <>
       <h1 className="sr-only">TradeTarget: stock market, IPO and personal finance news</h1>
 
-      {/* Front page: lead, second column, and the market terminal on the right ---------------- */}
-      <div className="wrap pt-5 md:pt-6">
+      {/* Front page: the hero (folio line, switchable lead, numbered index) and the market terminal ---- */}
+      <div className="wrap pt-4 md:pt-5">
         <div className="grid gap-y-8 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-x-8 xl:grid-cols-[minmax(0,1fr)_320px] xl:gap-x-10">
-          <div className="grid md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:grid-cols-1 xl:grid-cols-[minmax(0,1.75fr)_minmax(0,1fr)]">
-            <div className="md:pr-6 lg:pr-0 xl:pr-7">
-              <LeadStory story={lead} priority sizes="(min-width: 1280px) 540px, (min-width: 1024px) 660px, (min-width: 768px) 440px, 100vw" />
-            </div>
-            <div className="mt-6 border-t-2 border-ink md:mt-0 md:border-l md:border-t-0 md:border-rule md:pl-6 lg:mt-8 lg:border-l-0 lg:border-t-2 lg:border-ink lg:pl-0 lg:pt-5 xl:mt-0 xl:border-l xl:border-t-0 xl:border-rule xl:pl-7 xl:pt-0">
-              <div className="divide-y divide-rule lg:grid lg:grid-cols-3 lg:divide-x lg:divide-y-0 xl:block xl:divide-x-0 xl:divide-y">
-                {secondary.map((s, i) => (
-                  <SecondaryStory key={s.slug} story={s} first={i === 0} />
-                ))}
-              </div>
-            </div>
-          </div>
+          <FrontHero stories={[lead, ...secondary]} ipos={ipos} buildDate={buildDate} />
           <div className="surface-ink -mx-4 grid gap-px self-start bg-rule sm:mx-0 md:grid-cols-2 lg:grid-cols-1">
             <MarketsBoard />
             <IpoThisWeek ipos={ipos} buildDate={buildDate} />
@@ -98,12 +63,21 @@ export default function HomePage() {
         <div className="wrap grid gap-12 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-x-8 xl:grid-cols-[minmax(0,1fr)_320px] xl:gap-x-10">
           <section aria-label="Latest news">
             <SectionHeader title="Latest news" href="/news/" accent="ink" more={false} />
-            <div className="divide-y divide-rule">
+            <Stagger className="divide-y divide-rule">
               {latest.map((s) => (
                 <StoryRow key={s.slug} story={s} standfirst />
               ))}
-            </div>
-            <SectionEnd href="/news/" label="All news" accent="ink" note={`${latest.length} of ${newsCount} stories from the newsroom`} />
+            </Stagger>
+            <SectionEnd
+              href="/news/"
+              label="All news"
+              accent="ink"
+              note={
+                <>
+                  <b className="stat">{latest.length}</b> of <b className="stat">{newsCount}</b> stories from the newsroom
+                </>
+              }
+            />
           </section>
           <aside className="space-y-10 md:grid md:grid-cols-2 md:gap-x-8 md:space-y-0 lg:block lg:space-y-10">
             <section aria-label="Most read">
@@ -183,13 +157,22 @@ export default function HomePage() {
                 </div>
               </Link>
             </article>
-            <div className="mt-4 divide-y divide-rule border-t border-rule lg:-mt-5 lg:border-t-0 lg:pl-8">
+            <Stagger className="mt-4 divide-y divide-rule border-t border-rule lg:-mt-5 lg:border-t-0 lg:pl-8">
               {shareRest.map((s) => (
                 <StoryRow key={s.slug} story={s} />
               ))}
-            </div>
+            </Stagger>
           </div>
-          <SectionEnd href="/share-analysis/" label="All share analysis" accent="company" note={`${count("share-analysis")} companies analysed: financials, ratios and shareholding`} />
+          <SectionEnd
+            href="/share-analysis/"
+            label="All share analysis"
+            accent="company"
+            note={
+              <>
+                <b className="stat">{count("share-analysis")}</b> companies analysed: financials, ratios and shareholding
+              </>
+            }
+          />
         </div>
       </section>
 
@@ -217,7 +200,8 @@ export default function HomePage() {
       {/* Commercial: content services ------------------------------------------------- */}
       <section className="surface-ink band band-tool" aria-labelledby="hire-band">
         <div className="wrap grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:items-center lg:gap-x-16">
-          <div className="border-t-3 border-company-mark pt-4">
+          {/* Arrives once: the amber rule draws across, then the pitch rises into place under it */}
+          <Seen className="hire-reveal">
             <p className="kicker text-company">TradeTarget content services</p>
             <h2 id="hire-band" className="headline mt-3 text-balance text-3xl md:text-4xl">
               Finance writing for brokers, AMCs and fintechs
@@ -226,7 +210,7 @@ export default function HomePage() {
             <Link prefetch={false} href="/hire-writers/" className="btn mt-7">
               Send us a brief <span className="arrow" aria-hidden>→</span>
             </Link>
-          </div>
+          </Seen>
           <div>
             <p className="kicker text-muted">Teams we have written for</p>
             <ul className="mt-3 grid grid-cols-3 border-l border-t border-rule">

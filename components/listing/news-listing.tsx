@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useMemo, useRef, useState } from "react";
 import type { ArticleCard } from "@/lib/content";
 import { StoryRow } from "../story";
+import { Stagger } from "./stagger";
 import { Pagination, scrollToList } from "./paginated-stories";
 
 const PER_PAGE = 8;
@@ -60,11 +61,11 @@ export function NewsListing({ stories, topics }: { stories: ArticleCard[]; topic
               </>
             ) : null}
           </p>
-          <div className="divide-y divide-rule">
+          <Stagger className="divide-y divide-rule">
             {shown.map((s) => (
               <StoryRow key={s.slug} story={s} standfirst />
             ))}
-          </div>
+          </Stagger>
         </>
       ) : (
         <div role="status" className="empty mt-4">

@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "./css/calculator.css";
+@import "./css/data.css";
 
 /* ==========================================================================
    TradeTarget design tokens
@@ -2387,6 +2389,456 @@
   }
 }
 
+/* ==========================================================================
+   Front page hero, news arrivals, the two asking blocks, editorial devices.
+   Motion is spent where it is earned: the hero most, news rows on scroll,
+   the commercial bands once each, everything else still.
+   ========================================================================== */
+@layer components {
+  /* ---- Lead composition: photo, a plate breaking its bottom edge, a hairline with the caption on it */
+  .lead {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .lead-photo {
+    grid-row: 1;
+    grid-column: 1 / -1;
+  }
+  .lead-rule {
+    grid-row: 3;
+    grid-column: 1 / -1;
+    align-self: start;
+    height: 1px;
+    margin-top: 0.75rem;
+    background: var(--color-ink);
+  }
+  .lead-plate {
+    grid-row: 2;
+    grid-column: 1;
+    position: relative;
+    z-index: 3;
+    margin: -2.25rem 2.5rem 0 0;
+    padding: 0.75rem 1rem 0 0;
+    background: var(--surface);
+  }
+  .lead-line {
+    grid-row: 3;
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.125rem 1rem;
+    margin-top: 0.75rem;
+    padding-top: 0.4375rem;
+    font-size: var(--text-xs);
+    line-height: var(--text-xs--line-height);
+  }
+  @container lead (min-width: 34rem) {
+    .lead {
+      grid-template-columns: minmax(0, 1fr) minmax(8.5rem, 28%);
+    }
+    .lead-rule {
+      grid-row: 2;
+      margin-top: 0;
+    }
+    .lead-plate {
+      margin: -4rem 1.5rem 0 0;
+      padding: 1rem 1.5rem 0 0;
+    }
+    .lead-line {
+      grid-row: 2;
+      grid-column: 2;
+      display: block;
+      margin-top: 0;
+      padding-top: 0.5rem;
+    }
+  }
+  /* First load only: the lead headline rises into place behind a clip, in reading order, under 400ms */
+  .lead-reveal .lw {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    padding-bottom: 0.14em;
+    margin-bottom: -0.14em;
+  }
+  .lead-reveal .lw > span {
+    display: inline-block;
+  }
+  html[data-js] .lead-reveal .lw > span {
+    animation: lw-rise 300ms var(--ease-out) both;
+    animation-delay: calc(var(--w, 0) * 9ms);
+  }
+
+  /* ---- Hero: folio line, stage, numbered index ---------------------------- */
+  .glance {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-bottom: 1.25rem;
+    border-top: 2px solid var(--color-ink);
+    border-bottom: 1px solid var(--color-rule);
+    font-variant-numeric: tabular-nums;
+  }
+  .glance-cell {
+    min-width: 0;
+    padding: 0.5rem 0.75rem;
+  }
+  .glance-cell:nth-child(odd) {
+    padding-left: 0;
+    border-right: 1px solid var(--color-rule);
+  }
+  .glance-cell:nth-child(n + 3) {
+    border-top: 1px solid var(--color-rule);
+  }
+  @media (min-width: 768px) {
+    .glance {
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.4fr);
+    }
+    .glance-cell,
+    .glance-cell:nth-child(odd) {
+      padding-left: 0.875rem;
+      border-right: 1px solid var(--color-rule);
+    }
+    .glance-cell:first-child {
+      padding-left: 0;
+    }
+    .glance-cell:last-child {
+      border-right: 0;
+    }
+    .glance-cell:nth-child(n + 3) {
+      border-top: 0;
+    }
+  }
+  .glance dt {
+    font-size: var(--text-2xs);
+    line-height: 1.3;
+    font-weight: 700;
+    letter-spacing: var(--tracking-kicker);
+    text-transform: uppercase;
+    color: var(--color-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .glance dd {
+    margin-top: 0.25rem;
+    font-size: var(--text-sm);
+    line-height: 1.375rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .hero-grid {
+    display: grid;
+    row-gap: 1.75rem;
+  }
+  .hero-stage {
+    display: grid;
+    touch-action: pan-y;
+  }
+  .hero-slide {
+    grid-area: 1 / 1;
+    min-width: 0;
+    visibility: hidden;
+    opacity: 0;
+    transition:
+      opacity 220ms var(--ease-out),
+      visibility 0s 220ms;
+  }
+  .hero-slide[data-active] {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 260ms var(--ease-out);
+  }
+  .hero-slide .photo-zoom {
+    transform: scale(1.035);
+    transition: transform 280ms var(--ease-out);
+  }
+  .hero-slide[data-active] .photo-zoom {
+    transform: none;
+  }
+  @media (hover: hover) {
+    .hero-slide[data-active] .group:hover .photo-zoom {
+      transform: scale(1.02);
+    }
+  }
+  .hero-index-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 2.75rem;
+    border-top: 2px solid var(--color-ink);
+  }
+  .hero-index-head > :first-child {
+    margin-right: auto;
+  }
+  .hero-tabs {
+    display: grid;
+  }
+  .hero-tab {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    gap: 0.75rem;
+    width: 100%;
+    min-height: 2.75rem;
+    padding: 0.875rem 0;
+    border-top: 1px solid var(--color-rule);
+    text-align: left;
+  }
+  /* The active story's rule draws across rather than switching on */
+  .hero-tab::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: -1px;
+    height: 2px;
+    background: var(--color-ink);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 320ms var(--ease-out);
+  }
+  .hero-tab[aria-selected="true"]::before {
+    transform: scaleX(1);
+  }
+  .hero-tab:focus-visible {
+    outline-offset: -2px;
+  }
+  .hero-tab-num {
+    font-size: var(--text-2xl);
+    line-height: 1;
+    font-weight: 300;
+    color: var(--color-faint);
+    font-variant-numeric: tabular-nums;
+  }
+  .hero-tab[aria-selected="true"] .hero-tab-num {
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  .hero-tab-title {
+    display: block;
+    margin-top: 0.25rem;
+    font-family: var(--font-serif);
+    font-weight: 650;
+    font-size: var(--text-md);
+    line-height: var(--leading-snug);
+    color: var(--color-ink-2);
+    text-decoration: underline 1px transparent;
+    text-underline-offset: 0.16em;
+  }
+  .hero-tab[aria-selected="true"] .hero-tab-title {
+    color: var(--color-ink);
+  }
+  .hero-tab:hover .hero-tab-title {
+    text-decoration-color: currentColor;
+  }
+  @media (min-width: 768px) {
+    .hero-grid {
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    }
+    .hero-stage {
+      padding-right: 1.5rem;
+    }
+    .hero-index {
+      padding-left: 1.5rem;
+      border-left: 1px solid var(--color-rule);
+    }
+    .hero-tab-title {
+      font-size: var(--text-lg);
+    }
+  }
+  @media (min-width: 1024px) and (max-width: 1279px) {
+    .hero-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .hero-stage {
+      padding-right: 0;
+    }
+    .hero-index {
+      padding-left: 0;
+      border-left: 0;
+    }
+    .hero-tabs {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 1.5rem;
+    }
+  }
+  @media (min-width: 1280px) {
+    .hero-grid {
+      grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr);
+    }
+    .hero-stage {
+      padding-right: 1.75rem;
+    }
+    .hero-index {
+      padding-left: 1.75rem;
+    }
+  }
+
+  /* ---- News rows: arrive in sequence once, and answer the pointer ---------- */
+  html[data-js] .stagger:not([data-seen]) > * {
+    opacity: 0;
+    transform: translateY(12px);
+    animation: arrive-late 0s 2.5s forwards;
+  }
+  .stagger[data-seen] > * {
+    transition:
+      opacity 280ms var(--ease-out),
+      transform 280ms var(--ease-out);
+    transition-delay: calc(var(--si, 5) * 50ms);
+  }
+  .stagger > :nth-child(1) {
+    --si: 0;
+  }
+  .stagger > :nth-child(2) {
+    --si: 1;
+  }
+  .stagger > :nth-child(3) {
+    --si: 2;
+  }
+  .stagger > :nth-child(4) {
+    --si: 3;
+  }
+  .stagger > :nth-child(5) {
+    --si: 4;
+  }
+  .story-row .kicker {
+    display: inline-block;
+    transition: transform 200ms var(--ease-out);
+  }
+  .story-row:hover .kicker,
+  .story-row:focus-within .kicker {
+    transform: translateX(4px);
+  }
+
+  /* ---- The two blocks that ask for something: one arrival each ----------- */
+  .hire-reveal::before {
+    content: "";
+    display: block;
+    height: 3px;
+    margin-bottom: 1rem;
+    background: var(--color-company-mark);
+    transform-origin: left;
+  }
+  html[data-js] .hire-reveal:not([data-seen])::before {
+    transform: scaleX(0);
+    animation: arrive-late 0s 2.5s forwards;
+  }
+  html[data-js] .hire-reveal:not([data-seen]) > * {
+    opacity: 0;
+    transform: translateY(16px);
+    animation: arrive-late 0s 2.5s forwards;
+  }
+  .hire-reveal[data-seen]::before {
+    transition: transform 360ms var(--ease-out);
+  }
+  .hire-reveal[data-seen] > * {
+    transition:
+      opacity 320ms var(--ease-out) 80ms,
+      transform 320ms var(--ease-out) 80ms;
+  }
+  .newsletter-reveal {
+    position: relative;
+  }
+  .newsletter-reveal::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 3px;
+    background: var(--color-white);
+    transform-origin: right;
+  }
+  html[data-js] .newsletter-reveal:not([data-seen])::before {
+    transform: scaleX(0);
+    animation: arrive-late 0s 2.5s forwards;
+  }
+  html[data-js] .newsletter-reveal:not([data-seen]) .newsletter-form {
+    opacity: 0;
+    transform: translateX(20px);
+    animation: arrive-late 0s 2.5s forwards;
+  }
+  .newsletter-reveal[data-seen]::before {
+    transition: transform 360ms var(--ease-out);
+  }
+  .newsletter-reveal[data-seen] .newsletter-form {
+    transition:
+      opacity 300ms var(--ease-out) 120ms,
+      transform 300ms var(--ease-out) 120ms;
+  }
+
+  /* ---- Editorial emphasis: type and rules only, used sparingly ------------ */
+  /* Lead paragraph: the first paragraph of an article, a step up in the serif, first line in small capitals */
+  .article-body > p:first-child,
+  .lede {
+    font-family: var(--font-serif);
+    font-size: var(--text-xl);
+    line-height: var(--leading-normal);
+    color: var(--color-ink);
+  }
+  .article-body > p:first-child::first-line,
+  .lede::first-line {
+    font-variant-caps: all-small-caps;
+    letter-spacing: 0.04em;
+  }
+  /* Pull quote: a short amber rule, the serif at display size, a hanging open-quote */
+  .article-body blockquote {
+    position: relative;
+    margin-block: 2em;
+    padding: 1rem 0 0 1.5rem;
+    border-left: 0;
+    border-top: 1px solid var(--color-rule);
+    font-size: var(--text-2xl);
+    line-height: var(--text-2xl--line-height);
+    letter-spacing: var(--text-2xl--letter-spacing);
+  }
+  .article-body blockquote::before {
+    content: "\201C";
+    position: absolute;
+    left: 0;
+    top: 0.85rem;
+    font-family: var(--font-serif);
+    font-size: 2.25em;
+    line-height: 1;
+    color: var(--color-company-mark);
+  }
+  .article-body blockquote::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: -2px;
+    width: 3rem;
+    height: 3px;
+    background: var(--color-company-mark);
+  }
+  /* Statistic: a figure inside a sentence, set tabular and bold on an amber underline */
+  .stat {
+    font-weight: 700;
+    color: var(--color-ink);
+    font-variant-numeric: tabular-nums;
+    text-decoration-line: underline;
+    text-decoration-thickness: 2px;
+    text-decoration-color: var(--color-company-mark);
+    text-underline-offset: 0.22em;
+  }
+}
+
+@keyframes lw-rise {
+  from {
+    transform: translateY(105%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes arrive-late {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 @keyframes art-reveal {
   from {
     opacity: 0;
@@ -2444,6 +2896,18 @@
     transform: none;
   }
   html[data-js] .img-fade:not([data-loaded]) {
+    opacity: 1;
+    transform: none;
+  }
+  html[data-js] .lead-reveal .lw > span {
+    animation: none;
+  }
+  html[data-js] .stagger:not([data-seen]) > *,
+  html[data-js] .hire-reveal:not([data-seen]) > *,
+  html[data-js] .hire-reveal:not([data-seen])::before,
+  html[data-js] .newsletter-reveal:not([data-seen])::before,
+  html[data-js] .newsletter-reveal:not([data-seen]) .newsletter-form,
+  .hero-slide .photo-zoom {
     opacity: 1;
     transform: none;
   }

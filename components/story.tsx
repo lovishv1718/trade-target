@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import authors from "@/content/authors.json";
 import type { ArticleCard } from "@/lib/content";
 import { formatDate } from "@/lib/format";
@@ -7,7 +8,7 @@ import { Photo, photoCredit } from "./photo";
 
 // Story furniture shared across the site. One order everywhere: kicker, headline,
 // standfirst, meta. Hover is the .story device: a 2px rule draws in across the top
-// and the headline takes its underline.
+// and the headline takes its underline; list rows also nudge their kicker.
 
 const authorName = (slug: string) => authors.find((a) => a.slug === slug)?.name ?? authors[0].name;
 
@@ -50,33 +51,68 @@ export function Dateline({ story, className = "" }: { story: ArticleCard; classN
 }
 
 /**
- * The lead: one composition, sized by the column it sits in (container queries in globals.css).
- * Kicker running into a hairline, the display headline, the wide photograph with its caption and
- * credit, then the deck beside a stacked dateline. The photo link is a duplicate of the headline
- * link, so it is skipped by the keyboard and screen readers.
+ * The lead, composed rather than stacked: the photograph, a paper plate carrying the kicker and
+ * headline that breaks up across the picture's bottom edge, a hairline running out from under the
+ * plate along that edge with the caption and credit set on it, then the deck beside a stacked
+ * dateline. Sized by its own column (container queries in globals.css). With `reveal`, the headline
+ * is set word by word so it can rise into place line by line on first load (the front page only).
+ * The photo link repeats the headline link, so it is skipped by the keyboard and screen readers.
  */
-export function LeadStory({ story, priority = false, sizes = "(min-width: 1024px) 760px, 100vw" }: { story: ArticleCard; priority?: boolean; sizes?: string }) {
+export function LeadComposition({
+  story,
+  priority = false,
+  sizes,
+  reveal = false,
+}: {
+  story: ArticleCard;
+  priority?: boolean;
+  sizes: string;
+  reveal?: boolean;
+}) {
+  const words = story.title.split(" ");
+  const caption = story.image?.caption && story.image.caption !== story.title ? story.image.caption : "";
   return (
     <article className="story story-lead group">
-      <Link prefetch={false} href={story.path} className="block">
-        <Kicker label={story.kicker} className="kicker-rule" />
-        <h2 className="lead-title headline mt-2.5 text-balance">{story.title}</h2>
-      </Link>
-      <Link prefetch={false} href={story.path} tabIndex={-1} aria-hidden className="lead-photo mt-4 block">
-        <Photo image={story.image} sizes={sizes} crop="wide" priority={priority} />
-      </Link>
-      {story.image ? (
-        <p className="photo-caption">
-          {story.image.caption && story.image.caption !== story.title ? <span className="min-w-0">{story.image.caption}</span> : null}
-          <span className="photo-credit ml-auto">{photoCredit(story.image)}</span>
-        </p>
-      ) : null}
+      <div className="lead">
+        <Link prefetch={false} href={story.path} tabIndex={-1} aria-hidden className="lead-photo block">
+          <Photo image={story.image} sizes={sizes} crop="wide" priority={priority} />
+        </Link>
+        <span aria-hidden className="lead-rule" />
+        <div className="lead-plate">
+          <Kicker label={story.kicker} className="kicker-rule" />
+          <Link prefetch={false} href={story.path} className="block">
+            <h2 className={`lead-title headline mt-2 text-balance ${reveal ? "lead-reveal" : ""}`}>
+              {reveal
+                ? words.map((w, i) => (
+                    <span key={i}>
+                      <span className="lw" style={{ "--w": Math.min(i, 10) } as CSSProperties}>
+                        <span>{w}</span>
+                      </span>
+                      {i < words.length - 1 ? " " : null}
+                    </span>
+                  ))
+                : story.title}
+            </h2>
+          </Link>
+        </div>
+        {story.image ? (
+          <p className="lead-line">
+            {caption ? <span className="block text-ink-2">{caption}</span> : null}
+            <span className="photo-credit mt-0.5 block">{photoCredit(story.image)}</span>
+          </p>
+        ) : null}
+      </div>
       <div className="lead-foot mt-4">
         <p className="deck text-lg leading-normal">{story.standfirst}</p>
         <Dateline story={story} />
       </div>
     </article>
   );
+}
+
+/** The section lead used on index pages: the same composition as the front page. */
+export function LeadStory({ story, priority = false, sizes = "(min-width: 1024px) 760px, 100vw" }: { story: ArticleCard; priority?: boolean; sizes?: string }) {
+  return <LeadComposition story={story} priority={priority} sizes={sizes} />;
 }
 
 /** Image on top, compact headline. */
@@ -109,7 +145,7 @@ export function StoryTile({
 /** List row: text on the left where the eye scans, thumbnail on the right. */
 export function StoryRow({ story, standfirst = false }: { story: ArticleCard; standfirst?: boolean }) {
   return (
-    <article className="story group py-4 md:py-5">
+    <article className="story story-row group py-4 md:py-5">
       <Link prefetch={false} href={story.path} className="flex items-start gap-4 md:gap-6">
         <div className="min-w-0 flex-1">
           <Kicker label={story.kicker} />
@@ -126,7 +162,7 @@ export function StoryRow({ story, standfirst = false }: { story: ArticleCard; st
 /** Headline only, with an optional rank number in tabular sans. */
 export function StoryLink({ story, index }: { story: ArticleCard; index?: number }) {
   return (
-    <article className="story flex items-start gap-4 py-3">
+    <article className="story story-row flex items-start gap-4 py-3">
       {index !== undefined ? <span className="w-5 shrink-0 text-right text-3xl font-light leading-none text-muted tabular-nums">{index}</span> : null}
       <Link prefetch={false} href={story.path} className="min-w-0">
         <Kicker label={story.kicker} />
