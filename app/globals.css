@@ -2404,12 +2404,12 @@
     grid-row: 1;
     grid-column: 1 / -1;
   }
+  /* The hairline runs along the photo's bottom edge, behind the plate, and out past its right side */
   .lead-rule {
-    grid-row: 3;
+    grid-row: 2;
     grid-column: 1 / -1;
     align-self: start;
     height: 1px;
-    margin-top: 0.75rem;
     background: var(--color-ink);
   }
   .lead-plate {
@@ -2428,18 +2428,21 @@
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 0.125rem 1rem;
-    margin-top: 0.75rem;
-    padding-top: 0.4375rem;
+    margin-top: 0.625rem;
     font-size: var(--text-xs);
     line-height: var(--text-xs--line-height);
   }
-  @container lead (min-width: 30rem) {
-    .lead {
-      grid-template-columns: minmax(0, 1fr) minmax(7.5rem, 26%);
+  /* A column of front-page width: the plate cuts deeper into the picture, the headline keeps its size */
+  @container lead (min-width: 28rem) {
+    .lead-plate {
+      margin: -3.5rem 3rem 0 0;
+      padding: 1rem 1.25rem 0 0;
     }
-    .lead-rule {
-      grid-row: 2;
-      margin-top: 0;
+  }
+  /* A wide column: the caption moves out to its own narrow column along the hairline */
+  @container lead (min-width: 40rem) {
+    .lead {
+      grid-template-columns: minmax(0, 1fr) minmax(8.5rem, 26%);
     }
     .lead-plate {
       margin: -4rem 1.5rem 0 0;
@@ -2451,14 +2454,6 @@
       display: block;
       margin-top: 0;
       padding-top: 0.5rem;
-    }
-  }
-  /* Where the plate shares the width with the caption column, the headline steps down to fit it */
-  @container lead (min-width: 30rem) and (max-width: 40rem) {
-    .lead-title {
-      font-size: var(--text-3xl);
-      line-height: var(--text-3xl--line-height);
-      letter-spacing: var(--text-3xl--letter-spacing);
     }
   }
   /* First load only: the lead headline rises into place behind a clip, in reading order, under 400ms */

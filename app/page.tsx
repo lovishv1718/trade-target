@@ -180,7 +180,8 @@ export default function HomePage() {
       <section className="surface-paper-2 band band-data border-y border-rule" aria-label="Stock Market IQ">
         <div className="wrap">
           <SectionHeader title="Stock Market IQ" href="/stock-market-iq/" accent="learn" more={false} dek="Explainers in plain language" />
-          <Scroller label="Stock Market IQ explainers" className="mt-5">
+          <p className="scroll-hint mt-4">Swipe sideways for more explainers</p>
+          <Scroller label="Stock Market IQ explainers" className="mt-3 lg:mt-5">
             {smiq.map((s) => (
               <div key={s.slug} className="w-[72%] sm:w-[42%] md:w-[30%] lg:w-[21%]">
                 <StoryTile story={s} sizes="(min-width: 1024px) 260px, (min-width: 768px) 30vw, 72vw" />
