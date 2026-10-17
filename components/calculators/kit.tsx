@@ -1,7 +1,7 @@
 "use client";
 
-import { useId, useState, type ReactNode } from "react";
-import { amountInWords, formatINR, formatNumber } from "@/lib/format";
+import { useEffect, useId, useState, type ReactNode } from "react";
+import { amountInWords, formatINR, formatINRCompact, formatNumber } from "@/lib/format";
 
 // ---------------------------------------------------------------------------
 // Live numbers
@@ -29,6 +29,34 @@ function display(value: number, unit: Unit, decimals: number) {
   return decimals ? value.toFixed(decimals).replace(/\.?0+$/, "") : String(value);
 }
 
+/** A value with its unit, short form: the fader's end labels, the tag riding the cap, the presets. */
+function short(n: number, unit: Unit, decimals: number, compact = false) {
+  if (unit === "inr") return compact ? formatINRCompact(n) : formatINR(n);
+  const s = display(n, unit, decimals);
+  if (unit === "pct") return `${s}%`;
+  if (unit === "years") return `${s} ${n === 1 ? "yr" : "yrs"}`;
+  if (unit === "months") return `${s} mo`;
+  return s;
+}
+
+/** A value with its unit as it is said: the out-of-range message. */
+function spoken(n: number, unit: Unit, decimals: number) {
+  if (unit === "inr") return `₹${amountInWords(n)}`;
+  const s = formatNumber(n, Number.isInteger(n) ? 0 : decimals);
+  if (unit === "pct") return `${s}%`;
+  if (unit === "years") return `${s} ${n === 1 ? "year" : "years"}`;
+  if (unit === "months") return `${s} ${n === 1 ? "month" : "months"}`;
+  return s;
+}
+
+/**
+ * One control, not two: the label, the number box and the fader share a single frame, and focus
+ * on either rings the whole unit. The fader is drawn (track, a fill scaled by --ratio, ticks at
+ * the quartiles, a slim cap) under a transparent native range, so keyboard, touch and assistive
+ * tech all get the real control. The unit carries its state as data attributes: data-at at
+ * either end of the scale, data-drag while a pointer holds the cap (the value rides on a tag
+ * above it), data-invalid while a typed number sits outside the scale.
+ */
 export function SliderField({
   label,
   value,
@@ -40,6 +68,7 @@ export function SliderField({
   decimals = 0,
   hint,
   disabled = false,
+  presets,
 }: {
   label: string;
   value: number;
@@ -51,80 +80,137 @@ export function SliderField({
   decimals?: number;
   hint?: string;
   disabled?: boolean;
+  /** Quick values shown as quiet chips under the fader; only values inside min..max are used. */
+  presets?: number[];
 }) {
   const id = useId();
   const hintId = `${id}-hint`;
+  const errId = `${id}-err`;
   const [draft, setDraft] = useState<string | null>(null);
-  const pct = ((clamp(value, min, max) - min) / (max - min)) * 100;
+  const [drag, setDrag] = useState(false);
+  const v = clamp(value, min, max);
+  const ratio = max > min ? (v - min) / (max - min) : 0;
+  const at = value <= min ? "min" : value >= max ? "max" : undefined;
   const suffix = unit === "pct" ? "%" : unit === "years" ? (value === 1 ? "yr" : "yrs") : unit === "months" ? "mo" : "";
 
+  // A drag ends wherever the pointer is let go, not only over the fader
+  useEffect(() => {
+    if (!drag) return;
+    const end = () => setDrag(false);
+    window.addEventListener("pointerup", end);
+    window.addEventListener("pointercancel", end);
+    return () => {
+      window.removeEventListener("pointerup", end);
+      window.removeEventListener("pointercancel", end);
+    };
+  }, [drag]);
+
+  const parse = (raw: string) => Number(raw.replace(/[^0-9.]/g, ""));
   const commit = (raw: string) => {
-    const n = Number(raw.replace(/[^0-9.]/g, ""));
+    const n = parse(raw);
     if (Number.isFinite(n) && raw.trim() !== "") onChange(clamp(Number(n.toFixed(decimals)), min, max));
     setDraft(null);
   };
 
+  // While a typed number sits outside the scale, say so, and say where it will land on blur
+  const typed = draft !== null && draft.trim() !== "" ? Number(parse(draft).toFixed(decimals)) : NaN;
+  const invalid = Number.isFinite(typed) && (typed < min || typed > max);
+  const message = invalid ? `Between ${spoken(min, unit, decimals)} and ${spoken(max, unit, decimals)}. It will be set to ${spoken(typed < min ? min : max, unit, decimals)}.` : null;
+
   const words =
     unit === "inr" ? amountInWords(value) : unit === "years" ? `${value} ${value === 1 ? "year" : "years"}` : unit === "months" ? `${value} months${value >= 12 ? ` (${(value / 12).toFixed(value % 12 ? 1 : 0)} yrs)` : ""}` : null;
+  const end = (n: number) => (unit === "inr" ? `₹${amountInWords(n)}` : short(n, unit, decimals));
+  const quick = (presets ?? []).filter((p) => p >= min && p <= max);
 
   return (
-    <div className="calc-field py-4">
-      <div className="flex items-center justify-between gap-3">
-        <label htmlFor={id} className="text-md font-semibold leading-snug text-ink">
-          {label}
-        </label>
-        <div className="calc-num shrink-0">
-          {unit === "inr" ? <span className="calc-num-affix">₹</span> : null}
-          <input
-            id={id}
-            inputMode="decimal"
-            disabled={disabled}
-            aria-describedby={hint ? hintId : undefined}
-            value={draft ?? display(value, unit, decimals)}
-            onChange={(e) => setDraft(e.target.value)}
-            onFocus={(e) => {
-              setDraft(String(value));
-              requestAnimationFrame(() => e.target.select());
-            }}
-            onBlur={(e) => commit(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") (e.target as HTMLInputElement).blur();
-            }}
-            className="calc-num-input"
-          />
-          {suffix ? <span className="calc-num-affix">{suffix}</span> : null}
+    <div className="cx-field">
+      <div
+        className="cx-unit"
+        data-at={at}
+        data-drag={drag ? "" : undefined}
+        data-invalid={invalid ? "" : undefined}
+        data-disabled={disabled ? "" : undefined}
+        style={{ ["--ratio" as string]: ratio }}
+      >
+        <div className="cx-unit-head">
+          <label htmlFor={id} className="cx-unit-label">
+            {label}
+          </label>
+          <div className="cx-num">
+            {unit === "inr" ? <span className="cx-num-affix">₹</span> : null}
+            <input
+              id={id}
+              inputMode="decimal"
+              disabled={disabled}
+              aria-invalid={invalid || undefined}
+              aria-describedby={hint ? `${hintId} ${errId}` : errId}
+              value={draft ?? display(value, unit, decimals)}
+              onChange={(e) => setDraft(e.target.value)}
+              onFocus={(e) => {
+                setDraft(String(value));
+                requestAnimationFrame(() => e.target.select());
+              }}
+              onBlur={(e) => commit(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") (e.target as HTMLInputElement).blur();
+              }}
+              className="cx-num-input"
+            />
+            {suffix ? <span className="cx-num-affix">{suffix}</span> : null}
+          </div>
         </div>
+        {/* The fader: the native range sits on top, transparent; everything under it is drawn */}
+        <div className="cx-fader">
+          <input
+            type="range"
+            min={min}
+            max={max}
+            step={step}
+            value={v}
+            disabled={disabled}
+            onChange={(e) => onChange(Number(e.target.value))}
+            onPointerDown={() => {
+              if (!disabled) setDrag(true);
+            }}
+            onBlur={() => setDrag(false)}
+            aria-label={`${label} slider`}
+            aria-valuetext={unit === "inr" ? `₹${formatNumber(value)}` : `${value}${suffix ? ` ${suffix}` : ""}`}
+            className="cx-range"
+          />
+          <span aria-hidden className="cx-rail">
+            <span className="cx-track">
+              <span className="cx-fill" />
+            </span>
+            <span className="cx-ticks">
+              <i />
+              <i />
+              <i />
+              <i />
+              <i />
+            </span>
+            <span className="cx-stop cx-stop-min" />
+            <span className="cx-stop cx-stop-max" />
+            <span className="cx-thumb" />
+            <span className="cx-tag">{short(v, unit, decimals)}</span>
+          </span>
+        </div>
+        <div className="cx-scale">
+          <span className="cx-end cx-end-min">{end(min)}</span>
+          <span className="cx-words">{words ? (unit === "inr" ? `₹${words}` : words) : null}</span>
+          <span className="cx-end cx-end-max">{end(max)}</span>
+        </div>
+        {quick.length ? (
+          <div role="group" aria-label={`${label}: quick values`} className="cx-presets">
+            {quick.map((p) => (
+              <button key={p} type="button" aria-pressed={value === p} disabled={disabled} onClick={() => onChange(p)} className="cx-preset">
+                {short(p, unit, decimals, true)}
+              </button>
+            ))}
+          </div>
+        ) : null}
       </div>
-      {/* The fader: a drawn scale and fill under a transparent native range, so keyboard,
-          touch and assistive tech all get the real control */}
-      <div className="range mt-1" style={{ ["--ratio" as string]: pct / 100 }}>
-        <span aria-hidden className="range-track">
-          <span className="range-fill" />
-        </span>
-        <span aria-hidden className="range-ticks">
-          <i />
-          <i />
-          <i />
-          <i />
-          <i />
-        </span>
-        <input
-          type="range"
-          min={min}
-          max={max}
-          step={step}
-          value={clamp(value, min, max)}
-          disabled={disabled}
-          onChange={(e) => onChange(Number(e.target.value))}
-          aria-label={`${label} slider`}
-          aria-valuetext={unit === "inr" ? `₹${formatNumber(value)}` : `${value}${suffix ? ` ${suffix}` : ""}`}
-          className="range-input"
-        />
-      </div>
-      <div className="mt-1 flex justify-between gap-2 text-xs text-muted tabular">
-        <span>{unit === "inr" ? `₹${amountInWords(min)}` : `${min}${suffix && ` ${suffix}`}`}</span>
-        {words ? <span className="text-center font-semibold text-ink-2">{unit === "inr" ? `₹${words}` : words}</span> : null}
-        <span className="text-right">{unit === "inr" ? `₹${amountInWords(max)}` : `${max}${suffix && ` ${suffix}`}`}</span>
+      <div id={errId} aria-live="polite">
+        {message ? <p className="cx-error">{message}</p> : null}
       </div>
       {hint ? (
         <p id={hintId} className="mt-2 text-xs leading-normal text-muted">
@@ -188,29 +274,89 @@ export function SelectField({ label, value, onChange, options }: { label: string
 // Layout
 
 /**
- * One instrument: inputs on white and the readout on black, joined under a single ink frame on
- * wide screens, the readout column sticky. Below lg the result column and panel dissolve
- * (display: contents) so the black readout becomes a grid item that sticks to the bottom of the
- * screen while the inputs scroll past: the number stays in view, above the thumb, while dragging.
+ * One instrument: inputs on white and the readout on black under a single ink frame. From lg the
+ * results column sits beside the inputs and sticks. Below lg the results column and panel
+ * dissolve (display: contents), and the black readout moves to the top of the block (CSS order)
+ * and pins under the nav, compact, so the number stays in view while the inputs below it are
+ * worked, and nothing is left behind where it would otherwise have sat.
  */
 export function CalcLayout({ inputs, results }: { inputs: ReactNode; results: ReactNode }) {
   return (
     <div className="grid items-start lg:grid-cols-2">
-      <div className="border border-ink bg-white px-4 py-1 md:px-6 lg:border-r-0">{inputs}</div>
+      <div className="border border-ink bg-white px-4 py-1 max-lg:border-t-0 md:px-6 lg:border-r-0">{inputs}</div>
       <div className="max-lg:contents lg:sticky lg:top-16">{results}</div>
     </div>
   );
 }
 
-export function ResultPanel({ label, value, format = "inr", decimals = 0, sub, children }: { label: string; value: number; format?: "inr" | "pct" | "num"; decimals?: number; sub?: ReactNode; children?: ReactNode }) {
+export type SplitPart = { label: string; value: number; color: string };
+
+/**
+ * A single proportion bar: each part's share drawn with transform, so it eases as the inputs move,
+ * and under it each part's label, rupee value and share. Compact (a thin bar, small type) while
+ * the readout is pinned on a phone; full size from lg in a ResultPanel and from md in MiniSip.
+ */
+export function SplitBar({ split, className = "" }: { split: SplitPart[]; className?: string }) {
+  const parts = split.map((s) => ({ ...s, v: Math.max(s.value, 0) }));
+  const total = parts.reduce((a, p) => a + p.v, 0) || 1;
+  const segs = parts.map((p, i) => ({ ...p, start: parts.slice(0, i).reduce((a, q) => a + q.v, 0) / total, frac: p.v / total }));
+  return (
+    <div className={`cx-split ${className}`}>
+      <div aria-hidden className="cx-split-bar">
+        {segs.map((s) => (
+          <span key={s.label} className="cx-split-seg" style={{ background: s.color, transform: `translateX(${s.start * 100}%) scaleX(${s.frac})` }} />
+        ))}
+        {segs.slice(1).map((s) => (
+          <span key={`cut-${s.label}`} className="cx-split-cut" style={{ transform: `translateX(${s.start * 100}%)` }}>
+            <i />
+          </span>
+        ))}
+      </div>
+      <dl className="cx-split-legend" style={{ gridTemplateColumns: `repeat(${segs.length}, minmax(0, 1fr))` }}>
+        {segs.map((s) => (
+          <div key={s.label} className="cx-split-item">
+            <dt className="cx-split-label">
+              <span aria-hidden className="cx-swatch" style={{ background: s.color }} />
+              <span className="cx-split-name">{s.label}</span>
+            </dt>
+            <dd className="cx-split-value">
+              <span className="cx-split-amt">{formatINRCompact(s.value)}</span>
+              <span className="cx-split-pct">{(s.frac * 100).toFixed(1)}%</span>
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  );
+}
+
+export function ResultPanel({
+  label,
+  value,
+  format = "inr",
+  decimals = 0,
+  sub,
+  children,
+  split,
+}: {
+  label: string;
+  value: number;
+  format?: "inr" | "pct" | "num";
+  decimals?: number;
+  sub?: ReactNode;
+  children?: ReactNode;
+  /** Parts of the result (invested and returns, say), drawn as one proportion bar under the number. */
+  split?: SplitPart[];
+}) {
   return (
     <div className="max-lg:contents">
-      <div className="surface-ink z-10 border border-black px-4 py-4 max-lg:sticky max-lg:bottom-0 max-lg:z-[45] md:px-6 lg:py-6">
+      <div className="surface-ink cx-readout border border-black">
         <p className="kicker text-muted">{label}</p>
-        <p className="readout readout-xl mt-2">
+        <p className="cx-figure mt-1 lg:mt-2">
           <LiveValue value={value} format={format} decimals={decimals} live />
         </p>
-        {sub ? <div className="mt-2.5 border-t border-rule pt-2.5 text-sm leading-normal text-ink-2">{sub}</div> : null}
+        {split && split.length ? <SplitBar split={split} /> : null}
+        {sub ? <div className="cx-readout-sub">{sub}</div> : null}
       </div>
       {children ? <div className="border border-t-0 border-ink bg-white px-4 py-5 md:px-6">{children}</div> : null}
     </div>

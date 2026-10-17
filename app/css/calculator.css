@@ -1,1 +1,764 @@
-/* Calculator instrument styles. Imported by globals.css. */
+/* Calculator instrument styles. Imported by globals.css, ahead of its own rules, so everything
+   here uses new cx- class names and never restyles a class that globals.css defines. */
+
+@layer components {
+  /* ==========================================================================
+     Slider unit: label, number box and fader in one frame. States ride on the
+     unit as data attributes: data-at (min|max), data-drag, data-invalid,
+     data-disabled. Focus on either input rings the whole unit.
+     ========================================================================== */
+  .cx-field {
+    padding-block: 0.75rem;
+  }
+  .calc-field + .cx-field,
+  .cx-field + .calc-field {
+    border-top: 1px solid var(--color-rule);
+  }
+
+  .cx-unit {
+    --cx-thumb-w: 12px;
+    --cx-thumb-h: 26px;
+    --cx-pad: 0.75rem;
+    position: relative;
+    border: 1px solid var(--color-rule-strong);
+    background: var(--field-bg);
+    color: var(--color-ink);
+  }
+  .cx-unit:hover {
+    border-color: var(--color-muted);
+  }
+  .cx-unit:focus-within {
+    border-color: var(--color-ink);
+    outline: 2px solid var(--focus);
+    outline-offset: 0;
+  }
+
+  /* Head: the label cell and the number cell, joined by a hairline */
+  .cx-unit-head {
+    display: flex;
+    align-items: stretch;
+    border-bottom: 1px solid var(--color-rule);
+  }
+  .cx-unit-label {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    min-width: 0;
+    min-height: 2.75rem;
+    padding: 0.5rem var(--cx-pad);
+    font-size: var(--text-md);
+    line-height: 1.3;
+    font-weight: 600;
+    color: var(--color-ink);
+    cursor: text;
+  }
+  .cx-num {
+    position: relative;
+    display: flex;
+    flex-shrink: 0;
+    align-items: stretch;
+    border-left: 1px solid var(--color-rule);
+  }
+  /* The cell being typed into takes an ink underline, drawn in from the left */
+  .cx-num::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: -1px;
+    height: 2px;
+    background: var(--color-ink);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .cx-num:focus-within::after {
+    transform: scaleX(1);
+  }
+  .cx-num-affix {
+    display: flex;
+    align-items: center;
+    padding-inline: 0.5rem;
+    background: var(--color-paper-2);
+    color: var(--color-muted);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .cx-num-affix:first-child {
+    border-right: 1px solid var(--color-rule);
+  }
+  .cx-num-affix:last-child {
+    border-left: 1px solid var(--color-rule);
+  }
+  .cx-num-input {
+    width: 6.5rem;
+    min-width: 0;
+    padding: 0 0.625rem;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: inherit;
+    font-family: var(--font-sans);
+    font-size: var(--text-lg); /* 18px: no zoom on iOS focus */
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .cx-num-input:focus,
+  .cx-num-input:focus-visible {
+    outline: none;
+  }
+
+  /* Fader: a 44px row. The native range sits on top, transparent, with an invisible thumb as
+     wide as the drawn cap, so the rail (inset by half a cap) puts the drawn cap exactly where
+     the native one would be and a tap lands where it looks like it should. */
+  .cx-fader {
+    position: relative;
+    height: 2.75rem;
+    margin: 0.25rem var(--cx-pad) 0;
+  }
+  .cx-range {
+    -webkit-appearance: none;
+    appearance: none;
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    background: transparent;
+    cursor: pointer;
+    touch-action: pan-y;
+  }
+  .cx-unit[data-drag] .cx-range {
+    cursor: grabbing;
+  }
+  .cx-range:focus,
+  .cx-range:focus-visible {
+    outline: none;
+  }
+  .cx-range::-webkit-slider-runnable-track {
+    height: 2.75rem;
+    border: 0;
+    background: transparent;
+  }
+  .cx-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: var(--cx-thumb-w);
+    height: 2.75rem;
+    border: 0;
+    background: transparent;
+  }
+  .cx-range::-moz-range-track {
+    height: 2.75rem;
+    border: 0;
+    background: transparent;
+  }
+  .cx-range::-moz-range-progress {
+    background: transparent;
+  }
+  .cx-range::-moz-range-thumb {
+    width: var(--cx-thumb-w);
+    height: 2.75rem;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .cx-rail {
+    position: absolute;
+    inset-block: 0;
+    inset-inline: calc(var(--cx-thumb-w) / 2);
+    z-index: 1;
+    pointer-events: none;
+  }
+  .cx-track {
+    position: absolute;
+    inset-inline: 0;
+    top: 50%;
+    height: 4px;
+    margin-top: -2px;
+    background: var(--color-rule);
+  }
+  .cx-fader:hover .cx-track {
+    background: var(--color-rule-strong);
+  }
+  .cx-fill {
+    position: absolute;
+    inset: 0;
+    background: var(--color-ink);
+    transform: scaleX(var(--ratio, 0));
+    transform-origin: left center;
+  }
+  /* Ticks at min, the quartiles and max: the stops the presets come from */
+  .cx-ticks {
+    position: absolute;
+    inset-inline: 0;
+    top: calc(50% + 6px);
+    height: 5px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .cx-ticks > i {
+    width: 1px;
+    background: var(--color-rule-strong);
+  }
+
+  /* The cap: a slim ink bar with a centre line. Dragging inverts it and grows it a little */
+  .cx-thumb {
+    position: absolute;
+    top: 50%;
+    left: calc(var(--ratio, 0) * 100%);
+    width: var(--cx-thumb-w);
+    height: var(--cx-thumb-h);
+    border: 2px solid var(--color-ink);
+    background: var(--color-ink);
+    transform: translate(-50%, -50%);
+    transition: transform var(--duration-fast) var(--ease-out);
+  }
+  .cx-thumb::after {
+    content: "";
+    position: absolute;
+    top: 5px;
+    bottom: 5px;
+    left: 50%;
+    width: 2px;
+    margin-left: -1px;
+    background: var(--field-bg);
+  }
+  .cx-unit[data-drag] .cx-thumb,
+  .cx-range:active ~ .cx-rail .cx-thumb {
+    background: var(--field-bg);
+    transform: translate(-50%, -50%) scale(1.15);
+  }
+  .cx-unit[data-drag] .cx-thumb::after,
+  .cx-range:active ~ .cx-rail .cx-thumb::after {
+    background: var(--color-ink);
+  }
+  .cx-range:focus-visible ~ .cx-rail .cx-thumb {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  /* The value riding on the cap: shown while dragging and while the fader has keyboard focus */
+  .cx-tag {
+    position: absolute;
+    left: calc(var(--ratio, 0) * 100%);
+    bottom: calc(50% + var(--cx-thumb-h) / 2 + 6px);
+    padding: 0.125rem 0.375rem;
+    background: var(--color-ink);
+    color: var(--field-bg);
+    font-size: var(--text-xs);
+    line-height: 1.35;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translate(-50%, 4px);
+    transition:
+      opacity var(--duration-fast) var(--ease-out),
+      transform var(--duration-fast) var(--ease-out);
+  }
+  .cx-tag::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -4px;
+    border: 4px solid transparent;
+    border-top-color: var(--color-ink);
+    border-bottom: 0;
+  }
+  .cx-unit[data-drag] .cx-tag,
+  .cx-range:active ~ .cx-rail .cx-tag,
+  .cx-range:focus-visible ~ .cx-rail .cx-tag {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  /* Hard stops: at either end of the scale a bar stands just outside the cap */
+  .cx-stop {
+    position: absolute;
+    top: 50%;
+    width: 2px;
+    height: 1.25rem;
+    margin-top: -0.625rem;
+    background: var(--color-ink);
+    opacity: 0;
+    transform: scaleY(0.4);
+    transition:
+      opacity var(--duration-fast) var(--ease-out),
+      transform var(--duration-fast) var(--ease-out);
+  }
+  .cx-stop-min {
+    left: calc(var(--cx-thumb-w) / -2 - 5px);
+  }
+  .cx-stop-max {
+    right: calc(var(--cx-thumb-w) / -2 - 5px);
+  }
+  .cx-unit[data-at="min"] .cx-stop-min,
+  .cx-unit[data-at="max"] .cx-stop-max {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Scale: min and max at the ends, the value in words between them */
+  .cx-scale {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: start;
+    gap: 0.5rem;
+    padding: 0 var(--cx-pad) 0.5rem;
+    font-size: var(--text-xs);
+    line-height: var(--text-xs--line-height);
+    font-variant-numeric: tabular-nums;
+    color: var(--color-muted);
+  }
+  .cx-end {
+    justify-self: start;
+    padding-top: 0.125rem;
+    border-top: 2px solid transparent;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .cx-end-max {
+    justify-self: end;
+  }
+  .cx-words {
+    padding-top: calc(0.125rem + 2px);
+    font-weight: 600;
+    color: var(--color-ink-2);
+    text-align: center;
+    white-space: nowrap;
+  }
+  .cx-unit[data-at="min"] .cx-end-min,
+  .cx-unit[data-at="max"] .cx-end-max {
+    border-top-color: var(--color-ink);
+    color: var(--color-ink);
+  }
+
+  /* Presets: a quiet strip of joined cells along the foot of the unit */
+  .cx-presets {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    border-top: 1px solid var(--color-rule);
+  }
+  .cx-preset {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.25rem;
+    padding: 0 0.25rem;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--color-muted);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .cx-preset + .cx-preset {
+    border-left: 1px solid var(--color-rule);
+  }
+  .cx-preset::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: -1px;
+    height: 2px;
+    background: var(--color-ink);
+    transform: scaleX(0);
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .cx-preset:hover {
+    background: var(--color-paper);
+    color: var(--color-ink);
+  }
+  .cx-preset[aria-pressed="true"] {
+    color: var(--color-ink);
+    font-weight: 700;
+  }
+  .cx-preset[aria-pressed="true"]::before {
+    transform: scaleX(1);
+  }
+  .cx-preset:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: -2px;
+  }
+  .cx-preset:disabled {
+    background: transparent;
+    color: var(--color-faint);
+    cursor: not-allowed;
+  }
+  @media (pointer: coarse) {
+    .cx-preset {
+      min-height: 2.75rem;
+    }
+  }
+
+  /* A typed number outside the scale: the unit turns red and says where the value will land */
+  .cx-unit[data-invalid] {
+    border-color: var(--color-down);
+  }
+  .cx-unit[data-invalid]:focus-within {
+    outline-color: var(--color-down);
+  }
+  .cx-unit[data-invalid]::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    bottom: -1px;
+    left: -1px;
+    width: 3px;
+    background: var(--color-down);
+  }
+  .cx-unit[data-invalid] .cx-num-input,
+  .cx-unit[data-invalid] .cx-num-affix {
+    color: var(--color-down);
+  }
+  .cx-unit[data-invalid] .cx-num::after {
+    background: var(--color-down);
+  }
+  .cx-error {
+    margin-top: 0.5rem;
+    padding-left: 0.625rem;
+    border-left: 3px solid var(--color-down);
+    font-size: var(--text-sm);
+    line-height: var(--text-sm--line-height);
+    font-weight: 600;
+    color: var(--color-down);
+  }
+
+  .cx-unit[data-disabled] {
+    border-style: dashed;
+    background: var(--color-paper-2);
+    color: var(--color-muted);
+  }
+  .cx-unit[data-disabled] .cx-unit-label,
+  .cx-unit[data-disabled] .cx-num-input,
+  .cx-unit[data-disabled] .cx-range {
+    cursor: not-allowed;
+  }
+  .cx-unit[data-disabled] .cx-fader,
+  .cx-unit[data-disabled] .cx-scale {
+    opacity: 0.5;
+  }
+  .cx-unit[data-disabled] .cx-thumb {
+    border-color: var(--color-rule-strong);
+    background: var(--color-rule-strong);
+  }
+
+  /* ==========================================================================
+     Readout: the result is the hero. Tabular, one line, its size set by the
+     panel's width (never by the value), so the number never wraps or jumps.
+     ========================================================================== */
+  .cx-figure {
+    display: block;
+    font-size: 2rem;
+    font-size: min(2rem, 10.5cqi);
+    line-height: 1.1;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-ink);
+  }
+
+  /* ResultPanel's black block. Below lg it moves to the top of the calculator and pins under
+     the nav, compact; from lg it sits in the sticky results column at full size. */
+  .cx-readout {
+    container-type: inline-size;
+    padding: 0.75rem 1rem;
+  }
+  @media (width < 64rem) {
+    .cx-readout {
+      order: -1;
+      position: sticky;
+      top: var(--nav-h);
+      z-index: 35;
+    }
+  }
+  @media (width >= 48rem) {
+    .cx-readout {
+      padding-inline: 1.5rem;
+    }
+  }
+  .cx-readout-sub {
+    margin-top: 0.625rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--color-rule);
+    font-size: var(--text-xs);
+    line-height: var(--text-xs--line-height);
+    color: var(--color-ink-2);
+  }
+
+  /* Split: one proportion bar and a legend of label, rupee value and share */
+  .cx-split {
+    --cx-split-h: 4px;
+    margin-top: 0.625rem;
+  }
+  .cx-split-bar {
+    position: relative;
+    height: var(--cx-split-h);
+    overflow: hidden;
+    background: var(--color-rule);
+    outline: 1px solid var(--color-rule-strong);
+  }
+  .cx-split-seg,
+  .cx-split-cut {
+    position: absolute;
+    inset: 0;
+    transform-origin: left center;
+    transition: transform var(--duration-slow) var(--ease-out);
+  }
+  .cx-split-cut > i {
+    position: absolute;
+    inset-block: 0;
+    left: -1px;
+    width: 2px;
+    background: var(--cx-panel, var(--color-paper));
+  }
+  .cx-split-legend {
+    display: grid;
+    margin-top: 0.5rem;
+  }
+  .cx-split-item {
+    min-width: 0;
+    padding-inline: 0.75rem;
+  }
+  .cx-split-item:first-child {
+    padding-left: 0;
+  }
+  .cx-split-item + .cx-split-item {
+    border-left: 1px solid var(--color-rule);
+  }
+  .cx-split-label {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    min-width: 0;
+    font-size: var(--text-2xs);
+    line-height: 1.35;
+    font-weight: 700;
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .cx-split-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .cx-swatch {
+    display: inline-block;
+    flex-shrink: 0;
+    width: 0.5rem;
+    height: 0.5rem;
+    outline: 1px solid color-mix(in srgb, var(--color-ink) 22%, transparent);
+    outline-offset: -1px;
+  }
+  .cx-split-value {
+    display: flex;
+    align-items: baseline;
+    gap: 0.375rem;
+    margin-top: 0.125rem;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .cx-split-amt {
+    font-size: var(--text-sm);
+    line-height: 1.25;
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  .cx-split-pct {
+    font-size: var(--text-2xs);
+    line-height: 1.25;
+    color: var(--color-muted);
+  }
+
+  @media (width >= 64rem) {
+    .cx-readout {
+      padding-block: 1.5rem;
+    }
+    .cx-readout .cx-figure {
+      font-size: var(--text-5xl);
+      font-size: min(var(--text-5xl), 11cqi);
+    }
+    .cx-readout .cx-split {
+      --cx-split-h: 10px;
+      margin-top: 1rem;
+    }
+    .cx-readout .cx-split-legend {
+      margin-top: 0.75rem;
+    }
+    .cx-readout .cx-split-amt {
+      font-size: var(--text-lg);
+    }
+    .cx-readout .cx-split-pct {
+      font-size: var(--text-xs);
+    }
+    .cx-readout-sub {
+      margin-top: 1rem;
+      padding-top: 0.75rem;
+      font-size: var(--text-sm);
+      line-height: var(--text-sm--line-height);
+    }
+  }
+
+  /* ==========================================================================
+     MiniSip: faders on white, readout and donut on a recessed dark panel.
+     Phone: readout first, pinned under the nav; faders; donut and button.
+     md up: faders left; readout top right; donut and button bottom right.
+     ========================================================================== */
+  .cx-mini-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .cx-mini-readout {
+    --cx-panel: var(--color-paper-2);
+    container-type: inline-size;
+    padding: 0.875rem 1rem;
+    border-bottom: 1px solid var(--color-rule);
+  }
+  .cx-mini-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-top: 1px solid var(--color-rule);
+  }
+  @media (width < 48rem) {
+    .cx-mini-readout {
+      order: -1;
+      position: sticky;
+      top: var(--nav-h);
+      z-index: 35;
+    }
+  }
+  @media (width >= 40rem) {
+    .cx-mini-readout,
+    .cx-mini-foot {
+      padding-inline: 1.25rem;
+    }
+  }
+  @media (width >= 48rem) {
+    .cx-mini-grid {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      grid-template-rows: auto 1fr;
+    }
+    .cx-mini-faders {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+    }
+    .cx-mini-readout {
+      grid-column: 2;
+      grid-row: 1;
+      padding: 1.25rem;
+      border-bottom: 0;
+      border-left: 1px solid var(--color-rule);
+    }
+    .cx-mini-readout .cx-figure {
+      font-size: var(--text-4xl);
+      font-size: min(var(--text-4xl), 11cqi);
+    }
+    .cx-mini-readout .cx-split {
+      --cx-split-h: 8px;
+      margin-top: 0.875rem;
+    }
+    .cx-mini-readout .cx-split-legend {
+      margin-top: 0.625rem;
+    }
+    .cx-mini-readout .cx-split-amt {
+      font-size: var(--text-base);
+    }
+    .cx-mini-readout .cx-split-pct {
+      font-size: var(--text-xs);
+    }
+    .cx-mini-foot {
+      grid-column: 2;
+      grid-row: 2;
+      align-items: flex-end;
+      align-content: flex-end;
+      padding: 0 1.25rem 1.25rem;
+      border-top: 0;
+      border-left: 1px solid var(--color-rule);
+    }
+  }
+
+  /* ==========================================================================
+     Donut: shares set in place on the ring. Each label hangs from a spoke that
+     rotates to the arc's midpoint (and counter-rotates, so the text stays
+     upright); both ease with the arcs. Hidden until the ring has drawn in.
+     ========================================================================== */
+  .cx-donut-spoke {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    transition: transform var(--duration-slow) var(--ease-out);
+  }
+  .cx-donut-label {
+    position: absolute;
+    left: 50%;
+    font-size: var(--text-2xs);
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    transition:
+      transform var(--duration-slow) var(--ease-out),
+      opacity var(--duration-base) var(--ease-out) var(--duration-fast);
+  }
+  .cx-donut-label[data-hidden] {
+    opacity: 0;
+  }
+  html[data-js] .donut:not([data-seen]) .cx-donut-label {
+    opacity: 0;
+  }
+  .cx-donut-center {
+    position: absolute;
+    inset: 21%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  /* ==========================================================================
+     Reduced motion: no transitions; state still shows, without the movement
+     ========================================================================== */
+  @media (prefers-reduced-motion: reduce) {
+    .cx-num::after,
+    .cx-thumb,
+    .cx-tag,
+    .cx-stop,
+    .cx-preset::before,
+    .cx-split-seg,
+    .cx-split-cut,
+    .cx-donut-spoke,
+    .cx-donut-label {
+      transition: none;
+    }
+    .cx-unit[data-drag] .cx-thumb,
+    .cx-range:active ~ .cx-rail .cx-thumb {
+      transform: translate(-50%, -50%);
+    }
+    .cx-tag {
+      transform: translate(-50%, 0);
+    }
+    .cx-stop {
+      transform: none;
+    }
+  }
+}

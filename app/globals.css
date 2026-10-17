@@ -2433,9 +2433,9 @@
     font-size: var(--text-xs);
     line-height: var(--text-xs--line-height);
   }
-  @container lead (min-width: 34rem) {
+  @container lead (min-width: 30rem) {
     .lead {
-      grid-template-columns: minmax(0, 1fr) minmax(8.5rem, 28%);
+      grid-template-columns: minmax(0, 1fr) minmax(7.5rem, 26%);
     }
     .lead-rule {
       grid-row: 2;
@@ -2451,6 +2451,14 @@
       display: block;
       margin-top: 0;
       padding-top: 0.5rem;
+    }
+  }
+  /* Where the plate shares the width with the caption column, the headline steps down to fit it */
+  @container lead (min-width: 30rem) and (max-width: 40rem) {
+    .lead-title {
+      font-size: var(--text-3xl);
+      line-height: var(--text-3xl--line-height);
+      letter-spacing: var(--text-3xl--letter-spacing);
     }
   }
   /* First load only: the lead headline rises into place behind a clip, in reading order, under 400ms */
@@ -2740,6 +2748,10 @@
   }
   .newsletter-reveal {
     position: relative;
+  }
+  /* The sign-up panel starts 20px to the right; the band clips it so a phone never scrolls sideways */
+  .band-closing {
+    overflow-x: clip;
   }
   .newsletter-reveal::before {
     content: "";
