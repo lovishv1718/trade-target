@@ -84,7 +84,7 @@ export function IpoPreviewTable({ ipos, buildDate }: { ipos: Ipo[]; buildDate: s
     <>
       <p className="scroll-hint mb-2">Swipe sideways for every column</p>
       <div className="table-wrap" tabIndex={0} role="region" aria-label="Mainboard IPOs">
-        <table className="data-table min-w-[720px]">
+        <table className="data-table dx-rows min-w-[720px]">
           <thead>
             <tr>
               <th scope="col" className="sticky-col">

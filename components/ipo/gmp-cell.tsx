@@ -1,9 +1,29 @@
+"use client";
+
+import { useEffect } from "react";
 import { formatNumber } from "@/lib/format";
 import { gmpPct, type Ipo } from "@/lib/ipo";
+import { useSeen } from "../reveal";
 
 /** The largest premium on the board, as a percentage of the upper band: the full width of every GMP bar. */
 export function gmpScale(ipos: Ipo[]) {
   return Math.max(10, ...ipos.map((i) => Math.abs(gmpPct(i) ?? 0)));
+}
+
+/**
+ * The premium's bar. It grows out to its value once, the first time it comes into view (see
+ * .dx-grow in data.css). `data-armed` says the script is running, so the stall fallback stands down.
+ */
+function GmpBar({ dir, w }: { dir: "up" | "down" | "flat"; w: number }) {
+  const ref = useSeen<HTMLSpanElement>();
+  useEffect(() => {
+    ref.current?.setAttribute("data-armed", "");
+  }, [ref]);
+  return (
+    <span ref={ref} className="gmp-bar dx-grow" data-dir={dir} aria-hidden style={{ ["--w" as string]: w }}>
+      <i />
+    </span>
+  );
 }
 
 /**
@@ -19,9 +39,7 @@ export function GmpCell({ ipo, scale }: { ipo: Ipo; scale: number }) {
   const w = pct === null ? 0 : Math.min(Math.abs(pct) / scale, 1);
   return (
     <span className="gmp">
-      <span className="gmp-bar" data-dir={dir} aria-hidden style={{ ["--w" as string]: w }}>
-        <i />
-      </span>
+      <GmpBar dir={dir} w={w} />
       <span className="text-right">
         <span className={`block whitespace-nowrap font-semibold ${dir === "up" ? "text-up" : dir === "down" ? "text-down" : "text-ink"}`}>
           {dir !== "flat" ? (

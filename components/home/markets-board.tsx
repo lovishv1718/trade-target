@@ -1,8 +1,8 @@
 import markets from "@/content/markets.json";
 import { formatNumber } from "@/lib/format";
-import { Wipe } from "../reveal";
 import { ChangeChip } from "./change-chip";
 import { MarketStatus } from "./market-status-badge";
+import { TickValue } from "./tick-value";
 
 /** `series`, when a feed supplies it, is the session's prices in order; the sample has only the close. */
 type Quote = { id: string; name: string; value: number; change: number; changePct: number; unit?: string; unitLabel?: string; series?: number[] };
@@ -21,7 +21,8 @@ const H = 18;
 /**
  * The session drawn from the previous close (the dotted baseline) to the latest value, as a
  * percentage on the shared scale. With only the close in the sample data this is a straight
- * run; with a feed's intraday series it becomes the full path. Draws in once when first seen.
+ * run; with a feed's intraday series it becomes the full path. Drawn still: on the board only the
+ * figures move, and only when they change.
  */
 function Spark({ q }: { q: Quote }) {
   const prev = q.value - q.change;
@@ -32,18 +33,21 @@ function Spark({ q }: { q: Quote }) {
   const line = pts.map((p, i) => `${i ? "L" : "M"}${x(i).toFixed(1)} ${y(p).toFixed(1)}`).join(" ");
   const last = pts.length - 1;
   return (
-    <Wipe className={q.change > 0 ? "text-up" : q.change < 0 ? "text-down" : "text-muted"}>
+    <span className={`block ${q.change > 0 ? "text-up" : q.change < 0 ? "text-down" : "text-muted"}`}>
       <svg className="spark" viewBox={`0 0 ${W} ${H}`} width={W} height={H} aria-hidden>
         <line className="spark-base" x1="0" x2={W} y1={mid} y2={mid} strokeWidth="1" />
         <path d={`${line} L${x(last).toFixed(1)} ${mid} L0 ${mid} Z`} fill="currentColor" opacity="0.18" />
         <path d={line} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         <circle cx={x(last)} cy={y(pts[last])} r="1.9" fill="currentColor" />
       </svg>
-    </Wipe>
+    </span>
   );
 }
 
-/** One instrument. Rows take focus so the board can be read from the keyboard; hover and focus look the same. */
+/**
+ * One instrument. Rows take focus so the board can be read from the keyboard; hover and focus look
+ * the same. The last price and the change update in place, flashing their direction when they move.
+ */
 function QuoteRow({ q, spark }: { q: Quote; spark: boolean }) {
   const decimals = decimalsFor(q);
   return (
@@ -58,11 +62,15 @@ function QuoteRow({ q, spark }: { q: Quote; spark: boolean }) {
         </td>
       ) : null}
       <td className="whitespace-nowrap text-right text-sm text-ink">
-        {q.unit === "rupee" ? "₹" : ""}
-        {formatNumber(q.value, decimals)}
+        <TickValue value={q.value} className="inline-block">
+          {q.unit === "rupee" ? "₹" : ""}
+          {formatNumber(q.value, decimals)}
+        </TickValue>
       </td>
       <td className="w-[5.5rem] text-right">
-        <ChangeChip value={q.change} pct={`${Math.abs(q.changePct).toFixed(2)}%`} abs={formatNumber(Math.abs(q.change), decimals)} />
+        <TickValue value={q.change} className="inline-flex" fit>
+          <ChangeChip value={q.change} pct={`${Math.abs(q.changePct).toFixed(2)}%`} abs={formatNumber(Math.abs(q.change), decimals)} />
+        </TickValue>
       </td>
     </tr>
   );
