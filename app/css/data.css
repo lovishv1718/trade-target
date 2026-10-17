@@ -1,0 +1,148 @@
+/* Markets rail, ticker and IPO data styles. Imported by globals.css.
+   Precision, not flourish: on the data the figures move only when they change, the tape runs,
+   premium bars grow once, and rows answer the pointer and the keyboard. Transform and opacity
+   only, and all of it stops under reduced motion. */
+
+@layer components {
+  /* ---- Ticks -----------------------------------------------------------------
+     A figure that changes flashes its direction once, in place. The tint sits behind the
+     figure on its own layer and only its opacity moves: it shows, holds a beat and is gone
+     inside 180ms. Nothing around it shifts. TickValue (components/home/tick-value.tsx)
+     sets data-flash only when the value differs from the one before. */
+  .dx-tick {
+    position: relative;
+    isolation: isolate;
+  }
+  .dx-tick::after {
+    content: "";
+    position: absolute;
+    inset: -0.125rem -0.25rem;
+    z-index: -1;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .dx-tick-fit::after {
+    inset: 0;
+  }
+  .dx-tick[data-flash="up"]::after {
+    background: color-mix(in srgb, var(--color-up) 30%, transparent);
+    animation: dx-flash var(--duration-base) var(--ease-out) both;
+  }
+  .dx-tick[data-flash="down"]::after {
+    background: color-mix(in srgb, var(--color-down) 30%, transparent);
+    animation: dx-flash var(--duration-base) var(--ease-out) both;
+  }
+
+  /* ---- The tape --------------------------------------------------------------
+     The quotes are set twice in one track and the track slides left by exactly one copy
+     (-50%), then starts over, so the join never shows. This is the one linear motion on the
+     site: a tape must run at constant speed, and any easing would make the quotes surge and
+     stall at the loop. Transform only, on its own compositor layer; it holds still under the
+     pointer and while focus is inside it. */
+  .dx-tape {
+    overflow: hidden;
+  }
+  .dx-tape-track {
+    display: flex;
+    flex: none;
+    width: max-content;
+    animation: dx-tape 56s linear infinite;
+    will-change: transform;
+  }
+  .dx-tape:hover .dx-tape-track,
+  .dx-tape:focus-within .dx-tape-track {
+    animation-play-state: paused;
+  }
+
+  /* ---- Premium bars ----------------------------------------------------------
+     A bar's fill waits at zero until the bar first comes into view, then scales out to its
+     value once. data-seen comes from useSeen; data-armed says the bar's script is running.
+     If scripting stalls before that, the fill shows at its value after 2.5s anyway. */
+  html[data-js] .dx-grow:not([data-seen]) > i {
+    transform: scaleX(0);
+  }
+  html[data-js] .dx-grow:not([data-seen]):not([data-armed]) > i {
+    animation: dx-grow-late 0s 2.5s forwards;
+  }
+  .dx-grow[data-seen] > i {
+    transition: transform 320ms var(--ease-out);
+  }
+
+  /* ---- IPO preview rows ------------------------------------------------------
+     Each row answers the pointer and the keyboard alike, as the markets board does: a tint
+     across the row and a stripe at its leading edge. The open issue keeps its IPO-blue stripe.
+     The sticky first cell keeps its column rule. */
+  @media (hover: hover) {
+    .dx-rows.data-table tbody tr:hover {
+      background: color-mix(in srgb, var(--color-ink) 6%, var(--color-paper-2));
+    }
+    .dx-rows.data-table tbody tr:not([data-live]):hover > :first-child {
+      box-shadow:
+        inset 2px 0 0 var(--color-ink),
+        inset -1px 0 0 var(--color-rule-strong);
+    }
+  }
+  .dx-rows.data-table tbody tr:focus-within {
+    background: color-mix(in srgb, var(--color-ink) 6%, var(--color-paper-2));
+  }
+  .dx-rows.data-table tbody tr:not([data-live]):focus-within > :first-child {
+    box-shadow:
+      inset 3px 0 0 var(--focus),
+      inset -1px 0 0 var(--color-rule-strong);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dx-tick::after {
+      display: none;
+      animation: none;
+    }
+    /* The tape stands still, set once, and scrolls sideways instead */
+    .dx-tape {
+      overflow-x: auto;
+      scroll-snap-type: x proximity;
+    }
+    .dx-tape-track {
+      animation: none;
+      will-change: auto;
+    }
+    .dx-tape-copy {
+      display: none;
+    }
+    html[data-js] .dx-grow:not([data-seen]) > i,
+    html[data-js] .dx-grow:not([data-seen]):not([data-armed]) > i {
+      transform: scaleX(var(--w, 0));
+      animation: none;
+    }
+    .dx-grow[data-seen] > i {
+      transition: none;
+    }
+  }
+}
+
+/* Shows, holds a beat, fades: under 200ms in all */
+@keyframes dx-flash {
+  0%,
+  35% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* One copy's width, at constant speed (see .dx-tape-track) */
+@keyframes dx-tape {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* If scripting stalls, a premium bar shows at its value */
+@keyframes dx-grow-late {
+  to {
+    transform: scaleX(var(--w, 0));
+  }
+}
