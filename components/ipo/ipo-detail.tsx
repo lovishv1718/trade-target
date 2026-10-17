@@ -30,9 +30,11 @@ function Block({ title, children, note }: { title: string; children: React.React
   const id = slugId(title);
   return (
     <section className="mt-12" aria-labelledby={id}>
-      <h2 id={id} className="headline border-t border-ink pt-3 text-2xl">
-        {title}
-      </h2>
+      <div className="section-head" style={{ ["--rule-color" as string]: "var(--color-ipo)" }}>
+        <h2 id={id} className="section-title">
+          {title}
+        </h2>
+      </div>
       <div className="mt-4">{children}</div>
       {note ? <p className="mt-2 text-xs leading-normal text-muted">{note}</p> : null}
     </section>
@@ -75,8 +77,8 @@ export function IpoDetail({ ipo }: { ipo: Ipo }) {
             <span className="kicker text-ipo">{board}</span>
             <LiveStatus ipo={ipo} buildDate={buildDate} detail />
           </div>
-          <h1 className="headline mt-2 text-3xl md:text-4xl xl:text-5xl">{ipo.name} IPO</h1>
-          <p className="mt-3 text-lg leading-normal text-ink-2">
+          <h1 className="headline mt-2 text-balance text-3xl md:text-4xl xl:text-5xl">{ipo.name} IPO</h1>
+          <p className="deck mt-3 text-xl leading-normal">
             {ipo.sector}.{" "}
             {ipo.issueSizeCr ? `₹${crore(ipo.issueSizeCr)} crore issue` : "Issue"}
             {ipo.priceBand[1] ? `, price band ${priceBandLabel(ipo)}` : ""}
@@ -103,11 +105,11 @@ export function IpoDetail({ ipo }: { ipo: Ipo }) {
           </dl>
 
           {ipo.sample ? (
-            <p className="mt-4 border-l-3 border-company-mark bg-white px-4 py-2.5 text-sm leading-normal text-ink-2">
+            <p className="note note-sample mt-4">
               <strong className="text-ink">Sample data.</strong> Figures on this page are illustrative and were added to show how the IPO template works.
             </p>
           ) : (
-            <p className="mt-4 border-l-3 border-rule-strong bg-white px-4 py-2.5 text-sm leading-normal text-ink-2">
+            <p className="note mt-4">
               Figures from TradeTarget’s coverage of this issue. Fields we did not report are shown as –.
             </p>
           )}
@@ -117,12 +119,7 @@ export function IpoDetail({ ipo }: { ipo: Ipo }) {
           </Block>
 
           {photo ? (
-            <figure className="mt-10">
-              <Photo image={photo} sizes="(min-width: 1024px) 760px, 100vw" aspect="aspect-[2/1]" priority />
-              <figcaption className="mt-2 text-xs leading-normal text-muted">
-                {photo.caption}. Photo: {photo.credit}. Illustrative.
-              </figcaption>
-            </figure>
+            <Photo image={photo} sizes="(min-width: 1024px) 760px, 100vw" crop="panorama" priority caption="full" captionText={`${photo.caption}. Illustrative.`} className="mt-10" />
           ) : null}
 
           <Block title="Key details">
@@ -167,7 +164,9 @@ export function IpoDetail({ ipo }: { ipo: Ipo }) {
                   </table>
                 </>
               ) : (
-                <p className="border border-rule bg-paper-2 px-4 py-6 text-sm leading-normal text-muted">Bidding has not started. Subscription figures appear once the issue opens.</p>
+                <div className="empty">
+                  <p className="empty-text mt-0">Bidding has not started. Subscription figures appear once the issue opens.</p>
+                </div>
               )}
             </Block>
             <Block title="GMP trend" note="Grey market premium is unofficial and can change quickly.">
@@ -193,11 +192,13 @@ export function IpoDetail({ ipo }: { ipo: Ipo }) {
                   </table>
                 </>
               ) : (
-                <p className="border border-rule bg-paper-2 px-4 py-6 text-sm leading-normal text-muted tabular">
-                  {ipo.gmpHistory.length === 1
-                    ? `Last reported GMP: ${signedRupees(ipo.gmpHistory[0].gmp)} on ${formatDate(ipo.gmpHistory[0].date)}. Not enough readings for a trend.`
-                    : "No GMP readings tracked for this issue."}
-                </p>
+                <div className="empty">
+                  <p className="empty-text mt-0 tabular">
+                    {ipo.gmpHistory.length === 1
+                      ? `Last reported GMP: ${signedRupees(ipo.gmpHistory[0].gmp)} on ${formatDate(ipo.gmpHistory[0].date)}. Not enough readings for a trend.`
+                      : "No GMP readings tracked for this issue."}
+                  </p>
+                </div>
               )}
             </Block>
           </div>
@@ -263,22 +264,31 @@ export function IpoDetail({ ipo }: { ipo: Ipo }) {
         <aside>
           <div className="space-y-6 lg:sticky lg:top-16">
             <AtAGlance ipo={ipo} buildDate={buildDate} />
-            <nav className="border border-rule bg-white px-5 pb-2 pt-4" aria-label="IPO tools">
+            <nav className="border border-rule bg-white px-5 pb-1 pt-4" aria-label="IPO tools">
               <p className="kicker text-muted">IPO tools</p>
-              <ul className="mt-2 divide-y divide-rule text-md font-semibold">
+              <ul className="mt-2 divide-y divide-rule text-md">
                 <li>
-                  <Link prefetch={false} href="/ipo/" className="flex min-h-11 items-center justify-between gap-3 py-2.5 text-ink hover:text-ipo hover:underline">
-                    All IPOs this month <span aria-hidden>→</span>
+                  <Link prefetch={false} href="/ipo/" className="link-row">
+                    <span className="link-row-label">All IPOs this month</span>
+                    <span aria-hidden className="arrow">
+                      →
+                    </span>
                   </Link>
                 </li>
                 <li>
-                  <Link prefetch={false} href="/stock-market-iq/what-is-an-ipo/" className="flex min-h-11 items-center justify-between gap-3 py-2.5 text-ink hover:text-ipo hover:underline">
-                    What is an IPO? <span aria-hidden>→</span>
+                  <Link prefetch={false} href="/stock-market-iq/what-is-an-ipo/" className="link-row">
+                    <span className="link-row-label">What is an IPO?</span>
+                    <span aria-hidden className="arrow">
+                      →
+                    </span>
                   </Link>
                 </li>
                 <li>
-                  <Link prefetch={false} href="/calculators/cagr-calculator/" className="flex min-h-11 items-center justify-between gap-3 py-2.5 text-ink hover:text-ipo hover:underline">
-                    CAGR calculator <span aria-hidden>→</span>
+                  <Link prefetch={false} href="/calculators/cagr-calculator/" className="link-row">
+                    <span className="link-row-label">CAGR calculator</span>
+                    <span aria-hidden className="arrow">
+                      →
+                    </span>
                   </Link>
                 </li>
               </ul>
@@ -287,7 +297,7 @@ export function IpoDetail({ ipo }: { ipo: Ipo }) {
         </aside>
       </div>
 
-      <section className="mt-14" aria-label="Related articles">
+      <section className="mt-16" aria-label="Related articles">
         <SectionHeader title="IPO coverage" href="/ipo/" accent="ipo" />
         <div className="mt-5 grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
           {related.map((a) => (

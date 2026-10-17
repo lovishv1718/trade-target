@@ -15,11 +15,20 @@ function Glass({ className = "" }: { className?: string }) {
   );
 }
 
-export function SearchTrigger({ variant }: { variant: "box" | "icon" }) {
+export function SearchTrigger({ variant }: { variant: "box" | "icon" | "field" }) {
   if (variant === "icon") {
     return (
-      <button type="button" onClick={openSearch} aria-label="Search" className="flex h-11 w-11 shrink-0 items-center justify-center text-ink-2 hover:text-ink">
+      <button type="button" onClick={openSearch} aria-label="Search" className="btn btn-text btn-icon shrink-0">
         <Glass />
+      </button>
+    );
+  }
+  if (variant === "field") {
+    // Full width at every size: the 404 page's search box on phones
+    return (
+      <button type="button" onClick={openSearch} className="field mt-0 flex h-12 items-center gap-2.5 text-left text-base text-muted">
+        <Glass className="shrink-0 text-ink" />
+        <span className="min-w-0 flex-1 truncate">Search stories, IPOs, calculators</span>
       </button>
     );
   }

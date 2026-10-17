@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-/** Email sign-up. Works on paper (tone="light") or inside a .surface-ink band (tone="dark"); .field and .btn invert there. */
+/** Email sign-up. Works on any surface: .field and .btn take their look from the band they sit in. */
 export function NewsletterForm({ tone = "light", id }: { tone?: "light" | "dark"; id?: string }) {
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
@@ -13,8 +13,8 @@ export function NewsletterForm({ tone = "light", id }: { tone?: "light" | "dark"
 
   if (done) {
     return (
-      <p role="status" className={`border-l-[3px] border-success px-4 py-3 text-sm leading-normal ${dark ? "bg-white/10 text-white" : "bg-white text-ink-2"}`}>
-        Thanks. We’ve noted <strong className={dark ? "text-white" : "text-ink"}>{email}</strong> for the morning brief. This preview doesn’t send emails yet.
+      <p role="status" className={`note border-success text-ink-2 ${dark ? "bg-paper-2" : ""}`}>
+        Thanks. We’ve noted <strong className="text-ink">{email}</strong> for the morning brief. This preview doesn’t send emails yet.
       </p>
     );
   }
@@ -33,10 +33,10 @@ export function NewsletterForm({ tone = "light", id }: { tone?: "light" | "dark"
         }
       }}
     >
-      <label htmlFor={inputId} className="sr-only">
+      <label htmlFor={inputId} className="field-label">
         Email address
       </label>
-      <div className="flex flex-col gap-2 sm:flex-row">
+      <div className="mt-1.5 flex flex-col gap-2 sm:flex-row">
         <input
           id={inputId}
           type="email"
@@ -53,7 +53,7 @@ export function NewsletterForm({ tone = "light", id }: { tone?: "light" | "dark"
           className="field mt-0 min-w-0 flex-1"
         />
         <button type="submit" className="btn shrink-0">
-          Sign up
+          Sign up <span className="arrow" aria-hidden>→</span>
         </button>
       </div>
       {error ? (

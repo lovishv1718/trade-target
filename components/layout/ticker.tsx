@@ -15,7 +15,7 @@ function Item({ q }: { q: Quote }) {
   const change = `${sign}${formatNumber(Math.abs(q.change), 2)}`;
   const pct = `${sign}${Math.abs(q.changePct).toFixed(2)}%`;
   return (
-    <li className="flex shrink-0 items-baseline gap-2 whitespace-nowrap border-r border-rule px-4 tabular">
+    <li className="flex shrink-0 snap-start items-baseline gap-2 whitespace-nowrap border-r border-rule px-4 tabular">
       <span className="font-semibold text-ink">{q.name}</span>
       <span className="text-right text-ink-2" style={cell(value)}>
         {value}
@@ -34,8 +34,9 @@ function Item({ q }: { q: Quote }) {
 }
 
 /**
- * Right-to-left looping market tape. The list is rendered twice so the loop is seamless.
- * Under reduced motion the tape stands still and scrolls sideways instead, without the copy.
+ * The market tape: one still row of quotes, ruled like a terminal strip. Nothing on the page moves
+ * on its own, so the tape never loops; where it is wider than the screen it scrolls sideways under
+ * the finger, the trackpad or the arrow keys.
  */
 export function Ticker() {
   return (
@@ -50,20 +51,13 @@ export function Ticker() {
           role="region"
           aria-label="Market ticker, indicative, may be delayed"
           tabIndex={0}
-          className="group flex min-w-0 flex-1 items-center overflow-hidden focus-visible:-outline-offset-2 motion-reduce:overflow-x-auto motion-reduce:[scrollbar-width:thin]"
+          className="no-scrollbar flex min-w-0 flex-1 snap-x items-center overflow-x-auto overscroll-x-contain focus-visible:-outline-offset-2"
         >
-          <div className="flex w-max animate-ticker will-change-transform [backface-visibility:hidden] group-hover:[animation-play-state:paused] group-focus-within:[animation-play-state:paused] motion-reduce:animate-none">
-            <ul className="flex">
-              {markets.ticker.map((q) => (
-                <Item key={q.id} q={q} />
-              ))}
-            </ul>
-            <ul className="flex motion-reduce:hidden" aria-hidden>
-              {markets.ticker.map((q) => (
-                <Item key={q.id} q={q} />
-              ))}
-            </ul>
-          </div>
+          <ul className="flex w-max">
+            {markets.ticker.map((q) => (
+              <Item key={q.id} q={q} />
+            ))}
+          </ul>
         </div>
         <p className="flex shrink-0 items-center border-l border-rule pl-3 text-2xs font-semibold uppercase tracking-caps text-muted sm:hidden">Indicative</p>
       </div>

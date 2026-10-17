@@ -2,8 +2,12 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
-/** Renders `children` only once the placeholder is near the viewport, so heavy chart code loads on demand. */
-export function InView({ children, placeholderClass, margin = "300px" }: { children: ReactNode; placeholderClass: string; margin?: string }) {
+/**
+ * Renders `children` only once the placeholder is near the viewport, so heavy chart code loads on
+ * demand. The placeholder is the designed lazy slot (globals.css): a still frame of axes at the
+ * chart's exact size, labelled, never a shimmer.
+ */
+export function InView({ children, placeholderClass, margin = "300px", label = "Chart" }: { children: ReactNode; placeholderClass: string; margin?: string; label?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   useEffect(() => {
@@ -27,5 +31,5 @@ export function InView({ children, placeholderClass, margin = "300px" }: { child
     .split(/\s+/)
     .filter((c) => c && !/(^|:)animate-/.test(c))
     .join(" ");
-  return <div ref={ref} aria-hidden="true" data-placeholder="" className={calm} />;
+  return <div ref={ref} aria-hidden="true" data-placeholder="" data-label={label} className={`lazy-slot ${calm}`} />;
 }

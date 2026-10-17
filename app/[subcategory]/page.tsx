@@ -61,20 +61,20 @@ export default async function SubcategoryPage({ params }: Params) {
             <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2">
               {stories.map((s, i) => (
                 <div key={s.slug} className={i === 0 ? "sm:col-span-2" : ""}>
-                  <StoryTile story={s} standfirst aspect={i === 0 ? "aspect-[2/1]" : "aspect-[3/2]"} headingSize={i === 0 ? "text-2xl md:text-3xl" : "text-lg"} sizes={i === 0 ? "(min-width: 1024px) 860px, 100vw" : "(min-width: 640px) 420px, 100vw"} />
+                  <StoryTile story={s} standfirst crop={i === 0 ? "panorama" : "standard"} headingSize={i === 0 ? "text-2xl md:text-3xl" : "text-lg"} sizes={i === 0 ? "(min-width: 1024px) 860px, 100vw" : "(min-width: 640px) 420px, 100vw"} />
                 </div>
               ))}
             </div>
           ) : (
-            <div role="status" className="border-b border-rule pb-10 pt-4">
-              <p className="headline text-xl">No stories in this topic yet.</p>
-              <p className="mt-1.5 text-md text-ink-2">Every Personal Finance guide is listed on the section page.</p>
+            <div role="status" className="empty">
+              <p className="empty-title">No stories in this topic yet.</p>
+              <p className="empty-text">Every Personal Finance guide is listed on the section page.</p>
               <Link prefetch={false} href="/personal-finance/" className="link-more mt-2">
                 All of Personal Finance <span className="arrow" aria-hidden>→</span>
               </Link>
             </div>
           )}
-          <section className="mt-14" aria-label="More personal finance">
+          <section className="mt-16" aria-label="More personal finance">
             <SectionHeader title="More in Personal Finance" href="/personal-finance/" accent="money" />
             <div className="divide-y divide-rule">
               {more.map((s) => (
@@ -85,14 +85,19 @@ export default async function SubcategoryPage({ params }: Params) {
         </div>
         <aside>
           {calcs.length ? (
-            <section aria-label="Calculators" className="border-t-[3px] border-learn pt-3">
+            <section aria-label="Calculators" className="surface-ink border-t-3 border-learn px-4 pb-2 pt-3 lg:sticky lg:top-16">
               <p className="kicker text-learn">Calculators</p>
               <ul className="mt-2 divide-y divide-rule">
                 {calcs.map((c) => (
                   <li key={c.slug}>
-                    <Link prefetch={false} href={`/calculators/${c.slug}/`} className="group block py-3">
-                      <span className="block font-semibold underline-offset-2 group-hover:underline">{c.name}</span>
-                      <span className="mt-0.5 block text-sm leading-normal text-muted">{c.short}</span>
+                    <Link prefetch={false} href={`/calculators/${c.slug}/`} className="link-row">
+                      <span>
+                        <span className="link-row-label">{c.name}</span>
+                        <span className="link-row-note">{c.short}</span>
+                      </span>
+                      <span aria-hidden className="arrow">
+                        →
+                      </span>
                     </Link>
                   </li>
                 ))}

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AuthorAvatar } from "@/components/article/article-parts";
-import { Breadcrumbs } from "@/components/breadcrumbs";
+import { SectionMasthead } from "@/components/listing/section-masthead";
 import { getAuthors } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -13,28 +13,29 @@ export const metadata: Metadata = {
 export default function BoardPage() {
   const team = getAuthors();
   return (
-    <div className="wrap pb-16 pt-5 md:pb-20 md:pt-7">
-      <Breadcrumbs items={[{ label: "Home", href: "/" }]} current="Board of Directors" />
-      <header className="mt-6 grid gap-6 border-b border-ink pb-7 md:mt-8 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-end lg:gap-16">
-        <div className="max-w-3xl">
-          <h1 className="headline text-3xl md:text-4xl lg:text-5xl">Board of Directors</h1>
-          <p className="mt-3 text-lg leading-normal text-ink-2">Leadership that combines financial expertise with a content-first approach.</p>
-        </div>
-        {/* Directory: the board at a glance, each name jumps to the full profile */}
-        <nav aria-label="Directors">
-          <ol className="divide-y divide-rule border-y border-rule text-sm">
-            {team.map((a, i) => (
-              <li key={a.slug}>
-                <a href={`#${a.slug}`} className="flex min-h-11 items-baseline gap-3 py-2 hover:underline hover:underline-offset-2">
-                  <span className="w-5 shrink-0 text-xs tabular-nums text-muted">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="font-semibold text-ink">{a.name}</span>
-                  <span className="ml-auto text-muted">{a.role}</span>
-                </a>
-              </li>
-            ))}
-          </ol>
-        </nav>
-      </header>
+    <>
+      <SectionMasthead
+        title="Board of Directors"
+        crumbs={[{ label: "Home", href: "/" }]}
+        description="Leadership that combines financial expertise with a content-first approach."
+        aside={
+          /* Directory: the board at a glance, each name jumps to the full profile */
+          <nav aria-label="Directors" className="shrink-0 md:w-80">
+            <ol className="divide-y divide-rule border-y border-rule-strong text-sm">
+              {team.map((a, i) => (
+                <li key={a.slug}>
+                  <a href={`#${a.slug}`} className="link-row gap-3 py-2 font-normal">
+                    <span className="w-5 shrink-0 text-xs tabular-nums text-muted">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="link-row-label font-semibold text-ink">{a.name}</span>
+                    <span className="ml-auto text-muted">{a.role}</span>
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        }
+      />
+    <div className="wrap">
 
       <div>
         {team.map((a) => (
@@ -57,7 +58,7 @@ export default function BoardPage() {
                   <p key={p.slice(0, 20)}>{p}</p>
                 ))}
               </div>
-              <Link href={`/author/${a.slug}/`} className="link-more mt-3">
+              <Link href={`/author/${a.slug}/`} className="btn btn-secondary btn-sm mt-4">
                 Stories and profile <span className="arrow" aria-hidden>→</span>
               </Link>
             </div>
@@ -75,5 +76,6 @@ export default function BoardPage() {
         ))}
       </div>
     </div>
+    </>
   );
 }

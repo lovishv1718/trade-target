@@ -39,7 +39,7 @@ export function AuthorBox({ author }: { author: Author }) {
         <AuthorAvatar author={author} size={72} />
         <div className="min-w-0">
           <h2 className="headline text-xl">
-            <Link href={`/author/${author.slug}/`} className="decoration-1 underline-offset-4 hover:underline">
+            <Link href={`/author/${author.slug}/`} className="link-quiet">
               {author.name}
             </Link>
           </h2>
@@ -62,7 +62,7 @@ export function AuthorBox({ author }: { author: Author }) {
 
 export function KeyTakeaways({ text }: { text: string }) {
   return (
-    <aside aria-label="Quick summary" className="border-t-2 border-ink pt-3">
+    <aside aria-label="Quick summary" className="border-t-3 border-company-mark bg-white px-4 pb-4 pt-3 md:px-5">
       <p className="kicker text-ink">Quick summary</p>
       <p className="mt-2 text-lg leading-relaxed text-ink">{text}</p>
     </aside>
@@ -73,14 +73,16 @@ export function FaqSection({ faqs, title = "Frequently asked questions" }: { faq
   if (!faqs.length) return null;
   return (
     <section aria-labelledby="faq-heading" className="mt-12">
-      <h2 id="faq-heading" className="headline border-t-2 border-ink pt-3 text-2xl">
-        {title}
-      </h2>
+      <div className="section-head">
+        <h2 id="faq-heading" className="section-title">
+          {title}
+        </h2>
+      </div>
       <div className="mt-4 divide-y divide-rule border-b border-rule">
         {faqs.map((f, i) => (
           <details key={i} className="art-disclosure group" open={i === 0}>
-            <summary className="flex min-h-11 cursor-pointer list-none items-start justify-between gap-4 py-3.5 text-lg font-semibold leading-snug text-ink [&::-webkit-details-marker]:hidden">
-              <span className="min-w-0">{f.q}</span>
+            <summary className="flex min-h-11 cursor-pointer list-none items-start justify-between gap-4 py-3.5 text-lg font-semibold leading-snug text-ink focus-visible:-outline-offset-2 [&::-webkit-details-marker]:hidden">
+              <span className="link-quiet min-w-0">{f.q}</span>
               <svg
                 aria-hidden
                 width="14"
@@ -108,7 +110,7 @@ export function FaqSection({ faqs, title = "Frequently asked questions" }: { faq
 
 export function DisclaimerBox() {
   return (
-    <aside aria-label="Disclaimer" className="border border-rule bg-paper-2 px-4 py-4 text-sm leading-relaxed text-ink-2 md:px-5">
+    <aside aria-label="Disclaimer" className="note bg-paper-2 py-4 leading-relaxed md:px-5">
       <p className="kicker text-ink">Disclaimer</p>
       <p className="mt-1.5">
         This article is for information and education only and is not investment advice or a recommendation to buy, sell or hold any security. TradeTarget is

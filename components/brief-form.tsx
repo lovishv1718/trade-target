@@ -52,7 +52,7 @@ export function BriefForm({ contentTypes, volumes }: Props) {
 
   if (status === "done") {
     return (
-      <div ref={doneRef} tabIndex={-1} role="status" className="border-t-[3px] border-success bg-white p-5 md:p-6">
+      <div ref={doneRef} tabIndex={-1} role="status" className="border border-t-3 border-rule border-t-success bg-white p-5 md:p-6">
         <p className="kicker text-success">Brief received</p>
         <p className="headline mt-1.5 text-2xl">Thanks, {name}. An editor will reply within one working day.</p>
         <p className="mt-2 max-w-prose text-md leading-normal text-ink-2">
@@ -93,9 +93,9 @@ export function BriefForm({ contentTypes, volumes }: Props) {
   );
 
   return (
-    <form onSubmit={submit} noValidate aria-busy={sending || undefined} className="grid gap-5 border-t-[3px] border-ink bg-white p-5 sm:grid-cols-2 md:p-6">
+    <form onSubmit={submit} noValidate aria-busy={sending || undefined} className="grid gap-5 border border-t-3 border-rule border-t-ink bg-white p-5 sm:grid-cols-2 md:p-6">
       {errorList.length ? (
-        <div ref={summaryRef} tabIndex={-1} role="alert" className="border-l-[3px] border-error bg-paper px-4 py-3 sm:col-span-2">
+        <div ref={summaryRef} tabIndex={-1} role="alert" className="note border-error bg-paper sm:col-span-2">
           <p className="text-base font-semibold text-ink">
             {errorList.length === 1 ? "Check one detail before sending" : `Check ${errorList.length} details before sending`}
           </p>
@@ -119,17 +119,17 @@ export function BriefForm({ contentTypes, volumes }: Props) {
       ) : null}
       <div>
         {label("bf-name", "Name")}
-        <input id="bf-name" name="name" autoComplete="name" className="field" {...a11y("name")} />
+        <input id="bf-name" name="name" autoComplete="name" placeholder=" " className="field" {...a11y("name")} />
         {err("name")}
       </div>
       <div>
         {label("bf-company", "Company")}
-        <input id="bf-company" name="company" autoComplete="organization" className="field" {...a11y("company")} />
+        <input id="bf-company" name="company" autoComplete="organization" placeholder=" " className="field" {...a11y("company")} />
         {err("company")}
       </div>
       <div className="sm:col-span-2">
         {label("bf-email", "Work email")}
-        <input id="bf-email" name="email" type="email" autoComplete="email" className="field" {...a11y("email")} />
+        <input id="bf-email" name="email" type="email" autoComplete="email" placeholder=" " className="field" {...a11y("email")} />
         {err("email")}
       </div>
       <div>
@@ -170,12 +170,17 @@ export function BriefForm({ contentTypes, volumes }: Props) {
         <p id="bf-message-hint" className="field-hint mt-0.5">
           Topics, audience, tone, links to examples
         </p>
-        <textarea id="bf-message" name="message" rows={5} aria-describedby="bf-message-hint" className="field" />
+        <textarea id="bf-message" name="message" rows={5} aria-describedby="bf-message-hint" placeholder=" " className="field" />
       </div>
       <div className="flex flex-col-reverse gap-3 border-t border-rule pt-5 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-xs text-muted">We use these details only to reply to your brief.</p>
-        <button type="submit" disabled={sending} aria-busy={sending || undefined} className="btn btn-lg w-full sm:w-auto">
+        <button type="submit" disabled={sending} aria-busy={sending || undefined} className="btn w-full sm:w-auto">
           {sending ? "Sending…" : "Send brief"}
+          {sending ? null : (
+            <span className="arrow" aria-hidden>
+              →
+            </span>
+          )}
         </button>
       </div>
     </form>

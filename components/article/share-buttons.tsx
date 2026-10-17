@@ -28,7 +28,7 @@ export function ShareButtons({ title, path, compact = false }: { title: string; 
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`Share on ${l.name}`}
-          className="flex h-11 w-11 shrink-0 items-center justify-center border border-rule-strong text-ink hover:border-ink hover:bg-ink hover:text-paper"
+          className="btn btn-secondary btn-icon shrink-0"
         >
           <svg aria-hidden width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
             <path d={PATHS[l.name]} />
@@ -46,7 +46,7 @@ export function ShareButtons({ title, path, compact = false }: { title: string; 
             setCopied(false);
           }
         }}
-        className="btn btn-secondary btn-sm min-h-11 min-w-[6.75rem] justify-center"
+        className="btn btn-secondary min-w-[6.75rem]"
       >
         {copied ? "Copied" : "Copy link"}
       </button>

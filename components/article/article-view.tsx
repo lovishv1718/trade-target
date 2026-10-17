@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -18,6 +17,7 @@ import { Breadcrumbs } from "../breadcrumbs";
 import { JsonLd } from "../json-ld";
 import { Kicker } from "../kicker";
 import { NewsletterBand } from "../newsletter-band";
+import { Photo } from "../photo";
 import { SectionHeader } from "../section-header";
 import { StoryLink, StoryTile } from "../story";
 import { ArticleBody } from "./article-body";
@@ -77,7 +77,6 @@ export function ArticleView({ article }: { article: Article }) {
     .map(toCard);
   const calcs = (CALCS_FOR[article.subsection ?? ""] ?? CALCS_FOR[article.section] ?? []).map((s) => getCalculator(s)).filter((c) => c !== null);
   const updated = new Date(article.modified).getTime() - new Date(article.date).getTime() > 3600_000;
-  const credit = article.image?.credit && article.image.credit !== "TradeTarget" ? `Photo: ${article.image.credit}` : "Image: TradeTarget";
 
   const stamp = (iso: string) => <time dateTime={iso}>{formatDateTime(iso)}</time>;
 
@@ -90,57 +89,56 @@ export function ArticleView({ article }: { article: Article }) {
         <div className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px] xl:gap-14">
           <article id="article-main" className="min-w-0 max-w-[760px]">
             <header>
-              <Kicker label={article.kicker} />
+              <Kicker label={article.kicker} className="kicker-rule" />
               <h1 className="headline mt-3 max-w-[22ch] text-balance text-3xl md:text-4xl xl:text-5xl">{article.title}</h1>
-              <p className="mt-4 max-w-[60ch] text-lg leading-normal text-ink-2 md:mt-5 md:text-xl">{article.standfirst}</p>
+              <p className="deck mt-4 max-w-[60ch] text-xl leading-normal md:mt-5 md:text-2xl md:leading-snug">{article.standfirst}</p>
 
-              <div className="mt-6 flex flex-col gap-4 border-y border-rule py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+              {/* Byline, dates and read time as one ruled dateline, the share tools at its end */}
+              <div className="mt-6 flex flex-col gap-3 border-y border-ink py-3">
                 <div className="flex min-w-0 items-center gap-3">
                   <AuthorAvatar author={author} size={44} />
-                  <div className="min-w-0">
-                    <p className="text-md leading-snug text-ink-2">
-                      By{" "}
-                      <Link prefetch={false} href={`/author/${author.slug}/`} className="font-semibold text-ink decoration-1 underline-offset-4 hover:underline">
-                        {author.name}
-                      </Link>
-                      <span className="text-muted">, {author.role}</span>
-                    </p>
-                    <p className="tabular mt-1 flex flex-wrap gap-x-2 text-sm leading-snug text-muted">
-                      <span>Published {stamp(article.date)}</span>
-                      {updated ? (
-                        <>
-                          <span aria-hidden>·</span>
-                          <span>Updated {stamp(article.modified)}</span>
-                        </>
-                      ) : null}
-                      <span aria-hidden>·</span>
-                      <span>{article.readTime} min read</span>
-                    </p>
-                  </div>
+                  <dl className="dateline border-t-0">
+                    <div>
+                      <dt>By</dt>
+                      <dd>
+                        <Link prefetch={false} href={`/author/${author.slug}/`} className="link-quiet">
+                          {author.name}
+                        </Link>
+                        <span className="font-normal text-muted">, {author.role}</span>
+                      </dd>
+                    </div>
+                    <div>
+                      <dt>Published</dt>
+                      <dd>{stamp(article.date)}</dd>
+                    </div>
+                    {updated ? (
+                      <div>
+                        <dt>Updated</dt>
+                        <dd>{stamp(article.modified)}</dd>
+                      </div>
+                    ) : null}
+                    <div>
+                      <dt>Read</dt>
+                      <dd>{article.readTime} min</dd>
+                    </div>
+                  </dl>
                 </div>
-                <div className="shrink-0">
+                <div className="border-t border-rule pt-3">
                   <ShareButtons title={article.title} path={article.path} compact />
                 </div>
               </div>
             </header>
 
             {article.image ? (
-              <figure className="mt-6">
-                <div className="relative aspect-[16/9] overflow-hidden bg-paper-2">
-                  <Image
-                    src={article.image.src}
-                    alt={article.image.alt}
-                    fill
-                    priority
-                    sizes="(min-width: 1024px) 760px, 100vw"
-                    className="img-fade object-cover"
-                  />
-                </div>
-                <figcaption className="mt-2 text-sm leading-normal text-ink-2">
-                  {article.image.caption && article.image.caption !== article.title ? <span>{article.image.caption}. </span> : null}
-                  <span className="text-xs text-muted">{credit}</span>
-                </figcaption>
-              </figure>
+              <Photo
+                image={article.image}
+                sizes="(min-width: 1024px) 760px, 100vw"
+                crop="wide"
+                priority
+                caption="full"
+                captionText={article.image.caption && article.image.caption !== article.title ? article.image.caption : ""}
+                className="lead-photo mt-6"
+              />
             ) : null}
 
             {/* Reading column: one measure (66ch of body type) for everything the reader reads */}
@@ -183,14 +181,14 @@ export function ArticleView({ article }: { article: Article }) {
             <div className="sticky top-20 space-y-10 pt-1">
               <TableOfContents headings={headings} variant="rail" />
               {calcs.length ? (
-                <div className="border-t-2 border-ink pt-3">
-                  <p className="kicker text-ink">Work it out</p>
-                  <ul className="mt-2 divide-y divide-rule border-b border-rule">
+                <div className="surface-ink border-t-3 border-learn px-4 pb-2 pt-3">
+                  <p className="kicker text-learn">Work it out</p>
+                  <ul className="mt-2 divide-y divide-rule">
                     {calcs.map((c) => (
                       <li key={c.slug}>
-                        <Link prefetch={false} href={`/calculators/${c.slug}/`} className="group flex min-h-11 items-center justify-between gap-3 py-2 text-md font-semibold text-ink">
-                          <span className="decoration-1 underline-offset-4 group-hover:underline">{c.name}</span>
-                          <span aria-hidden className="text-muted transition-transform duration-150 ease-out group-hover:translate-x-0.5 group-hover:text-ink motion-reduce:transition-none">
+                        <Link prefetch={false} href={`/calculators/${c.slug}/`} className="link-row text-md">
+                          <span className="link-row-label">{c.name}</span>
+                          <span aria-hidden className="arrow">
                             →
                           </span>
                         </Link>
@@ -208,7 +206,7 @@ export function ArticleView({ article }: { article: Article }) {
       <div className="wrap mt-16 grid gap-12 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-10 xl:gap-14">
         {related.length ? (
           <section aria-label="Related stories" className="min-w-0">
-            <SectionHeader title="Related stories" accent="var(--color-ink)" />
+            <SectionHeader title="Related stories" accent="ink" />
             <div className="mt-5 grid gap-x-6 gap-y-10 sm:grid-cols-2">
               {related.map((r) => (
                 <StoryTile key={r.slug} story={r} headingSize="text-lg" />
@@ -218,7 +216,7 @@ export function ArticleView({ article }: { article: Article }) {
         ) : null}
 
         <section aria-label="Latest" className="min-w-0">
-          <SectionHeader title="Latest from TradeTarget" href="/news/" accent="var(--color-ink)" />
+          <SectionHeader title="Latest from TradeTarget" href="/news/" accent="ink" pin={false} />
           <ul className="mt-2 grid gap-x-8 sm:grid-cols-2 lg:grid-cols-1">
             {latest.map((s) => (
               <li key={s.slug} className="border-b border-rule last:border-b-0">
@@ -229,9 +227,7 @@ export function ArticleView({ article }: { article: Article }) {
         </section>
       </div>
 
-      <div className="mt-16">
-        <NewsletterBand id="article-newsletter" />
-      </div>
+      <NewsletterBand id="article-newsletter" className="mt-16" />
 
       <JsonLd
         data={{

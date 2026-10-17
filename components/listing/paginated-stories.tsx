@@ -21,12 +21,12 @@ export function scrollToList(el: HTMLElement | null) {
   el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
 }
 
-const pageBtn = "chip tabular min-h-11 min-w-11 justify-center px-3 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-rule-strong";
+const pageBtn = "chip tabular min-h-11 min-w-11 px-3";
 
 export function Pagination({ page, total, onChange }: { page: number; total: number; onChange: (p: number) => void }) {
   if (total <= 1) return null;
   return (
-    <nav aria-label="Pagination" className="mt-8 flex flex-wrap items-center justify-between gap-x-2 gap-y-3 border-t border-rule pt-5 sm:justify-start">
+    <nav aria-label="Pagination" className="mt-8 flex flex-wrap items-center justify-between gap-x-2 gap-y-3 border-t border-ink pt-5 sm:justify-start">
       <button type="button" disabled={page === 1} onClick={() => onChange(page - 1)} className={pageBtn}>
         <span aria-hidden>←</span> Newer
       </button>
@@ -65,7 +65,11 @@ export function PaginatedStories({ stories, perPage = 8 }: { stories: ArticleCar
   const total = Math.ceil(stories.length / perPage);
   const shown = stories.slice((page - 1) * perPage, page * perPage);
   if (!stories.length) {
-    return <p className="border-b border-rule py-8 text-md text-muted">No stories here yet.</p>;
+    return (
+      <div role="status" className="empty mt-4">
+        <p className="empty-title">No stories here yet.</p>
+      </div>
+    );
   }
   return (
     <div ref={top} className="scroll-mt-20">

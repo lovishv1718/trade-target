@@ -30,15 +30,17 @@ export default async function AuthorPage({ params }: Params) {
   const stories = getArticleCards().filter((s) => s.author === author.slug);
   const first = author.name.split(" ")[0];
   return (
-    <div className="wrap pb-16 pt-5 md:pb-20 md:pt-7">
+    <>
+    <div className="surface-paper-2 border-b border-rule">
+      <div className="wrap pb-8 pt-4 md:pb-10 md:pt-6">
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Board of Directors", href: "/board-of-directors/" }]} current={author.name} />
 
-      <header className="mt-6 grid gap-5 border-b border-ink pb-7 sm:grid-cols-[auto_minmax(0,1fr)] sm:gap-7 md:mt-8 md:pb-9">
+      <header className="mt-3 grid gap-5 border-t-3 border-ink pt-5 sm:grid-cols-[auto_minmax(0,1fr)] sm:gap-7">
         <AuthorAvatar author={author} size={120} />
         <div className="max-w-[66ch]">
-          <h1 className="headline text-3xl md:text-4xl">{author.name}</h1>
+          <h1 className="headline text-4xl md:text-5xl">{author.name}</h1>
           <p className="mt-1.5 text-md font-semibold text-ink">{author.role}, TradeTarget</p>
-          <p className="mt-3 text-lg leading-normal text-ink-2">{author.shortBio}</p>
+          <p className="deck mt-3 text-lg leading-normal md:text-xl">{author.shortBio}</p>
           <ul className="mt-4 flex flex-wrap gap-1.5" aria-label="Expertise">
             {author.expertise.map((e) => (
               <li key={e} className="tag">
@@ -46,24 +48,24 @@ export default async function AuthorPage({ params }: Params) {
               </li>
             ))}
           </ul>
-          <dl className="mt-6 grid grid-cols-2 border-y border-rule text-sm sm:flex sm:flex-wrap sm:divide-x sm:divide-rule">
-            <div className="py-2.5 pr-5">
-              <dt className="text-xs text-muted">Stories</dt>
-              <dd className="mt-0.5 font-semibold tabular-nums text-ink">{stories.length}</dd>
+          <dl className="dateline mt-6 border-b border-rule">
+            <div>
+              <dt>Stories</dt>
+              <dd>{stories.length}</dd>
             </div>
-            <div className="py-2.5 sm:px-5">
-              <dt className="text-xs text-muted">Profile</dt>
-              <dd className="mt-0.5">
-                <Link href={`/board-of-directors/#${author.slug}`} className="link font-semibold">
+            <div>
+              <dt>Profile</dt>
+              <dd>
+                <Link href={`/board-of-directors/#${author.slug}`} className="link">
                   Board of Directors
                 </Link>
               </dd>
             </div>
             {author.linkedin && (
-              <div className="col-span-2 border-t border-rule py-2.5 sm:border-t-0 sm:px-5">
-                <dt className="text-xs text-muted">Follow</dt>
-                <dd className="mt-0.5">
-                  <a href={author.linkedin} target="_blank" rel="noopener noreferrer" className="link font-semibold">
+              <div>
+                <dt>Follow</dt>
+                <dd>
+                  <a href={author.linkedin} target="_blank" rel="noopener noreferrer" className="link">
                     LinkedIn
                   </a>
                 </dd>
@@ -72,15 +74,18 @@ export default async function AuthorPage({ params }: Params) {
           </dl>
         </div>
       </header>
+      </div>
+    </div>
+    <div className="wrap">
 
-      <section className="mt-9 max-w-4xl md:mt-12" aria-label="Stories">
+      <section className="mt-10 max-w-4xl md:mt-12" aria-label="Stories">
         <SectionHeader title={stories.length ? `Stories by ${first}` : "Stories"} />
         {stories.length ? (
           <PaginatedStories stories={stories} perPage={8} />
         ) : (
-          <div className="mt-4 border-l-2 border-rule-strong py-1 pl-5">
-            <p className="text-lg font-semibold text-ink">No stories from {author.name} yet</p>
-            <p className="mt-1.5 max-w-[60ch] text-md text-ink-2">
+          <div role="status" className="empty mt-4">
+            <p className="empty-title">No stories from {author.name} yet</p>
+            <p className="empty-text">
               {first} leads TradeTarget’s research desk. Read the latest{" "}
               <Link href="/share-analysis/" className="link">
                 Share Analysis
@@ -105,5 +110,6 @@ export default async function AuthorPage({ params }: Params) {
         }}
       />
     </div>
+    </>
   );
 }

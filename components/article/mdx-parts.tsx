@@ -5,14 +5,14 @@ import { Children, cloneElement, isValidElement, type AnchorHTMLAttributes, type
 /** Inline "Read this also" link card inside article bodies. */
 export function ReadAlso({ href, title }: { href: string; title: string }) {
   const internal = href.startsWith("/");
-  const cls = "group flex min-h-11 items-center justify-between gap-4 py-3 text-ink no-underline";
+  const cls = "link-row py-3 no-underline";
   const inner = (
     <>
       <span className="min-w-0">
         <span className="kicker block text-muted">Read this also</span>
-        <span className="headline mt-1 block text-lg leading-snug decoration-1 underline-offset-[3px] group-hover:underline">{title}</span>
+        <span className="link-row-label headline mt-1 block text-lg leading-snug">{title}</span>
       </span>
-      <span aria-hidden className="shrink-0 text-xl text-ink transition-transform duration-150 ease-out group-hover:translate-x-0.5 motion-reduce:transition-none">
+      <span aria-hidden className="arrow text-xl">
         →
       </span>
     </>
@@ -55,13 +55,18 @@ export function Figure({
   const by = credit ?? m?.[1];
   return (
     <figure className="art-figure">
-      <div className="border border-rule bg-paper-2">
-        <Image src={src} width={width} height={height} alt={alt} sizes="(min-width: 1024px) 660px, 100vw" className="img-fade h-auto w-full" />
+      {/* The photograph treatment at the figure's own proportions: tone, hairline, wipe on decode */}
+      <div className="photo-frame" style={{ aspectRatio: `${width} / ${height}` }}>
+        <div className="photo-wipe">
+          <div className="photo-wipe-inner">
+            <Image src={src} width={width} height={height} alt={alt} sizes="(min-width: 1024px) 660px, 100vw" className="h-full w-full object-cover" />
+          </div>
+        </div>
       </div>
       {text || by ? (
-        <figcaption className="mt-2 text-sm leading-normal text-ink-2">
-          {text ? <span>{text} </span> : null}
-          {by ? <span className="text-xs text-muted">{by}</span> : null}
+        <figcaption className="photo-caption text-sm">
+          {text ? <span className="min-w-0">{text}</span> : null}
+          {by ? <span className="photo-credit ml-auto">{by}</span> : null}
         </figcaption>
       ) : null}
     </figure>

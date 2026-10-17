@@ -43,7 +43,7 @@ export function NewsListing({ stories, topics }: { stories: ArticleCard[]; topic
           return (
             <button key={t} type="button" aria-pressed={on} onClick={() => choose(t)} className="chip shrink-0">
               {t}
-              <span className={`tabular font-normal ${on ? "text-paper/75" : "text-muted"}`}>{t === "All" ? stories.length : counts[t]}</span>
+              <span className="chip-count">{t === "All" ? stories.length : counts[t]}</span>
             </button>
           );
         })}
@@ -51,7 +51,7 @@ export function NewsListing({ stories, topics }: { stories: ArticleCard[]; topic
 
       {filtered.length ? (
         <>
-          <p aria-live="polite" className="tabular mt-4 border-b border-rule pb-2 text-sm text-muted">
+          <p aria-live="polite" className="tabular mt-4 border-b border-ink pb-2 text-sm text-muted">
             Showing {(current - 1) * PER_PAGE + 1}–{Math.min(current * PER_PAGE, filtered.length)} of {filtered.length} stories
             {topic !== "All" ? (
               <>
@@ -67,9 +67,9 @@ export function NewsListing({ stories, topics }: { stories: ArticleCard[]; topic
           </div>
         </>
       ) : (
-        <div role="status" className="mt-4 border-y border-rule py-10">
-          <p className="headline text-xl">No stories in this topic yet</p>
-          <p className="mt-1.5 text-md text-ink-2">{topic !== "All" ? `Nothing filed under ${topic} so far.` : "Nothing has been filed here so far."}</p>
+        <div role="status" className="empty mt-4">
+          <p className="empty-title">No stories in this topic yet</p>
+          <p className="empty-text">{topic !== "All" ? `Nothing filed under ${topic} so far.` : "Nothing has been filed here so far."}</p>
           {topic !== "All" ? (
             <button type="button" onClick={() => choose("All")} className="btn btn-secondary btn-sm mt-4">
               Show all stories

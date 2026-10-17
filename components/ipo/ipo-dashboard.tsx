@@ -4,8 +4,10 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { formatDayMonth, formatNumber } from "@/lib/format";
-import { gmpPct, ipoStatus, listingGainPct, priceBandLabel, statusOrder, summarise, type Ipo, type IpoStatus } from "@/lib/ipo";
+import { ipoStatus, listingGainPct, priceBandLabel, statusOrder, summarise, type Ipo, type IpoStatus } from "@/lib/ipo";
 import { useIstToday } from "@/lib/use-ist-today";
+import { SectionHeader } from "../section-header";
+import { GmpCell, gmpScale } from "./gmp-cell";
 import { StatusPill } from "./status-pill";
 
 const FILTERS: { key: "all" | IpoStatus; label: string }[] = [
@@ -16,10 +18,6 @@ const FILTERS: { key: "all" | IpoStatus; label: string }[] = [
   { key: "allotted", label: "Allotment out" },
   { key: "listed", label: "Listed" },
 ];
-
-function signedText(value: number, digits: number) {
-  return `${value > 0 ? "+" : value < 0 ? "−" : ""}${formatNumber(Math.abs(value), digits)}`;
-}
 
 /** Signed figure: sign and colour together, never colour alone. */
 function Signed({ value, suffix = "", prefix = "" }: { value: number | null; suffix?: string; prefix?: string }) {
@@ -51,6 +49,8 @@ export function IpoDashboard({ ipos, buildDate }: { ipos: Ipo[]; buildDate: stri
   const today = useIstToday(buildDate);
 
   const boardIpos = useMemo(() => ipos.filter((i) => i.board === board), [ipos, board]);
+  // Bars are scaled to the whole board, so filtering never changes a bar's length
+  const scale = useMemo(() => gmpScale(boardIpos), [boardIpos]);
   const rows = useMemo(
     () =>
       boardIpos
@@ -92,7 +92,7 @@ export function IpoDashboard({ ipos, buildDate }: { ipos: Ipo[]; buildDate: stri
               className="chip"
             >
               {BOARD_LABEL[b]}
-              <span className="font-normal tabular opacity-80">{ipos.filter((i) => i.board === b).length}</span>
+              <span className="chip-count">{ipos.filter((i) => i.board === b).length}</span>
             </button>
           ))}
         </div>
@@ -108,20 +108,21 @@ export function IpoDashboard({ ipos, buildDate }: { ipos: Ipo[]; buildDate: stri
 
       <dl className="mt-5 grid grid-cols-2 gap-px border border-rule bg-rule sm:grid-cols-3 lg:grid-cols-5">
         {cards.map((c) => (
-          <div key={c.label} className="bg-white px-4 py-3">
+          <div key={c.label} className="bg-white px-4 py-3 first:col-span-2 sm:first:col-span-1">
             <dt className="text-xs font-semibold text-muted">{c.label}</dt>
             <dd className={`mt-1 text-3xl font-semibold leading-tight tabular ${c.valueClass ?? "text-ink"}`}>{c.value}</dd>
           </div>
         ))}
       </dl>
 
-      <div className="mt-6 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-        <h2 className="headline text-2xl">{boardName} IPOs</h2>
-        <p className="text-xs text-muted tabular" aria-live="polite">
-          {rows.length} of {boardIpos.length} shown · Status: {filterLabel}
-        </p>
+      <div className="mt-8">
+        <SectionHeader title={`${boardName} IPOs`} accent="ipo" pin={false}>
+          <p className="text-xs text-muted tabular" aria-live="polite">
+            {rows.length} of {boardIpos.length} shown · Status: {filterLabel}
+          </p>
+        </SectionHeader>
       </div>
-      <p className="mt-1 text-xs text-muted sm:hidden">Swipe the table sideways for more columns. The company name stays in view.</p>
+      <p className="scroll-hint mt-3">Swipe the table sideways for more columns. The company name stays in view.</p>
 
       <div className="table-wrap table-scroll mt-3" tabIndex={0} role="region" aria-label={`${boardName} IPOs table`}>
         <table className="data-table min-w-[960px]">
@@ -156,23 +157,24 @@ export function IpoDashboard({ ipos, buildDate }: { ipos: Ipo[]; buildDate: stri
           <tbody>
             {rows.length === 0 ? (
               <tr>
-                <td colSpan={9} className="px-4 py-8">
-                  <p className="font-semibold text-ink">
-                    No {board === "sme" ? "SME" : "mainboard"} IPOs match this status{filter === "open" || filter === "upcoming" ? " this week" : ""}.
-                  </p>
-                  <p className="mt-1 text-sm text-muted">Try another status, or switch board.</p>
-                  <button type="button" className="chip mt-3" onClick={() => setFilter("all")}>
-                    Show all {board === "sme" ? "SME" : "mainboard"} IPOs
-                  </button>
+                <td colSpan={9} className="p-4 md:p-6">
+                  <div className="empty sticky left-4 max-w-xl bg-white">
+                    <p className="empty-title">
+                      No {board === "sme" ? "SME" : "mainboard"} IPOs match this status{filter === "open" || filter === "upcoming" ? " this week" : ""}.
+                    </p>
+                    <p className="empty-text">Try another status, or switch board.</p>
+                    <button type="button" className="btn btn-secondary btn-sm mt-4" onClick={() => setFilter("all")}>
+                      Show all {board === "sme" ? "SME" : "mainboard"} IPOs
+                    </button>
+                  </div>
                 </td>
               </tr>
             ) : (
               rows.map(({ ipo, status }) => {
-                const pct = gmpPct(ipo);
                 return (
-                  <tr key={ipo.slug}>
+                  <tr key={ipo.slug} data-live={status === "open" || undefined}>
                     <th scope="row" className="sticky-col min-w-36 font-normal sm:min-w-52">
-                      <Link prefetch={false} href={`/ipo/${ipo.slug}/`} className="font-semibold text-ink hover:text-ipo hover:underline">
+                      <Link prefetch={false} href={`/ipo/${ipo.slug}/`} className="link-quiet font-semibold text-ink">
                         {ipo.name}
                       </Link>
                       <span className="mt-0.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-xs font-normal text-muted">
@@ -184,14 +186,7 @@ export function IpoDashboard({ ipos, buildDate }: { ipos: Ipo[]; buildDate: stri
                     <td className="num">{priceBandLabel(ipo)}</td>
                     <td className="num">{ipo.lotSize ? formatNumber(ipo.lotSize) : "–"}</td>
                     <td className="num">
-                      {ipo.gmp === null ? (
-                        <span className="text-muted">–</span>
-                      ) : (
-                        <>
-                          <Signed value={ipo.gmp} prefix="₹" />
-                          <span className="block text-xs text-muted">{pct !== null ? `${signedText(pct, 1)}%` : ""}</span>
-                        </>
-                      )}
+                      <GmpCell ipo={ipo} scale={scale} />
                     </td>
                     <td className="num">{ipo.subscription?.total != null ? `${ipo.subscription.total.toFixed(2)}x` : <span className="text-muted">–</span>}</td>
                     <td className="whitespace-nowrap tabular">
@@ -210,17 +205,19 @@ export function IpoDashboard({ ipos, buildDate }: { ipos: Ipo[]; buildDate: stri
           </tbody>
         </table>
       </div>
-      <p className="mt-2 max-w-3xl text-xs leading-normal text-muted">
+      <p className="mt-3 max-w-3xl text-xs leading-normal text-muted">
         GMP is the unofficial grey market premium per share and is not an indicator of listing price. Subscription is the overall number of times the issue was
         bid. Status is worked out from the issue dates and today’s date ({formatDayMonth(today)}).
       </p>
 
       {withBrokers.length ? (
-        <section className="mt-12" aria-labelledby="broker-heading">
-          <h2 id="broker-heading" className="headline border-t border-ink pt-3 text-2xl">
-            What brokers are saying
-          </h2>
-          <p className="mt-1 text-sm text-muted">Count of brokerage notes by view. Sample data.</p>
+        <section className="mt-14" aria-labelledby="broker-heading">
+          <div className="section-head" style={{ ["--rule-color" as string]: "var(--color-ipo)" }}>
+            <h2 id="broker-heading" className="section-title">
+              What brokers are saying
+            </h2>
+            <p className="section-dek">Count of brokerage notes by view. Sample data.</p>
+          </div>
           <div className="table-wrap mt-3" tabIndex={0} role="region" aria-labelledby="broker-heading">
             <table className="data-table min-w-[640px]">
               <caption className="sr-only">Brokerage notes by view for {boardName.toLowerCase()} IPOs</caption>
@@ -250,7 +247,7 @@ export function IpoDashboard({ ipos, buildDate }: { ipos: Ipo[]; buildDate: stri
                   return (
                     <tr key={ipo.slug}>
                       <th scope="row" className="sticky-col min-w-36 sm:min-w-52">
-                        <Link prefetch={false} href={`/ipo/${ipo.slug}/`} className="font-semibold text-ink hover:text-ipo hover:underline">
+                        <Link prefetch={false} href={`/ipo/${ipo.slug}/`} className="link-quiet font-semibold text-ink">
                           {ipo.name}
                         </Link>
                       </th>
@@ -283,7 +280,9 @@ export function IpoDashboard({ ipos, buildDate }: { ipos: Ipo[]; buildDate: stri
           </p>
         </section>
       ) : (
-        <p className="mt-12 border border-rule bg-white px-4 py-3 text-sm text-muted">No brokerage views are tracked for {board === "sme" ? "SME" : "mainboard"} issues on this board yet.</p>
+        <div role="status" className="empty mt-14">
+          <p className="empty-text mt-0">No brokerage views are tracked for {board === "sme" ? "SME" : "mainboard"} issues on this board yet.</p>
+        </div>
       )}
     </div>
   );

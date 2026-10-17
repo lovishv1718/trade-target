@@ -1,49 +1,17 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { useId, useState, type ReactNode } from "react";
 import { amountInWords, formatINR, formatNumber } from "@/lib/format";
 
 // ---------------------------------------------------------------------------
-// Animated numbers
-// A result eases to its new value in at most 240ms (ease-out), so a change reads
-// as movement from the old figure. Under reduced motion it jumps straight there.
+// Live numbers
+// A result changes in place: tabular figures, never wrapping, so the new value replaces the old
+// one without counting through the numbers in between and without moving anything around it.
 
-function useAnimatedNumber(target: number, duration = 240) {
-  const [value, setValue] = useState(target);
-  const from = useRef(target);
-  const frame = useRef<number | null>(null);
-  useEffect(() => {
-    const start = performance.now();
-    const initial = from.current;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce || !Number.isFinite(target) || !Number.isFinite(initial)) {
-      from.current = target;
-      frame.current = requestAnimationFrame(() => setValue(target));
-      return () => {
-        if (frame.current) cancelAnimationFrame(frame.current);
-      };
-    }
-    const step = (t: number) => {
-      const p = Math.min((t - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - p, 3);
-      const v = initial + (target - initial) * eased;
-      from.current = v;
-      setValue(v);
-      if (p < 1) frame.current = requestAnimationFrame(step);
-    };
-    frame.current = requestAnimationFrame(step);
-    return () => {
-      if (frame.current) cancelAnimationFrame(frame.current);
-    };
-  }, [target, duration]);
-  return value;
-}
-
-export function AnimatedValue({ value, format = "inr", decimals = 0, className = "" }: { value: number; format?: "inr" | "pct" | "num"; decimals?: number; className?: string }) {
-  const v = useAnimatedNumber(value);
-  const text = format === "inr" ? formatINR(v, decimals) : format === "pct" ? `${v.toFixed(decimals || 2)}%` : formatNumber(v, decimals);
+export function LiveValue({ value, format = "inr", decimals = 0, className = "", live = false }: { value: number; format?: "inr" | "pct" | "num"; decimals?: number; className?: string; live?: boolean }) {
+  const text = format === "inr" ? formatINR(value, decimals) : format === "pct" ? `${value.toFixed(decimals || 2)}%` : formatNumber(value, decimals);
   return (
-    <span className={`tabular ${className}`} aria-live="polite">
+    <span className={`tabular whitespace-nowrap ${className}`} aria-live={live ? "polite" : undefined}>
       {text}
     </span>
   );
@@ -127,20 +95,33 @@ export function SliderField({
           {suffix ? <span className="calc-num-affix">{suffix}</span> : null}
         </div>
       </div>
-      <input
-        type="range"
-        min={min}
-        max={max}
-        step={step}
-        value={clamp(value, min, max)}
-        disabled={disabled}
-        onChange={(e) => onChange(Number(e.target.value))}
-        aria-label={`${label} slider`}
-        aria-valuetext={unit === "inr" ? `₹${formatNumber(value)}` : `${value}${suffix ? ` ${suffix}` : ""}`}
-        className="calc-range mt-1"
-        style={{ ["--pct" as string]: `${pct}%` }}
-      />
-      <div className="flex justify-between gap-2 text-xs text-muted tabular">
+      {/* The fader: a drawn scale and fill under a transparent native range, so keyboard,
+          touch and assistive tech all get the real control */}
+      <div className="range mt-1" style={{ ["--ratio" as string]: pct / 100 }}>
+        <span aria-hidden className="range-track">
+          <span className="range-fill" />
+        </span>
+        <span aria-hidden className="range-ticks">
+          <i />
+          <i />
+          <i />
+          <i />
+          <i />
+        </span>
+        <input
+          type="range"
+          min={min}
+          max={max}
+          step={step}
+          value={clamp(value, min, max)}
+          disabled={disabled}
+          onChange={(e) => onChange(Number(e.target.value))}
+          aria-label={`${label} slider`}
+          aria-valuetext={unit === "inr" ? `₹${formatNumber(value)}` : `${value}${suffix ? ` ${suffix}` : ""}`}
+          className="range-input"
+        />
+      </div>
+      <div className="mt-1 flex justify-between gap-2 text-xs text-muted tabular">
         <span>{unit === "inr" ? `₹${amountInWords(min)}` : `${min}${suffix && ` ${suffix}`}`}</span>
         {words ? <span className="text-center font-semibold text-ink-2">{unit === "inr" ? `₹${words}` : words}</span> : null}
         <span className="text-right">{unit === "inr" ? `₹${amountInWords(max)}` : `${max}${suffix && ` ${suffix}`}`}</span>
@@ -158,9 +139,9 @@ export function Segmented<T extends string>({ label, options, value, onChange }:
   return (
     <div className="calc-field py-4">
       <p className="text-md font-semibold leading-snug text-ink">{label}</p>
-      <div role="radiogroup" aria-label={label} className="calc-seg mt-2.5 flex flex-wrap gap-2">
+      <div role="radiogroup" aria-label={label} className="calc-seg mt-2.5">
         {options.map((o) => (
-          <button key={o.value} type="button" role="radio" aria-checked={value === o.value} onClick={() => onChange(o.value)} className="chip aria-checked:border-ink aria-checked:bg-ink aria-checked:text-paper">
+          <button key={o.value} type="button" role="radio" aria-checked={value === o.value} onClick={() => onChange(o.value)} className="chip">
             {o.label}
           </button>
         ))}
@@ -207,15 +188,15 @@ export function SelectField({ label, value, onChange, options }: { label: string
 // Layout
 
 /**
- * Inputs beside the result on wide screens, the result column sticky.
- * Below lg the result column and panel dissolve (display: contents) so the black
- * result band becomes a grid item that sticks to the bottom of the screen while
- * the inputs scroll past: the number stays in view, under the thumb, while dragging.
+ * One instrument: inputs on white and the readout on black, joined under a single ink frame on
+ * wide screens, the readout column sticky. Below lg the result column and panel dissolve
+ * (display: contents) so the black readout becomes a grid item that sticks to the bottom of the
+ * screen while the inputs scroll past: the number stays in view, above the thumb, while dragging.
  */
 export function CalcLayout({ inputs, results }: { inputs: ReactNode; results: ReactNode }) {
   return (
-    <div className="grid items-start lg:grid-cols-2 lg:gap-x-6 xl:gap-x-8">
-      <div className="border border-rule bg-white px-4 py-1 md:px-6">{inputs}</div>
+    <div className="grid items-start lg:grid-cols-2">
+      <div className="border border-ink bg-white px-4 py-1 md:px-6 lg:border-r-0">{inputs}</div>
       <div className="max-lg:contents lg:sticky lg:top-16">{results}</div>
     </div>
   );
@@ -224,14 +205,14 @@ export function CalcLayout({ inputs, results }: { inputs: ReactNode; results: Re
 export function ResultPanel({ label, value, format = "inr", decimals = 0, sub, children }: { label: string; value: number; format?: "inr" | "pct" | "num"; decimals?: number; sub?: ReactNode; children?: ReactNode }) {
   return (
     <div className="max-lg:contents">
-      <div className="surface-ink z-10 px-4 py-4 max-lg:sticky max-lg:bottom-0 max-lg:z-[45] md:px-6 lg:py-5">
-        <p className="text-sm font-semibold leading-snug text-muted">{label}</p>
-        <p className="mt-1.5 text-4xl font-semibold leading-none text-ink lg:text-5xl">
-          <AnimatedValue value={value} format={format} decimals={decimals} />
+      <div className="surface-ink z-10 border border-black px-4 py-4 max-lg:sticky max-lg:bottom-0 max-lg:z-[45] md:px-6 lg:py-6">
+        <p className="kicker text-muted">{label}</p>
+        <p className="readout readout-xl mt-2">
+          <LiveValue value={value} format={format} decimals={decimals} live />
         </p>
-        {sub ? <div className="mt-2 text-sm leading-normal text-ink-2">{sub}</div> : null}
+        {sub ? <div className="mt-2.5 border-t border-rule pt-2.5 text-sm leading-normal text-ink-2">{sub}</div> : null}
       </div>
-      {children ? <div className="border border-t-0 border-rule bg-white px-4 py-5 md:px-6">{children}</div> : null}
+      {children ? <div className="border border-t-0 border-ink bg-white px-4 py-5 md:px-6">{children}</div> : null}
     </div>
   );
 }
@@ -246,7 +227,7 @@ export function StatRows({ rows }: { rows: { label: string; value: number; forma
             {r.label}
           </dt>
           <dd className={`shrink-0 text-right text-ink ${r.strong ? "text-lg font-bold" : "text-md font-semibold"}`}>
-            <AnimatedValue value={r.value} format={r.format ?? "inr"} decimals={r.decimals ?? 0} />
+            <LiveValue value={r.value} format={r.format ?? "inr"} decimals={r.decimals ?? 0} />
             {r.suffix ? <span className="ml-1 text-sm font-normal text-muted">{r.suffix}</span> : null}
           </dd>
         </div>
@@ -255,11 +236,12 @@ export function StatRows({ rows }: { rows: { label: string; value: number; forma
   );
 }
 
+/** A section of the calculator page: the site's section header in the calculators colour, without the pin. */
 export function CalcSection({ title, children, aside }: { title: string; children: ReactNode; aside?: ReactNode }) {
   return (
     <section className="mt-12 md:mt-14">
-      <div className="flex flex-wrap items-end justify-between gap-3 border-t border-ink pt-3">
-        <h2 className="headline text-xl md:text-2xl">{title}</h2>
+      <div className="section-head items-center" style={{ ["--rule-color" as string]: "var(--color-learn)" }}>
+        <h2 className="section-title">{title}</h2>
         {aside}
       </div>
       <div className="mt-5">{children}</div>
@@ -268,7 +250,7 @@ export function CalcSection({ title, children, aside }: { title: string; childre
 }
 
 export function Insight({ children }: { children: ReactNode }) {
-  return <p className="max-w-3xl border-l-2 border-ink bg-white px-4 py-3 text-md leading-relaxed text-ink-2">{children}</p>;
+  return <p className="note max-w-3xl text-md leading-relaxed">{children}</p>;
 }
 
 // ---------------------------------------------------------------------------

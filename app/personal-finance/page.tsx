@@ -24,16 +24,16 @@ export default function PersonalFinancePage() {
       </SectionMasthead>
 
       <div className="wrap mt-6">
-        <article className="grid gap-6 border-b border-rule pb-8 md:grid-cols-[1.4fr_1fr] md:items-center">
-          <Link prefetch={false} href={lead.path} className="group block">
-            <Photo image={lead.image} sizes="(min-width: 768px) 720px, 100vw" aspect="aspect-[16/9]" priority />
+        <article className="story group grid gap-6 border-b border-rule pb-8 md:grid-cols-[1.4fr_1fr] md:items-center">
+          <Link prefetch={false} href={lead.path} tabIndex={-1} aria-hidden className="block">
+            <Photo image={lead.image} sizes="(min-width: 768px) 720px, 100vw" crop="wide" priority />
           </Link>
           <div>
-            <span className="kicker text-money">Retirement</span>
-            <Link prefetch={false} href={lead.path} className="group">
-              <h2 className="headline mt-1.5 text-3xl group-hover:underline md:text-4xl">{lead.title}</h2>
+            <span className="kicker kicker-rule text-money">Retirement</span>
+            <Link prefetch={false} href={lead.path}>
+              <h2 className="headline mt-2 text-balance text-3xl md:text-4xl">{lead.title}</h2>
             </Link>
-            <p className="mt-3 text-md leading-relaxed text-ink-2 md:text-lg md:leading-relaxed">{lead.standfirst}</p>
+            <p className="deck mt-3 text-lg leading-normal md:text-xl">{lead.standfirst}</p>
             <StoryMeta story={lead} className="mt-3" />
           </div>
         </article>
@@ -44,10 +44,10 @@ export default function PersonalFinancePage() {
             if (!items.length) return null;
             const [first, ...others] = items;
             return (
-              <section key={sub.slug} aria-labelledby={`sub-${sub.slug}`} className="border-t-[3px] border-money pt-2.5">
+              <section key={sub.slug} aria-labelledby={`sub-${sub.slug}`} className="border-t-3 border-money pt-2.5">
                 <div className="flex items-center justify-between gap-4">
-                  <h2 id={`sub-${sub.slug}`} className="headline text-xl md:text-2xl">
-                    <Link prefetch={false} href={sub.path} className="hover:underline">
+                  <h2 id={`sub-${sub.slug}`} className="section-title">
+                    <Link prefetch={false} href={sub.path}>
                       {sub.name}
                     </Link>
                   </h2>

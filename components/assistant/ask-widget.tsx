@@ -113,7 +113,7 @@ export function AskWidget() {
               Close
             </button>
           </div>
-          <p id="ask-notice" className="border-b border-rule border-l-[3px] border-l-ink bg-paper-2 px-4 py-2.5 text-sm leading-snug text-ink-2">
+          <p id="ask-notice" className="note border-b border-b-rule border-l-ink bg-paper-2 leading-snug">
             Explains market terms and personal finance rules. <strong className="font-semibold text-ink">It does not give buy or sell advice.</strong>
           </p>
 
@@ -124,13 +124,9 @@ export function AskWidget() {
                 <ul className="mt-2 border-t border-rule">
                   {SUGGESTED.map((s) => (
                     <li key={s} className="border-b border-rule">
-                      <button
-                        type="button"
-                        onClick={() => ask(s)}
-                        className="group flex min-h-11 w-full items-center justify-between gap-3 py-2.5 text-left text-sm font-semibold leading-snug text-ink"
-                      >
-                        <span className="underline-offset-2 group-hover:underline">{s}</span>
-                        <span aria-hidden className="shrink-0 text-muted transition-transform duration-150 ease-out group-hover:translate-x-0.5 motion-reduce:transition-none">
+                      <button type="button" onClick={() => ask(s)} className="link-row w-full text-left text-sm">
+                        <span className="link-row-label">{s}</span>
+                        <span aria-hidden className="arrow">
                           →
                         </span>
                       </button>
@@ -160,7 +156,7 @@ export function AskWidget() {
               ))}
               {thinking ? (
                 <p className="flex items-center gap-2 text-sm text-muted">
-                  <span aria-hidden className="inline-block size-1.5 animate-pulse bg-muted motion-reduce:animate-none" />
+                  <span aria-hidden className="inline-block h-3 w-0.5 bg-company-mark" />
                   Looking through our articles…
                 </p>
               ) : null}

@@ -3,16 +3,42 @@
 import { marketSession } from "@/lib/market";
 import { useNow } from "@/lib/use-now";
 
-/** Live or closed, readable without colour: a filled dot and green label when open, a hollow dot and muted label otherwise. */
-export function MarketStatusBadge() {
+const STATE_LABEL = { open: "Open", pre: "Pre-open", closed: "Closed" } as const;
+
+/** "16 Oct, 15:30 IST" from the feed's as-of time, always in Indian time. */
+export function istStamp(iso: string) {
+  const s = new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Kolkata", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date(iso));
+  return `${s} IST`;
+}
+
+/**
+ * Session state you cannot misread: a boxed label (filled dot when open, hollow when closed,
+ * amber in pre-open), never colour alone. The dot breathes only while the market trades.
+ * `stamp` adds the time the figures are from.
+ */
+export function MarketStatus({ asOf, compact = false }: { asOf?: string; compact?: boolean }) {
   const now = useNow();
-  // Same box before the clock is known, so nothing shifts when the label arrives
-  if (!now) return <span aria-hidden className="inline-block h-4 w-28" />;
-  const s = marketSession(now);
   return (
-    <span className={`inline-flex items-center gap-1.5 text-xs font-semibold ${s.open ? "text-up" : "text-muted"}`}>
-      <span aria-hidden className={`inline-block size-2 rounded-full ${s.open ? "bg-up" : "border border-muted"}`} />
-      {s.label}
+    <span className="flex items-center gap-2">
+      {now ? <State now={now} compact={compact} /> : <span aria-hidden className="inline-block h-[1.375rem] w-20" />}
+      {asOf ? (
+        <span className="mkt-stamp">
+          As of <time dateTime={asOf}>{istStamp(asOf)}</time>
+        </span>
+      ) : null}
     </span>
   );
 }
+
+function State({ now, compact }: { now: Date; compact: boolean }) {
+  const s = marketSession(now);
+  const state = s.open ? "open" : s.label === "Pre-open session" ? "pre" : "closed";
+  return (
+    <span className="mkt-state" data-state={state}>
+      <span aria-hidden className="mkt-dot" />
+      {compact ? <span>{STATE_LABEL[state]}</span> : s.label}
+      {compact ? <span className="sr-only"> ({s.label})</span> : null}
+    </span>
+  );
+}
+

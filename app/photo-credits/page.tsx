@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Breadcrumbs } from "@/components/breadcrumbs";
+import { SectionMasthead } from "@/components/listing/section-masthead";
 import { getPhotoCredits } from "@/lib/content";
 import { getIpos } from "@/lib/ipo";
 
@@ -20,44 +20,36 @@ export default function PhotoCreditsPage() {
   const credits = getPhotoCredits();
   const ipos = getIpos();
   return (
-    <div className="wrap pb-16 pt-5 md:pb-20 md:pt-7">
-      <Breadcrumbs items={[{ label: "Home", href: "/" }]} current="Photo credits" />
-      <header className="mt-6 grid gap-4 border-b border-ink pb-6 md:mt-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-16">
-        <div className="max-w-3xl">
-          <h1 className="headline text-3xl md:text-4xl">Photo credits</h1>
-          <p className="mt-3 max-w-[66ch] text-lg leading-normal text-ink-2">
-            Photographs below come from Wikimedia Commons and are used under the licence shown. Graphics on other stories are TradeTarget’s own, carried over from
-            tradetarget.in. Team photos and client logos belong to TradeTarget and the respective companies.
+    <>
+      <SectionMasthead
+        title="Photo credits"
+        crumbs={[{ label: "Home", href: "/" }]}
+        description="Photographs below come from Wikimedia Commons and are used under the licence shown. Graphics on other stories are TradeTarget’s own, carried over from tradetarget.in. Team photos and client logos belong to TradeTarget and the respective companies."
+        aside={
+          <p className="tabular shrink-0 border-l border-rule-strong pl-4 md:text-right">
+            <span className="block text-3xl font-semibold leading-none text-ink">{credits.length}</span>
+            <span className="mt-1 block text-xs font-semibold uppercase tracking-caps text-muted">photographs credited</span>
           </p>
-        </div>
-        <p className="text-sm tabular-nums text-muted">
-          <span className="font-semibold text-ink">{credits.length}</span> photographs credited
-        </p>
-      </header>
+        }
+      />
+    <div className="wrap pt-8">
+      <p className="scroll-hint mb-3">Swipe the table sideways for every column</p>
       {/* Scrolls sideways on phones; focusable so keyboard users can scroll it too */}
-      <div className="-mx-4 overflow-x-auto px-4 md:mx-0 md:px-0" role="region" aria-label="Photo credits table" tabIndex={0}>
-        <table className="w-full min-w-[56rem] border-collapse text-left text-sm tabular-nums">
+      <div className="table-wrap" role="region" aria-label="Photo credits table" tabIndex={0}>
+        <table className="data-table min-w-[56rem]">
           <caption className="sr-only">Photographs used on TradeTarget, with photographer, licence and the pages they appear on</caption>
           <thead>
-            <tr className="border-b border-rule-strong text-xs text-muted">
-              <th scope="col" className="w-36 py-3 pr-5 font-semibold">
+            <tr>
+              <th scope="col" className="w-36">
                 Photo
               </th>
-              <th scope="col" className="py-3 pr-5 font-semibold">
-                Subject and source
-              </th>
-              <th scope="col" className="py-3 pr-5 font-semibold">
-                Photographer
-              </th>
-              <th scope="col" className="py-3 pr-5 font-semibold">
-                Licence
-              </th>
-              <th scope="col" className="py-3 font-semibold">
-                Used on
-              </th>
+              <th scope="col">Subject and source</th>
+              <th scope="col">Photographer</th>
+              <th scope="col">Licence</th>
+              <th scope="col">Used on</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-rule">
+          <tbody>
             {credits.map((c) => {
               const uses = [
                 ...c.usedOn.map((p) => ({ label: p.replace(/^\/|\/$/g, "").split("/").at(-1)!.replace(/-/g, " "), href: p })),
@@ -65,24 +57,24 @@ export default function PhotoCreditsPage() {
                 ...(SITE_USES[c.id] ?? []),
               ];
               return (
-                <tr key={c.id} className="align-top">
-                  <td className="py-4 pr-5">
-                    <Image
-                      src={c.src}
-                      alt={c.subject}
-                      width={112}
-                      height={Math.round((112 * c.height) / c.width)}
-                      className="img-fade h-auto w-28 bg-paper-2 object-cover"
-                    />
+                <tr key={c.id}>
+                  <td>
+                    <div className="photo-frame w-28" style={{ aspectRatio: `${c.width} / ${c.height}` }}>
+                      <div className="photo-wipe">
+                        <div className="photo-wipe-inner">
+                          <Image src={c.src} alt={c.subject} width={112} height={Math.round((112 * c.height) / c.width)} className="h-full w-full object-cover" />
+                        </div>
+                      </div>
+                    </div>
                   </td>
-                  <td className="py-4 pr-5">
+                  <td>
                     <span className="block text-md font-semibold leading-snug text-ink">{c.subject}</span>
                     <a href={c.sourceUrl} target="_blank" rel="noopener noreferrer" className="link mt-1 inline-block text-xs text-ink-2">
                       {c.title}
                     </a>
                   </td>
-                  <td className="py-4 pr-5 text-ink-2">{c.author}</td>
-                  <td className="whitespace-nowrap py-4 pr-5">
+                  <td className="text-ink-2">{c.author}</td>
+                  <td className="whitespace-nowrap">
                     {c.licenseUrl ? (
                       <a href={c.licenseUrl} target="_blank" rel="noopener noreferrer" className="link">
                         {c.license}
@@ -91,7 +83,7 @@ export default function PhotoCreditsPage() {
                       <span className="text-ink-2">{c.license}</span>
                     )}
                   </td>
-                  <td className="py-4">
+                  <td>
                     {uses.length ? (
                       <ul className="space-y-1">
                         {uses.map((u) => (
@@ -113,5 +105,6 @@ export default function PhotoCreditsPage() {
         </table>
       </div>
     </div>
+    </>
   );
 }

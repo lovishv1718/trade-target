@@ -81,12 +81,12 @@ export function Scroller({ label, children, className = "" }: { label: string; c
           />
         </div>
         <div className="hidden shrink-0 gap-2 md:flex">
-          <button type="button" className="btn btn-secondary btn-sm w-9 px-0 pointer-coarse:w-11" aria-controls={id} aria-label={`Scroll ${label} back`} disabled={!state.prev} onClick={() => step(-1)}>
+          <button type="button" className="btn btn-secondary btn-sm btn-icon" aria-controls={id} aria-label={`Scroll ${label} back`} disabled={!state.prev} onClick={() => step(-1)}>
             <svg aria-hidden width="14" height="12" viewBox="0 0 14 12" fill="none" stroke="currentColor" strokeWidth="1.6">
               <path d="M13 6H1.5M6 1L1 6l5 5" />
             </svg>
           </button>
-          <button type="button" className="btn btn-secondary btn-sm w-9 px-0 pointer-coarse:w-11" aria-controls={id} aria-label={`Scroll ${label} forward`} disabled={!state.next} onClick={() => step(1)}>
+          <button type="button" className="btn btn-secondary btn-sm btn-icon" aria-controls={id} aria-label={`Scroll ${label} forward`} disabled={!state.next} onClick={() => step(1)}>
             <svg aria-hidden width="14" height="12" viewBox="0 0 14 12" fill="none" stroke="currentColor" strokeWidth="1.6">
               <path d="M1 6h11.5M8 1l5 5-5 5" />
             </svg>

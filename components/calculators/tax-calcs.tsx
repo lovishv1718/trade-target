@@ -6,7 +6,7 @@ import { compareRegimes, computeTax, HRA_METRO_CITIES, hraExemption, type AgeGro
 import { formatINR, formatINRCompact } from "@/lib/format";
 import { DonutWithLegend } from "./donut";
 import { Lines } from "./lazy-charts";
-import { AnimatedValue, BreakdownTable, CalcLayout, CalcSection, COLORS, Formula, Insight, ResultPanel, Segmented, SelectField, SliderField, StatRows, Toggle } from "./kit";
+import { LiveValue, BreakdownTable, CalcLayout, CalcSection, COLORS, Formula, Insight, ResultPanel, Segmented, SelectField, SliderField, StatRows, Toggle } from "./kit";
 
 // Income tax -------------------------------------------------------------------------
 
@@ -133,10 +133,10 @@ export function IncomeTaxCalculator() {
                   <tr className="border-t-2 border-ink font-bold text-ink">
                     <td className="py-2">Total tax</td>
                     <td className={`whitespace-nowrap px-2 py-2 text-right ${cmp.better === "new" ? "bg-paper-2" : ""}`}>
-                      <AnimatedValue value={cmp.new.totalTax} />
+                      <LiveValue value={cmp.new.totalTax} />
                     </td>
                     <td className={`whitespace-nowrap px-2 py-2 text-right ${cmp.better === "old" ? "bg-paper-2" : ""}`}>
-                      <AnimatedValue value={cmp.old.totalTax} />
+                      <LiveValue value={cmp.old.totalTax} />
                     </td>
                   </tr>
                   <Row label="Effective rate" a={`${cmp.new.effectiveRate.toFixed(2)}%`} b={`${cmp.old.effectiveRate.toFixed(2)}%`} better={cmp.better} />

@@ -147,7 +147,7 @@ export function SearchOverlay({ trending }: { trending: { label: string; href: s
               className="field mt-0 h-12 pl-10 text-lg md:h-14 md:pl-11 md:text-xl"
             />
           </div>
-          <button type="button" onClick={close} aria-label="Close search" className="btn btn-tertiary min-h-11 min-w-11 shrink-0 gap-2 px-2 no-underline">
+          <button type="button" onClick={close} aria-label="Close search" className="btn btn-text shrink-0 gap-2 px-2">
             <kbd aria-hidden className="hidden border border-rule-strong px-1.5 font-sans text-2xs font-semibold leading-5 text-muted sm:inline-block">
               Esc
             </kbd>
@@ -164,7 +164,7 @@ export function SearchOverlay({ trending }: { trending: { label: string; href: s
               <ul className="mt-3 flex flex-wrap gap-2">
                 {trending.map((t) => (
                   <li key={t.href}>
-                    <Link href={t.href} onClick={close} className="tag bg-white text-sm pointer-coarse:min-h-11 pointer-coarse:px-3">
+                    <Link href={t.href} onClick={close} className="tag text-sm">
                       {t.label}
                     </Link>
                   </li>
@@ -172,13 +172,33 @@ export function SearchOverlay({ trending }: { trending: { label: string; href: s
               </ul>
             </div>
           ) : docs === null ? (
-            <p role="status" className="px-1 py-8 text-sm text-muted">
-              Loading…
-            </p>
+            // The index is fetched on first open: a still outline of the result list holds the space
+            <div role="status" className="px-1">
+              <p className="kicker border-b border-rule pb-1.5 text-muted">Loading…</p>
+              <ul aria-hidden className="divide-y divide-rule">
+                {[0.82, 0.64, 0.74].map((w) => (
+                  <li key={w} className="flex min-h-11 items-center px-2.5">
+                    <span className="block h-2.5 bg-paper-2" style={{ width: `${w * 100}%` }} />
+                  </li>
+                ))}
+              </ul>
+            </div>
           ) : grouped.length === 0 ? (
-            <div role="status" className="px-1 py-8">
-              <p className="headline text-lg">No results for “{query}”.</p>
-              <p className="mt-1 text-sm text-ink-2">Try a company name, a scheme or a calculator.</p>
+            <div role="status" className="px-1">
+              <div className="empty">
+                <p className="empty-title text-balance">No results for “{query}”.</p>
+                <p className="empty-text">Try a company name, a scheme or a calculator.</p>
+              </div>
+              <h2 className="kicker mt-6 text-muted">Trending searches</h2>
+              <ul className="mt-3 flex flex-wrap gap-2">
+                {trending.map((t) => (
+                  <li key={t.href}>
+                    <Link href={t.href} onClick={close} className="tag text-sm">
+                      {t.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
           ) : (
             <div className="space-y-4">
@@ -198,7 +218,7 @@ export function SearchOverlay({ trending }: { trending: { label: string; href: s
                             onClick={close}
                             onMouseEnter={() => setCursor(i)}
                             data-active={active || undefined}
-                            className="flex min-h-11 items-baseline justify-between gap-4 border-b border-l-2 border-b-rule border-l-transparent px-2.5 py-2.5 data-active:border-l-ink data-active:bg-paper-2"
+                            className="story flex min-h-11 items-baseline justify-between gap-4 border-b border-l-2 border-b-rule border-l-transparent px-2.5 py-2.5 data-active:border-l-ink data-active:bg-paper-2"
                           >
                             <span className="headline text-base leading-snug">{item.title}</span>
                             <span className="shrink-0 text-xs text-muted">{item.label}</span>

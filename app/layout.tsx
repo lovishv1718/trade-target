@@ -31,13 +31,15 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-IN" className={`${serif.variable} ${sans.variable}`}>
+    <html lang="en-IN" className={`${serif.variable} ${sans.variable}`} suppressHydrationWarning>
       <head>
-        {/* Marks .img-fade images as loaded so they fade in on decode. Registered before any image
-            parses and independent of hydration, so images are never held back. */}
+        {/* Flags scripting for the reveal styles, then marks every image as loaded once it decodes,
+            so photographs wipe in. Registered before any image parses and independent of
+            hydration, so images are never held back; without scripting they simply show. A failed image
+            is marked too, so its frame can fall back to the empty-photo slot. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `document.addEventListener("load",function(e){var t=e.target;if(t&&t.classList&&t.classList.contains("img-fade"))t.setAttribute("data-loaded","")},true);`,
+            __html: `document.documentElement.setAttribute("data-js","");document.addEventListener("load",function(e){var t=e.target;if(t&&t.tagName==="IMG")t.setAttribute("data-loaded","")},true);document.addEventListener("error",function(e){var t=e.target;if(t&&t.tagName==="IMG")t.setAttribute("data-failed","")},true);`,
           }}
         />
       </head>

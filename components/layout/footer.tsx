@@ -3,8 +3,8 @@ import site from "@/content/site.json";
 import { getCalculators, getSubsections } from "@/lib/content";
 import { Logo } from "../logo";
 
-// White/80 at rest, white and underlined on hover. Compact on a mouse, 44px tall on touch.
-const link = "text-white/80 underline-offset-4 hover:text-white hover:underline";
+// The .link-soft look: ink-2, ink and underlined on hover. Compact on a mouse, 44px tall on touch.
+const link = "link-soft";
 const tapLink = `flex min-h-7 items-center py-0.5 leading-snug pointer-coarse:min-h-11 ${link}`;
 
 export function Footer() {
@@ -45,7 +45,7 @@ export function Footer() {
   ];
 
   return (
-    <footer className="surface-ink mt-16 text-sm text-ink-2">
+    <footer className="surface-ink border-t border-rule text-sm text-ink-2">
       <div className="wrap pb-6 pt-10 md:pt-12">
         {/* Identity: mark, what we are, where to follow */}
         <div className="grid gap-6 border-b border-rule pb-8 md:grid-cols-[auto_minmax(0,1fr)_auto] md:items-center md:gap-8">

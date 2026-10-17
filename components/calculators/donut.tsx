@@ -1,15 +1,21 @@
+"use client";
+
 import { formatINR } from "@/lib/format";
+import { useSeen } from "../reveal";
 
 export type Slice = { name: string; value: number; color: string };
 
 // A circle with r = 15.9155 has a circumference of 100, so dash lengths are percentages.
 const R = 15.9155;
+const EASE = "240ms cubic-bezier(0.2, 0.7, 0.2, 1)";
 
 /**
- * Lightweight SVG donut. Slices ease to new sizes through a 240ms ease-out
- * transition on the dash array (the global reduced-motion rule removes it).
+ * Lightweight SVG donut. The first time it scrolls into view the arcs draw in from nothing;
+ * after that each slice eases to its new size (240ms) as the inputs move. The ring is a token
+ * colour, so it reads on paper and on black. The global reduced-motion rule removes both.
  */
 export function Donut({ slices, centerLabel, centerValue, size = 190 }: { slices: Slice[]; centerLabel?: string; centerValue?: string; size?: number }) {
+  const ref = useSeen<HTMLDivElement>();
   const data = slices.filter((s) => s.value > 0);
   const total = data.reduce((s, x) => s + x.value, 0) || 1;
   const gap = data.length > 1 ? 0.6 : 0;
@@ -20,12 +26,13 @@ export function Donut({ slices, centerLabel, centerValue, size = 190 }: { slices
     start: pcts.slice(0, i).reduce((a, b) => a + b, 0),
   }));
   return (
-    <div className="relative shrink-0" style={{ width: size, height: size }}>
+    <div ref={ref} className="donut relative shrink-0" style={{ width: size, height: size }}>
       <svg viewBox="0 0 42 42" width={size} height={size} role="img" aria-label={data.map((s, i) => `${s.name} ${formatINR(s.value)} (${pcts[i].toFixed(1)}%)`).join(", ")}>
-        <circle cx="21" cy="21" r={R} fill="none" stroke="#e2dccf" strokeWidth="6" />
+        <circle className="donut-track" cx="21" cy="21" r={R} fill="none" strokeWidth="6" />
         {arcs.map((a) => (
           <circle
             key={a.name}
+            className="donut-arc"
             cx="21"
             cy="21"
             r={R}
@@ -34,7 +41,7 @@ export function Donut({ slices, centerLabel, centerValue, size = 190 }: { slices
             strokeWidth="6"
             strokeDasharray={`${a.dash} ${100 - a.dash}`}
             strokeDashoffset={25 - a.start}
-            style={{ transition: "stroke-dasharray 240ms cubic-bezier(0.2, 0.7, 0.2, 1), stroke-dashoffset 240ms cubic-bezier(0.2, 0.7, 0.2, 1)" }}
+            style={{ transition: `stroke-dasharray ${EASE}, stroke-dashoffset ${EASE}` }}
           >
             <title>{`${a.name}: ${formatINR(a.value)}`}</title>
           </circle>

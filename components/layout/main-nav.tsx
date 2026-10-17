@@ -18,12 +18,6 @@ const MARK_SLOT = logoWidth(MARK_H, "mark") + 12;
 const OPEN_DELAY = 140;
 const CLOSE_DELAY = 180;
 
-/** Tighter padding at lg so all eight sections fit beside the mark at 1024. Bar item: white/80 at rest, white on hover with a faint bar, white with a 3px white bar when current. */
-function barItem(on: boolean) {
-  return `relative flex min-h-11 shrink-0 items-center whitespace-nowrap px-3 text-sm font-semibold focus-visible:-outline-offset-2 after:absolute after:inset-x-3 after:bottom-0 lg:px-2 lg:after:inset-x-2 xl:px-3 xl:after:inset-x-3 after:h-0.75 ${
-    on ? "text-white after:bg-white" : "text-white/80 hover:text-white hover:after:bg-white/40"
-  }`;
-}
 
 export function MainNav({
   items,
@@ -184,7 +178,7 @@ export function MainNav({
             aria-expanded={open}
             aria-controls="site-menu"
             aria-label="Open menu"
-            className="relative -ml-2 flex min-h-11 min-w-11 shrink-0 items-center justify-center gap-2 px-2 text-sm font-semibold text-white focus-visible:-outline-offset-2 after:absolute after:inset-x-2 after:bottom-0 after:h-0.75 hover:after:bg-white/40 sm:ml-0 xl:pr-3"
+            className="nav-item -ml-2 min-w-11 justify-center gap-2 px-2 text-ink after:inset-x-2 sm:ml-0 xl:pr-3"
           >
             <svg aria-hidden width="18" height="14" viewBox="0 0 18 14" fill="currentColor">
               <rect width="18" height="2" />
@@ -198,7 +192,7 @@ export function MainNav({
             prefetch={false}
             href="/"
             aria-current={pathname === "/" ? "page" : undefined}
-            className={barItem(pathname === "/")}
+            className="nav-item"
             onPointerEnter={(e) => e.pointerType === "mouse" && megaKey && showMega(null)}
           >
             Home
@@ -227,7 +221,8 @@ export function MainNav({
                     prefetch={false}
                     href={item.href}
                     aria-current={active(item.href) ? "page" : undefined}
-                    className={`${barItem(!!active(item.href))} ${expanded ? "text-white after:bg-white" : ""}`}
+                    className="nav-item"
+                    data-open={expanded || undefined}
                     onClick={(e) => {
                       // Touch: the first tap opens the panel; a second tap on the same item follows the link
                       if (panel && (pointer.current === "touch" || pointer.current === "pen") && !expanded) {
@@ -308,7 +303,7 @@ export function MainNav({
           <div className="border-t-[3px] border-(--rule-color)" style={{ "--rule-color": mega[shownKey].rule } as CSSProperties}>
             <MegaPanel data={mega[shownKey]} ipos={ipos} buildDate={buildDate} onNavigate={() => showMega(null)} />
             <div className="wrap flex justify-end pb-3 pointer-fine:hidden">
-              <button type="button" onClick={() => closeMega(false)} className="btn btn-tertiary btn-sm">
+              <button type="button" onClick={() => closeMega(false)} className="btn btn-text btn-sm">
                 Close
               </button>
             </div>
@@ -346,7 +341,7 @@ export function MainNav({
               type="button"
               onClick={() => close()}
               aria-label="Close menu"
-              className="flex min-h-11 min-w-11 items-center justify-center gap-2 px-3 text-sm font-semibold text-muted hover:text-ink"
+              className="btn btn-text"
             >
               Close
               <svg aria-hidden width="12" height="12" viewBox="0 0 12 12" stroke="currentColor" strokeWidth="1.8">
@@ -362,9 +357,7 @@ export function MainNav({
                   href={m.href}
                   onClick={() => close(false)}
                   aria-current={pathname === m.href ? "page" : undefined}
-                  className={`flex min-h-11 items-center text-base font-semibold underline-offset-4 hover:underline aria-[current=page]:underline aria-[current=page]:decoration-2 ${
-                    active(m.href) ? "text-ink" : "text-ink-2"
-                  }`}
+                  className={`link-quiet flex min-h-11 items-center text-base font-semibold ${active(m.href) ? "text-ink" : "text-ink-2"}`}
                 >
                   {m.label}
                 </Link>
@@ -377,7 +370,7 @@ export function MainNav({
                           href={c.href}
                           onClick={() => close(false)}
                           aria-current={pathname === c.href ? "page" : undefined}
-                          className="flex min-h-9 items-center py-1 text-sm leading-snug text-muted underline-offset-4 hover:text-ink hover:underline aria-[current=page]:font-semibold aria-[current=page]:text-ink pointer-coarse:min-h-11"
+                          className="link-soft flex min-h-9 items-center py-1 text-sm leading-snug aria-[current=page]:font-semibold pointer-coarse:min-h-11"
                         >
                           {c.label}
                         </Link>

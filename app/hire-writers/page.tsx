@@ -25,30 +25,29 @@ export default function HireWritersPage() {
 
       {/* Intro: the pitch flush left, a photograph beside it */}
       <section className="wrap mt-6 grid gap-8 md:mt-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-14">
-        <div className="lg:border-t lg:border-ink lg:pt-5">
+        <div className="border-t-3 border-company-mark pt-5">
           <p className="kicker text-muted">TradeTarget content services</p>
           <h1 className="headline mt-3 max-w-[22ch] text-3xl md:text-4xl lg:text-5xl">Finance writing for brokers, AMCs and fintechs</h1>
-          <p className="mt-4 max-w-[60ch] text-lg leading-relaxed text-ink-2">{hire.intro}</p>
+          <p className="deck mt-4 max-w-[60ch] text-xl leading-normal">{hire.intro}</p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <a href="#brief" className="btn btn-lg">
-              Send a brief
+            <a href="#brief" className="btn">
+              Send a brief <span className="arrow" aria-hidden>→</span>
             </a>
-            <a href="mailto:business@tradetarget.in" className="btn btn-secondary btn-lg">
+            <a href="mailto:business@tradetarget.in" className="btn btn-secondary">
               business@tradetarget.in
             </a>
           </div>
         </div>
-        <figure>
-          <Photo image={photo} sizes="(min-width: 1024px) 560px, 100vw" aspect="aspect-[4/3]" priority />
-          <figcaption className="mt-2 text-xs text-muted">Photo: {photo?.credit}</figcaption>
-        </figure>
+        <Photo image={photo} sizes="(min-width: 1024px) 560px, 100vw" crop="compact" priority caption="credit" />
       </section>
 
       {/* Clients: every logo in a hairline ledger */}
-      <section className="wrap mt-12 md:mt-16" aria-labelledby="clients-heading">
-        <h2 id="clients-heading" className="kicker border-b border-ink pb-2 text-ink">
-          Teams we have written for
-        </h2>
+      <section className="wrap mt-14 md:mt-16" aria-labelledby="clients-heading">
+        <div className="section-head">
+          <h2 id="clients-heading" className="section-title">
+            Teams we have written for
+          </h2>
+        </div>
         <ul className="grid grid-cols-3 border-l border-rule lg:grid-cols-9">
           {hire.clients.map((c) => (
             <li key={c.name} className="flex flex-col items-center justify-center gap-2 border-b border-r border-rule bg-white px-2 py-4 text-center">
@@ -104,7 +103,7 @@ export default function HireWritersPage() {
                   <AuthorAvatar author={a} size={64} />
                   <div>
                     <h3 className="headline text-xl">
-                      <Link href={`/author/${a.slug}/`} className="hover:underline hover:underline-offset-2">
+                      <Link href={`/author/${a.slug}/`} className="link-quiet">
                         {a.name}
                       </Link>
                     </h3>
@@ -144,11 +143,13 @@ export default function HireWritersPage() {
       </section>
 
       {/* Process: a black band, steps numbered with tabular figures */}
-      <section className="surface-ink mt-14 py-10 md:mt-16 md:py-14" aria-labelledby="process-heading">
+      <section className="surface-ink band band-tool mt-16" aria-labelledby="process-heading">
         <div className="wrap">
-          <h2 id="process-heading" className="headline border-b border-rule-strong pb-3 text-2xl text-ink md:text-3xl">
-            How it works
-          </h2>
+          <div className="section-head" style={{ ["--rule-color" as string]: "var(--color-company-mark)" }}>
+            <h2 id="process-heading" className="section-title md:text-3xl">
+              How it works
+            </h2>
+          </div>
           <ol className="grid md:grid-cols-3">
             {hire.process.map((p, i) => (
               <li key={p.step} className="border-b border-rule py-6 md:border-b-0 md:border-l md:px-6 md:first:border-l-0 md:first:pl-0 md:last:pr-0">
@@ -162,8 +163,8 @@ export default function HireWritersPage() {
       </section>
 
       {/* The brief: the page's main action */}
-      <section id="brief" className="wrap mt-14 grid scroll-mt-20 gap-8 pb-16 md:mt-16 md:pb-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] lg:gap-14" aria-labelledby="brief-heading">
-        <div className="border-t border-ink pt-5">
+      <section id="brief" className="wrap mt-16 grid scroll-mt-20 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] lg:gap-14" aria-labelledby="brief-heading">
+        <div className="border-t-3 border-ink pt-5">
           <h2 id="brief-heading" className="headline text-3xl md:text-4xl">
             Send a brief
           </h2>

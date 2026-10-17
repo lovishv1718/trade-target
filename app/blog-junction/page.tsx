@@ -21,16 +21,16 @@ export default function BlogJunctionPage() {
       <SectionMasthead title={section.name} description={section.description} accent="money" crumbs={[{ label: "Home", href: "/" }]} count={stories.length} />
       <div className="wrap mt-6">
         <div className="grid gap-8 md:grid-cols-2">
-          <StoryTile story={first} standfirst aspect="aspect-[16/9]" headingSize="text-2xl" sizes="(min-width: 768px) 600px, 100vw" />
-          <StoryTile story={second} standfirst aspect="aspect-[16/9]" headingSize="text-2xl" sizes="(min-width: 768px) 600px, 100vw" />
+          <StoryTile story={first} standfirst crop="wide" headingSize="text-2xl" sizes="(min-width: 768px) 600px, 100vw" />
+          <StoryTile story={second} standfirst crop="wide" headingSize="text-2xl" sizes="(min-width: 768px) 600px, 100vw" />
         </div>
-        <div className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px]">
+        <div className="mt-14 grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px]">
           <section aria-label="More from Blog Junction">
             <SectionHeader title="More reads" accent="money" />
             <PaginatedStories stories={rest} perPage={6} />
           </section>
           <aside>
-            <SectionHeader title="Funds desk" accent="money" />
+            <SectionHeader title="Funds desk" accent="money" pin={false} />
             <div className="divide-y divide-rule">
               {funds.map((s) => (
                 <StoryLink key={s.slug} story={s} />

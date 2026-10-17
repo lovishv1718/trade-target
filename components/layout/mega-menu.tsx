@@ -23,8 +23,7 @@ export type MegaPanelData = {
   strip?: { kind: "stories"; title: string; stories: MegaStory[] } | { kind: "calcs"; title: string; calcs: MegaCalc[] } | { kind: "ipos" };
 };
 
-const columnLink =
-  "flex min-h-9 items-center py-1 text-sm leading-snug text-ink-2 decoration-1 underline-offset-4 hover:text-ink hover:underline pointer-coarse:min-h-11";
+const columnLink = "link-soft flex min-h-9 items-center py-1 text-sm leading-snug pointer-coarse:min-h-11";
 
 /** IPOs open today; if none, the next to open. Status is worked out in the browser from today's IST date. */
 function IpoStrip({ ipos, buildDate }: { ipos: MegaIpo[]; buildDate: string }) {
@@ -43,8 +42,8 @@ function IpoStrip({ ipos, buildDate }: { ipos: MegaIpo[]; buildDate: string }) {
         <ul className="grid gap-x-8 gap-y-3 sm:grid-cols-3">
           {items.map((i) => (
             <li key={i.slug}>
-              <Link prefetch={false} href={`/ipo/${i.slug}/`} className="group block">
-                <span className="block text-sm font-semibold text-ink decoration-1 underline-offset-4 group-hover:underline">{i.name}</span>
+              <Link prefetch={false} href={`/ipo/${i.slug}/`} className="link-row block py-1">
+                <span className="link-row-label block text-sm">{i.name}</span>
                 <span className="mt-0.5 block text-xs text-muted">
                   {open.length
                     ? `${i.dates.open ? formatDayMonth(i.dates.open) : ""} – ${i.dates.close ? formatDayMonth(i.dates.close) : ""}`
@@ -88,7 +87,7 @@ export function MegaPanel({ data, ipos, buildDate, onNavigate }: { data: MegaPan
             <div key={col.title} className="min-w-0">
               <p className="border-b border-rule pb-1.5 text-xs font-bold uppercase tracking-caps text-ink">
                 {col.href ? (
-                  <Link prefetch={false} href={col.href} className="decoration-1 underline-offset-4 hover:underline">
+                  <Link prefetch={false} href={col.href} className="link-quiet">
                     {col.title}
                   </Link>
                 ) : (
@@ -114,11 +113,11 @@ export function MegaPanel({ data, ipos, buildDate, onNavigate }: { data: MegaPan
           <ul className="grid gap-x-8 gap-y-3 sm:grid-cols-3">
             {data.strip.stories.map((s) => (
               <li key={s.href}>
-                <Link prefetch={false} href={s.href} className="group block">
+                <Link prefetch={false} href={s.href} className="story block">
                   <span className="block text-xs text-muted">
                     {s.kicker} · {s.date}
                   </span>
-                  <span className="headline mt-0.5 line-clamp-2 block text-md decoration-1 underline-offset-4 group-hover:underline">{s.title}</span>
+                  <span className="headline mt-0.5 line-clamp-2 block text-md">{s.title}</span>
                 </Link>
               </li>
             ))}
@@ -130,8 +129,8 @@ export function MegaPanel({ data, ipos, buildDate, onNavigate }: { data: MegaPan
           <ul className="grid gap-x-8 gap-y-3 sm:grid-cols-3">
             {data.strip.calcs.map((c) => (
               <li key={c.href}>
-                <Link prefetch={false} href={c.href} className="group block">
-                  <span className="block text-sm font-semibold text-ink decoration-1 underline-offset-4 group-hover:underline">{c.label}</span>
+                <Link prefetch={false} href={c.href} className="link-row block py-1">
+                  <span className="link-row-label block text-sm">{c.label}</span>
                   <span className="mt-0.5 line-clamp-2 block text-xs text-muted">{c.note}</span>
                 </Link>
               </li>

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AuthorAvatar } from "@/components/article/article-parts";
-import { Breadcrumbs } from "@/components/breadcrumbs";
+import { SectionMasthead } from "@/components/listing/section-masthead";
 import { Photo } from "@/components/photo";
 import { SectionHeader } from "@/components/section-header";
 import { getAuthors, getPhoto } from "@/lib/content";
@@ -31,29 +31,26 @@ export default function AboutPage() {
   const photo = getPhoto("mumbai-skyline-night");
   const team = getAuthors();
   return (
-    <div className="wrap pb-16 pt-5 md:pb-20 md:pt-7">
-      <Breadcrumbs items={[{ label: "Home", href: "/" }]} current="About us" />
-
+    <>
       {/* Masthead: kicker and title set flush left, the paper's figures in a ruled ledger beside them */}
-      <header className="mt-6 grid gap-8 border-b border-ink pb-8 md:mt-8 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-end lg:gap-16">
-        <div>
-          <p className="kicker text-muted">About TradeTarget</p>
-          <h1 className="headline mt-3 max-w-[20ch] text-3xl md:text-4xl lg:text-5xl">Financial understanding for investors. Finance content for businesses.</h1>
-        </div>
-        <dl className="grid grid-cols-2 gap-px border border-rule bg-rule sm:grid-cols-4 lg:grid-cols-2" aria-label="TradeTarget in figures">
-          {NUMBERS.map((n) => (
-            <div key={n.label} className="bg-white px-4 py-3.5">
-              <dt className="text-xs text-muted">{n.label}</dt>
-              <dd className="mt-1.5 text-2xl font-semibold leading-none tabular-nums text-ink md:text-3xl">{n.value}</dd>
-            </div>
-          ))}
-        </dl>
-      </header>
-
-      <figure className="mt-6 md:mt-8">
-        <Photo image={photo} sizes="(min-width: 1240px) 1208px, 100vw" aspect="aspect-[16/9] md:aspect-[21/8]" priority />
-        <figcaption className="mt-2 text-xs text-muted">Mumbai skyline. Photo: {photo?.credit}</figcaption>
-      </figure>
+      <SectionMasthead
+        title="Financial understanding for investors. Finance content for businesses."
+        crumb="About us"
+        kicker="About TradeTarget"
+        crumbs={[{ label: "Home", href: "/" }]}
+        aside={
+          <dl className="grid shrink-0 grid-cols-2 gap-px border border-rule bg-rule sm:grid-cols-4 md:w-[22rem] md:grid-cols-2" aria-label="TradeTarget in figures">
+            {NUMBERS.map((n) => (
+              <div key={n.label} className="bg-white px-4 py-3.5">
+                <dt className="text-xs text-muted">{n.label}</dt>
+                <dd className="mt-1.5 text-2xl font-semibold leading-none tabular-nums text-ink md:text-3xl">{n.value}</dd>
+              </div>
+            ))}
+          </dl>
+        }
+      />
+    <div className="wrap">
+      <Photo image={photo} sizes="(min-width: 1240px) 1208px, 100vw" crop={{ base: "wide", md: "panorama" }} priority caption="full" captionText="Mumbai skyline" className="mt-6 md:mt-8" />
 
       <div className="mt-10 grid gap-10 md:mt-12 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-16">
         <div className="article-body max-w-[66ch]">
@@ -78,14 +75,14 @@ export default function AboutPage() {
           <div className="border-t border-ink pt-4">
             <p className="kicker text-ink">Content services</p>
             <p className="mt-2 text-lg font-semibold leading-snug text-ink">We write for fintechs, stockbrokers, wealth managers and AMCs.</p>
-            <Link href="/hire-writers/" className="link-more mt-2">
+            <Link href="/hire-writers/" className="btn btn-secondary btn-sm mt-3">
               Hire our writers <span className="arrow" aria-hidden>→</span>
             </Link>
           </div>
         </aside>
       </div>
 
-      <section className="mt-14 md:mt-16" aria-label="What we cover">
+      <section className="mt-16" aria-label="What we cover">
         <SectionHeader title="What we cover" />
         <ol className="mt-1 grid sm:grid-cols-2 sm:gap-x-10 lg:grid-cols-4 lg:gap-x-0">
           {COVERAGE.map((c, i) => (
@@ -100,7 +97,7 @@ export default function AboutPage() {
         </ol>
       </section>
 
-      <section className="mt-14 md:mt-16" aria-label="Leadership">
+      <section className="mt-16" aria-label="Leadership">
         <SectionHeader title="Leadership" href="/board-of-directors/" linkLabel="Board of Directors" />
         <ul className="mt-1 grid sm:grid-cols-3 sm:gap-x-8">
           {team.map((a) => (
@@ -108,7 +105,7 @@ export default function AboutPage() {
               <AuthorAvatar author={a} size={72} />
               <div>
                 <p className="headline text-lg">
-                  <Link href={`/board-of-directors/#${a.slug}`} className="hover:underline hover:underline-offset-2">
+                  <Link href={`/board-of-directors/#${a.slug}`} className="link-quiet">
                     {a.name}
                   </Link>
                 </p>
@@ -119,5 +116,6 @@ export default function AboutPage() {
         </ul>
       </section>
     </div>
+    </>
   );
 }
