@@ -38,11 +38,11 @@ export function SearchTrigger({ variant }: { variant: "box" | "icon" | "field" }
       type="button"
       onClick={openSearch}
       aria-label="Search stories, IPOs and calculators"
-      className="field mt-0 hidden w-64 items-center gap-2.5 text-left text-sm text-muted md:flex lg:w-72 xl:w-80"
+      className="field mt-0 hidden h-12 w-64 items-center gap-3 rounded-2xl border-white/90 bg-white/80 px-4 text-left text-base text-muted shadow-card backdrop-blur-xl hover:border-white hover:bg-white md:flex lg:w-80 xl:w-96"
     >
-      <Glass className="shrink-0 text-ink" />
+      <Glass className="size-5 shrink-0 text-ink" />
       <span className="min-w-0 flex-1 truncate">Search stories, IPOs, calculators</span>
-      <kbd className="shrink-0 border border-rule-strong bg-paper px-1.5 font-sans text-2xs font-semibold leading-normal text-muted">/</kbd>
+      <kbd className="shrink-0 rounded-md border border-rule-strong bg-white px-2 font-sans text-xs font-semibold leading-relaxed text-muted">/</kbd>
     </button>
   );
 }

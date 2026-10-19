@@ -23,7 +23,7 @@ function textOn(color: string) {
     return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
   };
   const l = 0.2126 * lin(0) + 0.7152 * lin(2) + 0.0722 * lin(4);
-  return l > 0.179 ? "#000000" : "#ffffff";
+  return l > 0.179 ? "#0b1b33" : "#ffffff";
 }
 
 const share = (p: number) => (p > 0 && p < 1 ? "<1%" : `${Math.round(p)}%`);

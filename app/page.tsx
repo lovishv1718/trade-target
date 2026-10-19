@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import hire from "@/content/hire.json";
-import { FrontHero } from "@/components/home/front-hero";
+import { FrontHero, Glance } from "@/components/home/front-hero";
 import { IpoPreviewTable, IpoThisWeek } from "@/components/home/ipo-week";
-import { MarketsBoard } from "@/components/home/markets-board";
+import { CommoditiesCard, MarketsBoard } from "@/components/home/markets-board";
 import { MiniSip } from "@/components/home/mini-sip";
 import { JsonLd } from "@/components/json-ld";
 import { Kicker } from "@/components/kicker";
@@ -48,20 +48,26 @@ export default function HomePage() {
       <h1 className="sr-only">TradeTarget: stock market, IPO and personal finance news</h1>
 
       {/* Front page: the hero (folio line, switchable lead, numbered index) and the market terminal ---- */}
-      <div className="wrap pt-4 md:pt-5">
-        <div className="grid gap-y-8 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-x-8 xl:grid-cols-[minmax(0,1fr)_320px] xl:gap-x-10">
-          <FrontHero stories={[lead, ...secondary]} ipos={ipos} buildDate={buildDate} />
-          <div className="surface-ink -mx-4 grid gap-px self-start bg-rule sm:mx-0 md:grid-cols-2 lg:grid-cols-1">
+      <div className="wrap pt-5 md:pt-6">
+        {/* Glance cards and the lead on the left, the market panels on the right (grid areas in glass.css) */}
+        <div className="home-top">
+          <div className="home-glance">
+            <Glance ipos={ipos} buildDate={buildDate} />
+          </div>
+          <div className="home-hero">
+            <FrontHero stories={[lead, ...secondary]} />
+          </div>
+          <div className="home-side grid content-start gap-4">
             <MarketsBoard />
-            <IpoThisWeek ipos={ipos} buildDate={buildDate} />
+            <CommoditiesCard />
           </div>
         </div>
       </div>
 
       {/* Text: latest news and most read ----------------------------------------------- */}
       <div className="band band-text">
-        <div className="wrap grid gap-12 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-x-8 xl:grid-cols-[minmax(0,1fr)_320px] xl:gap-x-10">
-          <section aria-label="Latest news">
+        <div className="wrap grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px] xl:grid-cols-[minmax(0,1fr)_380px]">
+          <section aria-label="Latest news" className="glass p-5 md:p-7">
             <SectionHeader title="Latest news" href="/news/" accent="ink" more={false} />
             <Stagger className="divide-y divide-rule">
               {latest.map((s) => (
@@ -79,8 +85,8 @@ export default function HomePage() {
               }
             />
           </section>
-          <aside className="space-y-10 md:grid md:grid-cols-2 md:gap-x-8 md:space-y-0 lg:block lg:space-y-10">
-            <section aria-label="Most read">
+          <aside className="grid content-start gap-6 md:grid-cols-2 lg:grid-cols-1">
+            <section aria-label="Most read" className="glass self-start p-5 md:p-6">
               <SectionHeader title="Most read" accent="ink" pin={false} />
               <ol className="divide-y divide-rule">
                 {[getArticleBySlug("employees-provident-fund-epf"), getArticleBySlug("ppf-interest-rate"), getArticleBySlug("section-80c"), getArticleBySlug("what-is-an-ipo"), getArticleBySlug("parag-parikh-flexi-cap-fund-vs-hdfc-flexi-cap-fund")]
@@ -92,7 +98,8 @@ export default function HomePage() {
                   ))}
               </ol>
             </section>
-            <section aria-label="Hire our writers" className="surface-ink self-start border-t-3 border-company-mark p-5">
+            <IpoThisWeek ipos={ipos} buildDate={buildDate} />
+            <section aria-label="Hire our writers" className="surface-ink glass-navy self-start p-6">
               <p className="kicker text-company">For brokers, AMCs and fintechs</p>
               <p className="headline mt-2 text-xl">The writers behind these stories can write for you</p>
               <Link prefetch={false} href="/hire-writers/" className="btn mt-5">
@@ -144,35 +151,37 @@ export default function HomePage() {
       {/* Text: Share Analysis, a lead and a list ------------------------------------------- */}
       <section className="band band-text" aria-label="Share Analysis">
         <div className="wrap">
-          <SectionHeader title="Share Analysis" href="/share-analysis/" accent="company" more={false} />
-          <div className="mt-5 grid lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
-            <article className="story group pb-2 lg:border-r lg:border-rule lg:pb-0 lg:pr-8">
-              <Link prefetch={false} href={shareLead.path} className="grid gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-1 lg:gap-4">
-                <Photo image={shareLead.image} sizes="(min-width: 1024px) 640px, (min-width: 768px) 360px, 100vw" crop={{ base: "standard", lg: "wide" }} />
-                <div>
-                  <span className="kicker text-company">Fundamental analysis</span>
-                  <h3 className="headline mt-1.5 text-balance text-2xl md:text-3xl">{shareLead.title}</h3>
-                  <p className="deck mt-2 text-lg leading-normal">{shareLead.standfirst}</p>
-                  <StoryMeta story={shareLead} className="mt-3" />
-                </div>
-              </Link>
-            </article>
-            <Stagger className="mt-4 divide-y divide-rule border-t border-rule lg:-mt-5 lg:border-t-0 lg:pl-8">
-              {shareRest.map((s) => (
-                <StoryRow key={s.slug} story={s} />
-              ))}
-            </Stagger>
+          <div className="glass p-5 md:p-7">
+            <SectionHeader title="Share Analysis" href="/share-analysis/" accent="company" more={false} />
+            <div className="mt-5 grid lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
+              <article className="story group pb-2 lg:border-r lg:border-rule lg:pb-0 lg:pr-8">
+                <Link prefetch={false} href={shareLead.path} className="grid gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-1 lg:gap-4">
+                  <Photo image={shareLead.image} sizes="(min-width: 1024px) 640px, (min-width: 768px) 360px, 100vw" crop={{ base: "standard", lg: "wide" }} />
+                  <div>
+                    <span className="kicker text-company">Fundamental analysis</span>
+                    <h3 className="headline mt-1.5 text-balance text-2xl md:text-3xl">{shareLead.title}</h3>
+                    <p className="deck mt-2 text-lg leading-normal">{shareLead.standfirst}</p>
+                    <StoryMeta story={shareLead} className="mt-3" />
+                  </div>
+                </Link>
+              </article>
+              <Stagger className="mt-4 divide-y divide-rule border-t border-rule lg:-mt-5 lg:border-t-0 lg:pl-8">
+                {shareRest.map((s) => (
+                  <StoryRow key={s.slug} story={s} />
+                ))}
+              </Stagger>
+            </div>
+            <SectionEnd
+              href="/share-analysis/"
+              label="All share analysis"
+              accent="company"
+              note={
+                <>
+                  <b className="stat">{count("share-analysis")}</b> companies analysed: financials, ratios and shareholding
+                </>
+              }
+            />
           </div>
-          <SectionEnd
-            href="/share-analysis/"
-            label="All share analysis"
-            accent="company"
-            note={
-              <>
-                <b className="stat">{count("share-analysis")}</b> companies analysed: financials, ratios and shareholding
-              </>
-            }
-          />
         </div>
       </section>
 
@@ -231,33 +240,35 @@ export default function HomePage() {
       {/* Text: Personal Finance, a lead and four -------------------------------------- */}
       <section className="band band-text" aria-label="Personal Finance">
         <div className="wrap">
-          <SectionHeader title="Personal Finance" href="/personal-finance/" accent="money" more={false} />
-          <ul aria-label="Personal Finance topics" className="flex flex-wrap gap-x-5 border-b border-rule">
-            {subs.map((s) => (
-              <li key={s.slug}>
-                <Link prefetch={false} href={s.path} className="link-quiet inline-flex min-h-11 items-center text-sm font-semibold text-money">
-                  {s.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <div className="mt-6 grid gap-y-8 lg:grid-cols-2">
-            <article className="story group lg:border-r lg:border-rule lg:pr-8">
-              <Link prefetch={false} href={pfLead.path} className="block">
-                <Photo image={pfLead.image} sizes="(min-width: 1024px) 590px, 100vw" crop={{ base: "standard", md: "panorama", lg: "standard" }} />
-                <Kicker label={pfLead.kicker} className="mt-4 block" />
-                <h3 className="headline mt-1.5 text-balance text-2xl md:text-3xl">{pfLead.title}</h3>
-                <p className="deck mt-2 text-lg leading-normal">{pfLead.standfirst}</p>
-              </Link>
-              <StoryMeta story={pfLead} className="mt-3" />
-            </article>
-            <div className="grid grid-cols-2 content-start gap-x-4 gap-y-8 sm:gap-x-6 md:grid-cols-4 lg:grid-cols-2 lg:pl-8">
-              {pfRest.slice(0, 4).map((s) => (
-                <StoryTile key={s.slug} story={s} headingSize="text-md leading-snug sm:text-lg" sizes="(min-width: 1024px) 280px, 50vw" />
+          <div className="glass p-5 md:p-7">
+            <SectionHeader title="Personal Finance" href="/personal-finance/" accent="money" more={false} />
+            <ul aria-label="Personal Finance topics" className="flex flex-wrap gap-x-5 border-b border-rule">
+              {subs.map((s) => (
+                <li key={s.slug}>
+                  <Link prefetch={false} href={s.path} className="link-quiet inline-flex min-h-11 items-center text-sm font-semibold text-money">
+                    {s.name}
+                  </Link>
+                </li>
               ))}
+            </ul>
+            <div className="mt-6 grid gap-y-8 lg:grid-cols-2">
+              <article className="story group lg:border-r lg:border-rule lg:pr-8">
+                <Link prefetch={false} href={pfLead.path} className="block">
+                  <Photo image={pfLead.image} sizes="(min-width: 1024px) 590px, 100vw" crop={{ base: "standard", md: "panorama", lg: "standard" }} />
+                  <Kicker label={pfLead.kicker} className="mt-4 block" />
+                  <h3 className="headline mt-1.5 text-balance text-2xl md:text-3xl">{pfLead.title}</h3>
+                  <p className="deck mt-2 text-lg leading-normal">{pfLead.standfirst}</p>
+                </Link>
+                <StoryMeta story={pfLead} className="mt-3" />
+              </article>
+              <div className="grid grid-cols-2 content-start gap-x-4 gap-y-8 sm:gap-x-6 md:grid-cols-4 lg:grid-cols-2 lg:pl-8">
+                {pfRest.slice(0, 4).map((s) => (
+                  <StoryTile key={s.slug} story={s} headingSize="text-md leading-snug sm:text-lg" sizes="(min-width: 1024px) 280px, 50vw" />
+                ))}
+              </div>
             </div>
+            <SectionEnd href="/personal-finance/" label="All personal finance" accent="money" note={`${count("personal-finance")} guides across ${subs.length} topics`} />
           </div>
-          <SectionEnd href="/personal-finance/" label="All personal finance" accent="money" note={`${count("personal-finance")} guides across ${subs.length} topics`} />
         </div>
       </section>
 

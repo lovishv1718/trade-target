@@ -482,7 +482,7 @@ export function CagrCalculator() {
               <DonutWithLegend
                 slices={[
                   { name: "Value left", value: end, color: COLORS.invested },
-                  { name: "Loss", value: start - end, color: "#c80000" },
+                  { name: "Loss", value: start - end, color: "#d32f2f" },
                 ]}
               />
             )}

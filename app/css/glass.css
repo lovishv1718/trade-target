@@ -1,0 +1,1199 @@
+/* ==========================================================================
+   Glass theme
+
+   A bright city of glass towers behind the page; content sits on thick, rounded
+   frosted panels; market instruments sit on deep navy glass slabs. This file
+   loads after system.css and restyles its components in place, so every page picks
+   the theme up without its markup changing.
+
+   Colour roles:
+     navy      instrument panels, the utility bar and the ticker (was black)
+     primary   the one action colour: current nav item, primary buttons, focus
+     up/down   market direction, always with a sign or an arrow as well
+   Text pairs are checked against WCAG AA on white and on the paper ground.
+   ========================================================================== */
+
+@theme static {
+  --color-paper: #f2f6fc;
+  --color-paper-2: #e8eef7;
+  --color-ink: #0b1b33; /* 16.9:1 on paper */
+  --color-ink-2: #2b3b55; /* 10.6:1 */
+  --color-muted: #586a85; /* 5.1:1 */
+  --color-faint: #98a6bb; /* decorative only */
+  --color-rule: #dbe3ee;
+  --color-rule-strong: #bccadc;
+
+  --color-up: #087f45; /* 5.1:1 on white */
+  --color-down: #d32f2f; /* 5.0:1 on white */
+  --color-up-bright: #22d17c; /* on navy */
+  --color-down-bright: #ff5a5f; /* on navy, 5.5:1 */
+  --color-success: #087f45;
+  --color-error: #d32f2f;
+
+  --color-ipo: #1d5fd6; /* 5.8:1 */
+  --color-company: #8a5a00; /* 5.7:1 */
+  --color-company-mark: #f0a92a;
+  --color-money: #0b6f80; /* 5.6:1 */
+  --color-learn: #5b3fc4; /* 7.1:1 */
+
+  --color-primary: #1f6bff;
+  --color-primary-deep: #0b4fd8;
+  --color-primary-soft: #e6efff;
+  --color-navy: #0e1b30;
+  --color-navy-2: #16253f;
+  --color-teal: #14a39a;
+
+  --radius-card: 1.25rem;
+  --radius-control: 0.75rem;
+
+  /* Panels read as thick objects: a lit top edge, a darker underside, a long soft cast shadow */
+  --shadow-card: 0 26px 44px -24px rgb(16 38 77 / 0.42), 0 8px 18px -8px rgb(16 38 77 / 0.14), 0 2px 0 rgb(16 38 77 / 0.06);
+  --shadow-float: 0 34px 60px -26px rgb(6 18 40 / 0.7), 0 10px 22px -10px rgb(6 18 40 / 0.35);
+  --shadow-overlay: 0 24px 56px -16px rgb(11 27 51 / 0.38), 0 2px 8px rgb(11 27 51 / 0.08);
+}
+
+:root {
+  --focus: var(--color-primary);
+  --surface: var(--color-paper);
+  --paper-light: #f2f6fc;
+  --paper-2-light: #e8eef7;
+  --photo-tone: transparent;
+  --glass-bg: linear-gradient(180deg, rgb(255 255 255 / 0.94) 0%, rgb(248 251 255 / 0.84) 55%, rgb(236 243 252 / 0.8) 100%);
+  --glass-border: rgb(255 255 255 / 0.95);
+  --glass-solid: #f8fafe;
+  --navy-bg: linear-gradient(165deg, #18294a 0%, #0f1d35 55%, #0a1527 100%);
+  /* The floating nav bar: 3.5rem pill plus its 0.5rem gap from the top */
+  --nav-h: 4rem;
+}
+
+/* The bull sculpture on the tape (public/brand/bull-3d.webp, cut from the design): a soft
+   shadow sets it down on the slab */
+.bull-3d {
+  filter: drop-shadow(0 10px 8px rgb(6 40 48 / 0.28));
+}
+
+/* ---- Ground ----------------------------------------------------------------- */
+@layer base {
+  /* No stacking context on body: the skyline (z -1) still paints over the canvas, and the
+     multiplied logo blends with the real page ground */
+  body {
+    position: relative;
+    background: linear-gradient(180deg, #dce8f7 0, #f2f6fc 900px, #f3f6fb 100%);
+    color: var(--color-ink);
+  }
+  /* The city: blurred glass towers in morning light behind the top of the page, fading into
+     the ground as the page goes on */
+  body::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: 0 0 auto;
+    height: 1000px;
+    background: url("/brand/city.svg") center top / cover no-repeat;
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
+  }
+  /* Leaves at the left edge, as in a lobby: on the front page only, where they sit behind
+     the stage, and only where the page has margin for them */
+  @media (min-width: 1280px) {
+    body:has(.home-top)::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      left: -2rem;
+      top: 300px;
+      width: 260px;
+      height: 560px;
+      background: url("/brand/plants.svg") left top / contain no-repeat;
+      pointer-events: none;
+    }
+  }
+  ::selection {
+    background: rgb(31 107 255 / 0.22);
+  }
+}
+
+@layer components {
+  /* ---- Surfaces, re-pointed for the theme ------------------------------------ */
+  .surface-paper {
+    --color-ink: #0b1b33;
+    --color-ink-2: #2b3b55;
+    --color-muted: #586a85;
+    --color-faint: #98a6bb;
+    --color-rule: #dbe3ee;
+    --color-rule-strong: #bccadc;
+    --color-paper: #f2f6fc;
+    --color-paper-2: #e8eef7;
+    --color-up: #087f45;
+    --color-down: #d32f2f;
+    --color-ipo: #1d5fd6;
+    --color-company: #8a5a00;
+    --color-money: #0b6f80;
+    --color-learn: #5b3fc4;
+    --focus: #1f6bff;
+    --surface: #f2f6fc;
+    --field-bg: #ffffff;
+    background-color: var(--color-paper);
+  }
+
+  /* Tinted bands become a frosted strip across the page */
+  .surface-paper-2 {
+    background-color: rgb(255 255 255 / 0.5);
+    --surface: #f6f9fd;
+    --btn-2-bg: #ffffff;
+    border-color: rgb(255 255 255 / 0.9);
+  }
+
+  /* Navy instruments. The palette inverts inside, exactly as the black surface did. */
+  .surface-ink {
+    background-color: var(--color-navy);
+    background-image: var(--navy-bg);
+    color: #ffffff;
+    --color-ink: #ffffff;
+    --color-ink-2: rgb(255 255 255 / 0.84);
+    --color-muted: #a3b3cb; /* 7.9:1 on navy */
+    --color-faint: #5f7190;
+    --color-rule: rgb(255 255 255 / 0.1);
+    --color-rule-strong: rgb(255 255 255 / 0.24);
+    --color-paper: #0e1b30;
+    --color-paper-2: #16253f;
+    --color-up: #22d17c;
+    --color-down: #ff5a5f;
+    --color-ipo: #8fb3ff;
+    --color-company: #f3b54a;
+    --color-money: #5fd0de;
+    --color-learn: #b9a4ff;
+    --focus: #8fb3ff;
+    --surface: #0e1b30;
+    --field-bg: rgb(255 255 255 / 0.06);
+    --btn-2-bg: transparent;
+  }
+
+  /* ---- Panels ----------------------------------------------------------------- */
+  .glass {
+    position: relative;
+    background: var(--glass-bg);
+    border: 1.5px solid var(--glass-border);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card), inset 0 2px 0 rgb(255 255 255 / 0.95), inset 0 -3px 0 rgb(120 145 185 / 0.12);
+    -webkit-backdrop-filter: blur(18px) saturate(1.5);
+    backdrop-filter: blur(18px) saturate(1.5);
+    --surface: var(--glass-solid);
+  }
+  /* A navy glass slab: a lit rim, a gloss across its top, and a visible thickness under it */
+  .glass-navy {
+    position: relative;
+    border: 1px solid rgb(255 255 255 / 0.14);
+    border-radius: var(--radius-card);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.18),
+      inset 0 -2px 0 rgb(0 0 0 / 0.35),
+      0 6px 0 -1px #08111f,
+      var(--shadow-float);
+    overflow: hidden;
+  }
+  .glass-navy::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgb(255 255 255 / 0.09), transparent 42%),
+      radial-gradient(460px 240px at 100% 0%, rgb(80 130 255 / 0.22), transparent 70%);
+    pointer-events: none;
+  }
+  .glass-navy > * {
+    position: relative;
+  }
+
+  /* Full-width navy bands keep the glow, wider */
+  .band.surface-ink {
+    background-image:
+      radial-gradient(900px 420px at 85% 0%, rgb(60 110 240 / 0.22), transparent 65%),
+      radial-gradient(700px 380px at 0% 100%, rgb(20 163 154 / 0.14), transparent 60%),
+      var(--navy-bg);
+  }
+
+  /* ---- Buttons ----------------------------------------------------------------- */
+  .btn {
+    --btn-bg: linear-gradient(180deg, #3580ff 0%, #0f58e6 100%);
+    --btn-fg: #ffffff;
+    --btn-bd: transparent;
+    --btn-bg-h: linear-gradient(180deg, #4189ff 0%, #0b4fd8 100%);
+    --btn-fg-h: #ffffff;
+    --btn-bd-h: transparent;
+    border-radius: var(--radius-control);
+    box-shadow: 0 10px 20px -10px rgb(31 107 255 / 0.75), inset 0 1px 0 rgb(255 255 255 / 0.28);
+    font-weight: 700;
+  }
+  .surface-ink .btn {
+    --btn-bg-h: linear-gradient(180deg, #4189ff 0%, #0b4fd8 100%);
+  }
+  .btn-secondary {
+    --btn-bg: rgb(255 255 255 / 0.78);
+    --btn-fg: var(--color-ink);
+    --btn-bd: var(--color-rule-strong);
+    --btn-bg-h: #ffffff;
+    --btn-fg-h: var(--color-ink);
+    --btn-bd-h: color-mix(in srgb, var(--color-ink) 35%, transparent);
+    box-shadow: 0 6px 14px -10px rgb(16 38 77 / 0.35);
+  }
+  .surface-ink .btn-secondary {
+    --btn-bg: rgb(255 255 255 / 0.06);
+    --btn-fg: #ffffff;
+    --btn-bd: rgb(255 255 255 / 0.24);
+    --btn-bg-h: rgb(255 255 255 / 0.14);
+    --btn-fg-h: #ffffff;
+    --btn-bd-h: rgb(255 255 255 / 0.45);
+    box-shadow: none;
+  }
+  /* Text buttons stay bare: the theme's .btn fill must not reach them */
+  .btn-tertiary,
+  .btn-text {
+    --btn-bg: transparent;
+    --btn-bd: transparent;
+    --btn-bg-h: transparent;
+    --btn-bd-h: transparent;
+    box-shadow: none;
+  }
+  .btn-text {
+    --btn-fg: var(--color-muted);
+    --btn-fg-h: var(--color-ink);
+  }
+  .btn-tertiary {
+    --btn-fg: var(--color-ink);
+    --btn-fg-h: var(--color-ink);
+  }
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    box-shadow: none;
+  }
+  /* Round icon buttons: carousel arrows and the like */
+  .btn-round {
+    --btn-h: 2.25rem;
+    border-radius: 999px;
+  }
+
+  /* ---- Tags, chips, pills ---------------------------------------------------- */
+  .tag {
+    border-radius: 999px;
+    padding-inline: 0.625rem;
+    background: rgb(255 255 255 / 0.7);
+  }
+  .chip {
+    border-radius: 999px;
+    border-color: var(--color-rule-strong);
+    background: rgb(255 255 255 / 0.75);
+    padding-inline: 0.875rem;
+  }
+  .surface-ink .chip {
+    background: rgb(255 255 255 / 0.06);
+  }
+  .chip[aria-pressed="true"],
+  .chip[aria-current="page"],
+  .chip[aria-checked="true"] {
+    background: linear-gradient(180deg, #3580ff, #0f58e6);
+    border-color: transparent;
+    color: #ffffff;
+    box-shadow: 0 8px 16px -10px rgb(31 107 255 / 0.8);
+  }
+  .chip:is([aria-pressed="true"], [aria-current="page"]) .chip-count {
+    color: rgb(255 255 255 / 0.8);
+  }
+  /* Segmented controls keep their joined look, rounded at the ends */
+  .calc-seg {
+    gap: 0.375rem;
+  }
+  .calc-seg .chip {
+    margin: 0;
+  }
+
+  /* Section label as a soft pill: the kicker on story cards */
+  .kicker-pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.375rem;
+    padding: 0.125rem 0.5625rem 0.0625rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, currentColor 11%, transparent);
+    font-size: var(--text-2xs);
+    letter-spacing: 0.07em;
+  }
+  .surface-ink .kicker-pill {
+    background: color-mix(in srgb, currentColor 18%, transparent);
+  }
+
+  /* ---- Fields ------------------------------------------------------------------- */
+  .field {
+    border-radius: var(--radius-control);
+    border-color: var(--color-rule-strong);
+    background: rgb(255 255 255 / 0.9);
+  }
+  .surface-ink .field {
+    border-color: rgb(255 255 255 / 0.22);
+    background: rgb(255 255 255 / 0.06);
+  }
+  .field:focus-visible,
+  .field:focus {
+    border-color: var(--color-primary);
+    outline: 3px solid color-mix(in srgb, var(--color-primary) 28%, transparent);
+    outline-offset: 0;
+  }
+  .check {
+    border-radius: 0.375rem;
+  }
+  .check:checked,
+  .radio:checked::before {
+    background: var(--color-primary);
+  }
+  .check:checked,
+  .radio:checked {
+    border-color: var(--color-primary);
+  }
+  .range-fill {
+    background: var(--color-primary);
+    border-radius: 999px;
+  }
+  .range-track {
+    border-radius: 999px;
+  }
+  .range-input::-webkit-slider-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 3px solid #ffffff;
+    background: var(--color-primary);
+    box-shadow: 0 2px 6px rgb(16 38 77 / 0.35);
+  }
+  .range-input::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 3px solid #ffffff;
+    background: var(--color-primary);
+    box-shadow: 0 2px 6px rgb(16 38 77 / 0.35);
+  }
+
+  /* ---- Section devices ------------------------------------------------------- */
+  .section-head {
+    align-items: center;
+    padding-block: 0.25rem 0.875rem;
+    border-top: 0;
+    border-bottom: 0;
+    background: transparent;
+  }
+  .section-head[data-pin] {
+    position: static;
+  }
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+  .section-title::before {
+    content: "";
+    flex-shrink: 0;
+    width: 0.375rem;
+    height: 1.25em;
+    border-radius: 999px;
+    background: linear-gradient(180deg, var(--rule-color, var(--color-primary)), color-mix(in srgb, var(--rule-color, var(--color-primary)) 55%, #ffffff));
+  }
+  .section-end {
+    border-top-color: var(--color-rule);
+  }
+  .end-bar {
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    background: linear-gradient(120deg, var(--rule-color, var(--color-primary)), color-mix(in srgb, var(--rule-color, var(--color-primary)) 62%, #061226));
+    color: #ffffff;
+    box-shadow: var(--shadow-card);
+  }
+  .surface-ink .end-bar {
+    color: #0b1b33;
+    background: linear-gradient(120deg, #ffffff, #dfe8f6);
+  }
+  .end-bar-go {
+    border-left-color: rgb(255 255 255 / 0.25);
+  }
+
+  /* ---- Stories ------------------------------------------------------------------ */
+  .story::before {
+    height: 3px;
+    border-radius: 999px;
+    background: var(--color-primary);
+  }
+
+  /* The lead plate floats over the photograph as a frosted card */
+  .lead-rule {
+    display: none;
+  }
+  .lead-plate {
+    margin: -3rem 1rem 0;
+    padding: 0.875rem 1rem 1rem;
+    border-radius: 1rem;
+    background: rgb(255 255 255 / 0.9);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    backdrop-filter: blur(14px) saturate(1.4);
+    box-shadow: var(--shadow-card);
+  }
+  @container lead (min-width: 28rem) {
+    .lead-plate {
+      margin: -4rem 2rem 0 1.25rem;
+      padding: 1rem 1.25rem 1.125rem;
+    }
+  }
+  @container lead (min-width: 40rem) {
+    .lead-plate {
+      margin: -5rem 1.5rem 0 1.5rem;
+      padding: 1.125rem 1.5rem 1.25rem;
+    }
+  }
+  .dateline,
+  .dateline > div,
+  .dateline-stack,
+  .dateline-stack > div,
+  .lead-foot .dateline,
+  .lead-foot .dateline > div {
+    border-color: var(--color-rule);
+  }
+
+  /* ---- Photographs ---------------------------------------------------------- */
+  .photo-frame {
+    border-radius: 1rem;
+    background: var(--color-paper-2);
+  }
+  .photo-frame::before {
+    opacity: 0;
+  }
+  .photo-frame::after {
+    border-radius: inherit;
+    border-color: rgb(255 255 255 / 0.55);
+  }
+  .photo-frame img {
+    filter: saturate(1.04) contrast(1.02);
+  }
+  @media (max-width: 639px) {
+    .lead-photo .photo-frame {
+      border-radius: 0;
+    }
+  }
+
+  /* ---- Notes, empties, lazy slots -------------------------------------------- */
+  .note {
+    border-left-width: 4px;
+    border-radius: 0.75rem;
+    background: rgb(255 255 255 / 0.8);
+  }
+  .surface-ink .note {
+    background: rgb(255 255 255 / 0.06);
+  }
+  .empty,
+  .lazy-slot {
+    border-radius: 1rem;
+  }
+  .scroll-hint::before {
+    border-radius: 0.375rem;
+  }
+
+  /* ---- Market state, change chips, sparklines ------------------------------- */
+  .mkt-state {
+    height: 1.625rem;
+    padding: 0 0.625rem;
+    border-radius: 999px;
+    border-color: color-mix(in srgb, currentColor 35%, transparent);
+    background: color-mix(in srgb, currentColor 8%, transparent);
+    letter-spacing: 0.06em;
+  }
+  .mkt-state[data-state="closed"] {
+    color: var(--color-ink);
+  }
+  .mkt-state[data-state="closed"] .mkt-dot {
+    background: var(--color-down);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-down) 22%, transparent);
+  }
+  .mkt-state[data-state="open"] .mkt-dot {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-up) 25%, transparent);
+  }
+  .chg {
+    border-radius: 0.5rem;
+    border-color: transparent;
+    background: color-mix(in srgb, currentColor 13%, transparent);
+  }
+
+  /* ---- Navigation items ------------------------------------------------------- */
+  .nav-item {
+    min-height: 2.5rem;
+    margin-block: auto;
+    padding-inline: 0.875rem;
+    border-radius: 999px;
+    font-size: 0.9375rem;
+    color: color-mix(in srgb, var(--color-ink) 82%, transparent);
+    transition: background-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+  }
+  .nav-item::after {
+    display: none;
+  }
+  .nav-item:hover,
+  .nav-item[data-open],
+  .nav-item[aria-expanded="true"] {
+    background: rgb(255 255 255 / 0.85);
+    color: var(--color-ink);
+  }
+  .nav-item[aria-current="page"] {
+    background: linear-gradient(180deg, #3580ff 0%, #0f58e6 100%);
+    color: #ffffff;
+    box-shadow: 0 10px 20px -10px rgb(31 107 255 / 0.85), inset 0 1px 0 rgb(255 255 255 / 0.25);
+  }
+  @media (min-width: 1024px) and (max-width: 1279px) {
+    .nav-item {
+      padding-inline: 0.625rem;
+    }
+  }
+
+  /* ---- Tables ------------------------------------------------------------------- */
+  .table-wrap {
+    border-radius: 1rem;
+    border-color: rgb(255 255 255 / 0.9);
+    background: rgb(255 255 255 / 0.9);
+    box-shadow: var(--shadow-card);
+  }
+  .data-table thead th {
+    background: #eef3fa;
+    box-shadow: inset 0 -1px 0 var(--color-rule-strong);
+    letter-spacing: 0.03em;
+  }
+  .data-table thead .sticky-col {
+    background: #eef3fa;
+    box-shadow:
+      inset -1px 0 0 var(--color-rule),
+      inset 0 -1px 0 var(--color-rule-strong);
+  }
+  .data-table tbody tr {
+    background: rgb(255 255 255 / 0.96);
+  }
+  .data-table tbody tr:nth-child(even) {
+    background: #f6f9fd;
+  }
+  @media (hover: hover) {
+    .data-table tbody tr:hover {
+      background: #eef4ff;
+    }
+  }
+  .data-table tbody tr[data-live] {
+    background: #edf3ff;
+  }
+  .article-body thead th {
+    background: #eef3fa;
+    border-bottom: 1px solid var(--color-rule-strong);
+  }
+  .article-body tbody tr:nth-child(even) {
+    background: #f6f9fd;
+  }
+
+  /* ---- Calculator instruments (system classes) ------------------------------ */
+  .instrument {
+    border: 1px solid rgb(255 255 255 / 0.9);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    background: var(--glass-bg);
+    box-shadow: var(--shadow-card);
+  }
+  .instrument-label {
+    border-bottom-color: var(--color-rule);
+    background: rgb(238 243 250 / 0.85);
+  }
+  .calc-num {
+    border-radius: var(--radius-control);
+    overflow: hidden;
+  }
+  .calc-num:focus-within {
+    border-color: var(--color-primary);
+    outline: 3px solid color-mix(in srgb, var(--color-primary) 28%, transparent);
+  }
+  .calc-switch-track {
+    border-radius: 999px;
+  }
+  .calc-switch-thumb {
+    border-radius: 50%;
+  }
+  .calc-switch-input:checked + .calc-switch-track {
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+  }
+  .calc-switch-input:checked ~ .calc-switch-thumb {
+    background: #ffffff;
+  }
+
+  /* ---- Article body accents ---------------------------------------------------- */
+  .article-body ul > li::before {
+    border-radius: 50%;
+    background: var(--color-primary);
+  }
+  .article-body ol > li::marker {
+    color: var(--color-primary);
+  }
+  .article-body a {
+    color: var(--color-ipo);
+  }
+}
+
+/* ==========================================================================
+   Front page: the top grid, glance cards, the photo hero, top stories, market panels
+   ========================================================================== */
+@layer components {
+  .wrap {
+    max-width: 1500px;
+  }
+
+  /* ---- The top grid ---------------------------------------------------------------
+     Phones: glance, lead, markets in one column. From 1024px the markets sit beside the
+     lead under a full-width glance row. From 1440px, as in the design, the glance row
+     shares the left column with the lead and the markets run down the right. */
+  .home-top {
+    position: relative;
+    display: grid;
+    gap: 1.25rem;
+    grid-template-areas: "glance" "hero" "side";
+  }
+  /* The stage: one broad frosted tray the front-page cards stand on */
+  @media (min-width: 1280px) {
+    .home-top::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      inset: -1.125rem -1.125rem -1.5rem;
+      border: 1.5px solid rgb(255 255 255 / 0.7);
+      border-radius: 2rem;
+      background: linear-gradient(180deg, rgb(255 255 255 / 0.5), rgb(255 255 255 / 0.2) 70%, rgb(255 255 255 / 0.35));
+      box-shadow: 0 40px 70px -40px rgb(16 38 77 / 0.35), inset 0 2px 0 rgb(255 255 255 / 0.8);
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
+      pointer-events: none;
+    }
+  }
+  .home-glance {
+    grid-area: glance;
+    min-width: 0;
+  }
+  .home-hero {
+    grid-area: hero;
+    min-width: 0;
+  }
+  .home-side {
+    grid-area: side;
+    min-width: 0;
+  }
+  @media (min-width: 1024px) {
+    .home-top {
+      grid-template-columns: minmax(0, 1fr) 340px;
+      grid-template-areas: "glance glance" "hero side";
+    }
+  }
+  @media (min-width: 1440px) {
+    .home-top {
+      grid-template-columns: minmax(0, 1fr) 400px;
+      grid-template-rows: auto 1fr;
+      grid-template-areas: "glance side" "hero side";
+      column-gap: 1.5rem;
+    }
+  }
+
+  /* ---- Glance cards ------------------------------------------------------------ */
+  .glance {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 0;
+    border: 0;
+  }
+  @media (min-width: 1024px) {
+    .glance {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.25fr);
+      gap: 0.875rem;
+    }
+  }
+  .glance-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+    min-height: 4.75rem;
+    padding: 0.75rem 0.875rem;
+    border: 1.5px solid var(--glass-border);
+    border-radius: 1.125rem;
+    background: var(--glass-bg);
+    box-shadow: var(--shadow-card), inset 0 2px 0 rgb(255 255 255 / 0.95), inset 0 -3px 0 rgb(120 145 185 / 0.12);
+    -webkit-backdrop-filter: blur(18px) saturate(1.5);
+    backdrop-filter: blur(18px) saturate(1.5);
+  }
+  .glance dt {
+    font-size: var(--text-2xs);
+    letter-spacing: 0.07em;
+    color: var(--color-ink-2);
+  }
+  .glance dd {
+    overflow: visible;
+  }
+  .glance-date {
+    white-space: normal;
+  }
+
+  /* ---- The hero card --------------------------------------------------------------
+     Phones: the photograph over a dark glass block with the headline. From 640px the
+     photograph fills the top of a frosted card, the headline sits on a dark glass plate
+     rising over its lower left edge, and the caption and byline sit beside the plate. */
+  .hero-grid {
+    row-gap: 1.25rem;
+    column-gap: 1.25rem;
+  }
+  /* Tablets: the lead full width, the top stories under it in two columns */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .hero-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .hero-tabs {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 1.5rem;
+    }
+  }
+  @media (min-width: 1280px) {
+    .hero-grid {
+      grid-template-columns: minmax(0, 1.85fr) minmax(0, 1fr);
+    }
+  }
+  .hero-stage {
+    position: relative;
+    padding-right: 0;
+  }
+  .hero-card {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    border: 1.5px solid rgb(255 255 255 / 0.75);
+    border-radius: var(--radius-card);
+    background: linear-gradient(180deg, rgb(146 165 194 / 0.82), rgb(88 108 140 / 0.9));
+    box-shadow: var(--shadow-card), inset 0 2px 0 rgb(255 255 255 / 0.35);
+    -webkit-backdrop-filter: blur(18px) saturate(1.3);
+    backdrop-filter: blur(18px) saturate(1.3);
+    color: #ffffff;
+    --color-ink: #ffffff;
+    --color-ink-2: rgb(255 255 255 / 0.88);
+    --focus: #ffffff;
+  }
+  .hero-photo {
+    position: relative;
+    display: block;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-radius: calc(var(--radius-card) - 2px) calc(var(--radius-card) - 2px) 0 0;
+  }
+  .hero-copy {
+    position: relative;
+    padding: 1.125rem 1.125rem 1.375rem;
+    background: linear-gradient(180deg, rgb(44 58 84 / 0.86), rgb(32 46 70 / 0.94));
+  }
+  .hero-title {
+    margin-top: 0.625rem;
+    font-size: var(--text-2xl);
+    line-height: 1.12;
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgb(0 0 0 / 0.25);
+  }
+  .hero-deck {
+    margin-top: 0.625rem;
+    font-size: var(--text-md);
+    line-height: var(--leading-normal);
+    color: rgb(255 255 255 / 0.9);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .hero-aside,
+  .hero-dots,
+  .hero-next {
+    display: none;
+  }
+  @media (min-width: 640px) {
+    .hero-card {
+      min-height: 31rem;
+    }
+    .hero-photo {
+      position: absolute;
+      inset: 0 0 auto;
+      height: 62%;
+      aspect-ratio: auto;
+    }
+    .hero-copy {
+      position: absolute;
+      z-index: 2;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      min-height: 50%;
+      padding: 2rem 1.75rem 2.25rem;
+      border-top: 1px solid rgb(255 255 255 / 0.22);
+      border-right: 1px solid rgb(255 255 255 / 0.16);
+      border-radius: 0 1.5rem 0 0;
+      background: linear-gradient(180deg, rgb(58 74 102 / 0.72), rgb(36 50 76 / 0.86));
+      -webkit-backdrop-filter: blur(16px) saturate(1.2);
+      backdrop-filter: blur(16px) saturate(1.2);
+      box-shadow: 0 -16px 32px -18px rgb(6 18 40 / 0.6);
+    }
+    /* The section pill rides on the top edge of the plate */
+    .hero-copy .hero-kicker {
+      position: absolute;
+      top: 0;
+      left: 1.5rem;
+      translate: 0 -55%;
+      min-height: 1.875rem;
+      padding-inline: 0.875rem;
+      font-size: var(--text-sm);
+    }
+    .hero-title {
+      margin-top: 0;
+      font-size: var(--text-3xl);
+    }
+    .hero-deck {
+      font-family: var(--font-serif);
+      font-size: var(--text-lg);
+    }
+    .hero-dots {
+      position: absolute;
+      z-index: 3;
+      left: 1.75rem;
+      bottom: 0.75rem;
+      display: flex;
+      gap: 0.375rem;
+      pointer-events: none;
+    }
+    .hero-dots > span {
+      width: 1.75rem;
+      height: 4px;
+      border-radius: 999px;
+      background: rgb(255 255 255 / 0.45);
+      transition: width var(--duration-base) var(--ease-out), background-color var(--duration-base) var(--ease-out);
+    }
+    .hero-dots > span[data-active] {
+      width: 2.75rem;
+      background: #3580ff;
+    }
+    .hero-next {
+      position: absolute;
+      z-index: 3;
+      top: 31%;
+      right: -1.125rem;
+      display: grid;
+      place-items: center;
+      width: 2.75rem;
+      height: 2.75rem;
+      translate: 0 -50%;
+      border: 1.5px solid #ffffff;
+      border-radius: 50%;
+      background: rgb(255 255 255 / 0.94);
+      color: var(--color-ink);
+      box-shadow: var(--shadow-card);
+      transition: transform var(--duration-fast) var(--ease-out);
+    }
+    .hero-next:hover {
+      transform: translateX(2px);
+    }
+  }
+  @media (min-width: 900px) {
+    .hero-copy {
+      width: 67%;
+    }
+    .hero-aside {
+      position: absolute;
+      z-index: 2;
+      right: 0;
+      bottom: 0;
+      top: 62%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: 33%;
+      padding: 0.75rem 1.25rem 1rem 1.375rem;
+      border-left: 1px solid rgb(255 255 255 / 0.35);
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .hero-title {
+      font-size: var(--text-4xl);
+    }
+  }
+  @media (min-width: 1280px) and (max-width: 1439px) {
+    .hero-title {
+      font-size: var(--text-3xl);
+    }
+  }
+
+  /* ---- Top stories --------------------------------------------------------------- */
+  .hero-index {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    padding: 0.875rem 1.125rem 0.25rem;
+    border-left: 0;
+  }
+  .hero-index-head {
+    border-top: 0;
+    min-height: 2.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-rule);
+  }
+  /* Beside the lead, the list is exactly as tall as the picture and scrolls inside itself */
+  @media (min-width: 1280px) {
+    .hero-index {
+      contain: size;
+    }
+    .hero-tabs {
+      flex: 1;
+      min-height: 0;
+      /* Each story keeps its own height; the list scrolls rather than squeezing them */
+      grid-auto-rows: max-content;
+      align-content: start;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: none;
+    }
+    .hero-tabs::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  .hero-tab {
+    grid-template-columns: 2.25rem 4.25rem minmax(0, 1fr);
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 0;
+    border-top-color: var(--color-rule);
+  }
+  .hero-tabs > .hero-tab:first-child {
+    border-top-color: transparent;
+  }
+  .hero-tab::before {
+    height: 3px;
+    border-radius: 999px;
+    background: var(--color-primary);
+  }
+  .hero-tab-num {
+    align-self: start;
+    padding-top: 0.25rem;
+    font-size: 1.875rem;
+  }
+  .hero-tab[aria-selected="true"] .hero-tab-num {
+    color: var(--color-primary);
+  }
+  .hero-tab-art {
+    width: 4.25rem;
+    height: 4.25rem;
+    filter: drop-shadow(0 8px 8px rgb(16 38 77 / 0.18));
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .hero-tab:hover .hero-tab-art,
+  .hero-tab[aria-selected="true"] .hero-tab-art {
+    transform: translateY(-2px) scale(1.04);
+  }
+  .hero-tab-title {
+    margin-top: 0.375rem;
+  }
+  @media (min-width: 768px) {
+    .hero-tab-title {
+      font-size: var(--text-lg);
+    }
+  }
+
+  /* ---- Market panels --------------------------------------------------------------- */
+  .markets-panel .terminal-head,
+  .glass-navy > .terminal-head {
+    padding: 1rem 1.25rem 0.75rem;
+    border-bottom-color: var(--color-rule);
+  }
+  .terminal-title {
+    letter-spacing: 0.08em;
+  }
+  .quotes thead th {
+    padding: 0.625rem 0.5rem 0.5rem 0;
+    border-bottom: 1px solid var(--color-rule);
+    letter-spacing: 0.08em;
+  }
+  .quotes thead th:first-child,
+  .quotes tbody > tr > :first-child {
+    padding-left: 1.25rem;
+  }
+  .quotes thead th:last-child,
+  .quotes tbody > tr > :last-child {
+    padding-right: 1.25rem;
+  }
+  .quotes tbody > tr > * {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  .quotes tbody > tr:first-child > * {
+    border-top: 0;
+  }
+  .quotes tbody > tr[tabindex]:hover > *,
+  .quotes tbody > tr[tabindex]:focus-visible > * {
+    background: color-mix(in srgb, var(--color-ink) 5%, transparent);
+  }
+  .quotes tbody > tr[tabindex]:hover > :first-child {
+    box-shadow: inset 3px 0 0 var(--color-primary);
+  }
+  .markets-panel .chg {
+    min-width: 5.25rem;
+    padding: 0.3125rem 0.5rem 0.25rem;
+  }
+  .markets-panel .chg-pct {
+    font-size: var(--text-md);
+  }
+  .terminal-foot {
+    padding: 0.5rem 1.25rem 0.75rem;
+  }
+  .quotes-light tbody > tr > * {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  .quotes-light tbody > tr > :first-child {
+    padding-left: 0.75rem;
+  }
+  .quotes-light tbody > tr > :last-child {
+    padding-right: 0.75rem;
+  }
+  .tick {
+    padding-inline: 1.25rem;
+  }
+
+  /* ---- The header, set out as in the design ----------------------------------------
+     The ticker is the widest object, the nav sits inside it, and the masthead and the
+     utility tab sit further in still. The tape slab gets a white rim. */
+  @media (min-width: 1280px) {
+    .hdr-utility {
+      margin-inline: 4.5rem;
+    }
+    .hdr-masthead {
+      padding-left: 6.5rem;
+    }
+    .hdr-nav {
+      margin-inline: 3.5rem;
+    }
+    .hdr-tape {
+      margin-inline: -1rem;
+    }
+    .nav-item {
+      padding-inline: 1.125rem;
+    }
+  }
+  /* Where the bull stands on the tape, the nav ends exactly where its hindquarters begin, so
+     the frosted bar covers them as in the design: bull width 262px, rear 117px, set flush with
+     the wrap edge, less the wrap padding (24px) */
+  @media (min-width: 1440px) {
+    .hdr-nav {
+      margin-right: calc(262px - 117px - 24px);
+    }
+  }
+  .hdr-tape {
+    box-shadow:
+      0 0 0 4px rgb(255 255 255 / 0.55),
+      inset 0 1px 0 rgb(255 255 255 / 0.18),
+      inset 0 -2px 0 rgb(0 0 0 / 0.35),
+      0 8px 0 -1px #08111f,
+      var(--shadow-float);
+  }
+}
+
+/* The lead's section label on the dark plate: a solid pill. Set in the utilities layer so it
+   outranks the colour utility the label carries elsewhere. */
+@layer utilities {
+  .hero-kicker {
+    background: linear-gradient(180deg, #3580ff, #0f58e6);
+    color: #ffffff;
+    box-shadow: 0 6px 14px -6px rgb(31 107 255 / 0.9);
+  }
+}
+
+/* ==========================================================================
+   Calculator controls (calculator.css): rounded units, a round blue thumb on a
+   filled pill track, blue presets and a navy value tag
+   ========================================================================== */
+@layer components {
+  .cx-unit {
+    --cx-thumb-w: 22px;
+    --cx-thumb-h: 22px;
+    border-color: var(--color-rule);
+    border-radius: 0.875rem;
+    background: #ffffff;
+    box-shadow: 0 6px 16px -12px rgb(16 38 77 / 0.35);
+  }
+  .surface-ink .cx-unit {
+    border-color: rgb(255 255 255 / 0.14);
+    background: rgb(255 255 255 / 0.05);
+    box-shadow: none;
+  }
+  .cx-unit:focus-within {
+    border-color: var(--color-primary);
+    outline: 3px solid color-mix(in srgb, var(--color-primary) 26%, transparent);
+  }
+  .cx-num-affix {
+    background: transparent;
+  }
+  .cx-num::after,
+  .cx-stop,
+  .cx-preset::before {
+    background: var(--color-primary);
+  }
+  .cx-track {
+    height: 6px;
+    margin-top: -3px;
+    border-radius: 999px;
+  }
+  .cx-fill {
+    border-radius: 999px;
+    background: linear-gradient(90deg, #5b9bff, #0f58e6);
+  }
+  .cx-thumb {
+    border: 3px solid #ffffff;
+    border-radius: 50%;
+    background: var(--color-primary);
+    box-shadow: 0 3px 10px rgb(16 38 77 / 0.35);
+  }
+  .cx-thumb::after {
+    display: none;
+  }
+  .cx-unit[data-drag] .cx-thumb,
+  .cx-range:active ~ .cx-rail .cx-thumb {
+    background: var(--color-primary);
+  }
+  .cx-tag {
+    border-radius: 0.375rem;
+    background: var(--color-navy);
+    color: #ffffff;
+  }
+  .cx-tag::after {
+    border-top-color: var(--color-navy);
+  }
+  .cx-preset[aria-pressed="true"] {
+    color: var(--color-primary);
+  }
+  .cx-swatch {
+    border-radius: 0.25rem;
+  }
+  /* The readout is a navy card. Not .glass-navy: that sets position, and below lg the
+     readout must stay sticky under the nav. */
+  .cx-readout {
+    border: 1px solid rgb(255 255 255 / 0.08);
+    border-radius: var(--radius-card);
+    background-image:
+      radial-gradient(420px 220px at 100% 0%, rgb(80 130 255 / 0.2), transparent 70%),
+      var(--navy-bg);
+    box-shadow: var(--shadow-float);
+  }
+  .cx-mini-readout {
+    border-radius: 0.875rem 0.875rem 0 0;
+  }
+}

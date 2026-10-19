@@ -8,7 +8,7 @@ import { LiveValue, SliderField, SplitBar } from "../calculators/kit";
 
 // Literal palette values: SVG strokes take them as attributes
 const INVESTED = "#ffffff";
-const RETURNS = "#d99a12";
+const RETURNS = "#22d1a8";
 
 /** The values under a fader's five tick marks: min, the quartiles and max, each on the step. */
 const stops = (min: number, max: number, step: number) => Array.from(new Set([0, 0.25, 0.5, 0.75, 1].map((q) => Number((min + Math.round((q * (max - min)) / step) * step).toFixed(6)))));

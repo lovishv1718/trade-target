@@ -274,17 +274,17 @@ export function SelectField({ label, value, onChange, options }: { label: string
 // Layout
 
 /**
- * One instrument: inputs on white and the readout on black under a single ink frame. From lg the
+ * One instrument: inputs on a frosted card and the readout on a navy card. From lg the
  * results column sits beside the inputs and sticks. Below lg the results column and panel
- * dissolve (display: contents), and the black readout moves to the top of the block (CSS order)
+ * dissolve (display: contents), and the navy readout moves to the top of the block (CSS order)
  * and pins under the nav, compact, so the number stays in view while the inputs below it are
  * worked, and nothing is left behind where it would otherwise have sat.
  */
 export function CalcLayout({ inputs, results }: { inputs: ReactNode; results: ReactNode }) {
   return (
-    <div className="grid items-start lg:grid-cols-2">
-      <div className="border border-ink bg-white px-4 py-1 max-lg:border-t-0 md:px-6 lg:border-r-0">{inputs}</div>
-      <div className="max-lg:contents lg:sticky lg:top-16">{results}</div>
+    <div className="grid items-start gap-4 lg:grid-cols-2 lg:gap-5">
+      <div className="glass px-4 py-1 md:px-6">{inputs}</div>
+      <div className="max-lg:contents lg:sticky lg:top-20">{results}</div>
     </div>
   );
 }
@@ -350,7 +350,7 @@ export function ResultPanel({
 }) {
   return (
     <div className="max-lg:contents">
-      <div className="surface-ink cx-readout border border-black">
+      <div className="surface-ink cx-readout">
         <p className="kicker text-muted">{label}</p>
         <p className="cx-figure mt-1 lg:mt-2">
           <LiveValue value={value} format={format} decimals={decimals} live />
@@ -358,7 +358,7 @@ export function ResultPanel({
         {split && split.length ? <SplitBar split={split} /> : null}
         {sub ? <div className="cx-readout-sub">{sub}</div> : null}
       </div>
-      {children ? <div className="border border-t-0 border-ink bg-white px-4 py-5 md:px-6">{children}</div> : null}
+      {children ? <div className="glass px-4 py-5 md:px-6 lg:mt-4">{children}</div> : null}
     </div>
   );
 }
@@ -526,4 +526,4 @@ export function Formula({ formula, legend, steps }: { formula: string; legend: [
 
 export const inr = (n: number) => formatINR(n);
 /** Chart and swatch colours (literal hex: SVG attributes cannot read CSS variables). */
-export const COLORS = { invested: "#000000", returns: "#d99a12", interest: "#5a37a3", other: "#0b6676", muted: "#c8c0b0" };
+export const COLORS = { invested: "#1f6bff", returns: "#14a39a", interest: "#7c5cff", other: "#0b6f80", muted: "#bccadc" };

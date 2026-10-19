@@ -4,14 +4,14 @@ import { Bar, BarChart, CartesianGrid, Cell, Legend, Line, LineChart, Responsive
 import { formatNumber } from "@/lib/format";
 
 // Literal hex: Recharts attributes can't read CSS variables. Mirrors the site tokens.
-const PALETTE = ["#000000", "#d99a12", "#1f4fb4", "#0b6676", "#5a37a3", "#c8c0b0"];
-const GRID = "#e2dccf";
-const AXIS = "#c8c0b0";
-const TICK = { fontSize: 12, fill: "#625e57" };
+const PALETTE = ["#1f6bff", "#14a39a", "#f0a92a", "#7c5cff", "#0b6f80", "#bccadc"];
+const GRID = "#dbe3ee";
+const AXIS = "#bccadc";
+const TICK = { fontSize: 12, fill: "#586a85" };
 const UP = "#00703c";
 const DOWN = "#c80000";
-const TOOLTIP = { fontSize: 14, border: "1px solid #c8c0b0", borderRadius: 0, background: "#ffffff", color: "#000000", padding: "6px 10px" };
-const LEGEND = { fontSize: 12, color: "#2e2b27", paddingTop: 8 };
+const TOOLTIP = { fontSize: 14, border: "1px solid #dbe3ee", borderRadius: 10, background: "#ffffff", color: "#0b1b33", padding: "6px 10px" };
+const LEGEND = { fontSize: 12, color: "#2b3b55", paddingTop: 8 };
 
 /** Total height of the figure; the lazy placeholder reserves exactly this. */
 export const CHART_FIGURE_CLASS = "h-[324px] md:h-[364px]";

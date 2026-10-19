@@ -6,16 +6,16 @@ import type { Subscription } from "@/lib/ipo";
 
 // Recharts attributes cannot read CSS variables, so token values are written out here.
 const C = {
-  grid: "#e2dccf", // rule
-  axis: "#c8c0b0", // rule-strong
-  tick: "#625e57", // muted
-  zero: "#8c877e", // faint: reference rule only
-  ink: "#000000",
-  ipo: "#1f4fb4",
-  cursor: "#f3eee5", // paper-2
+  grid: "#dbe3ee", // rule
+  axis: "#bccadc", // rule-strong
+  tick: "#586a85", // muted
+  zero: "#98a6bb", // faint: reference rule only
+  ink: "#0b1b33",
+  ipo: "#1f6bff",
+  cursor: "#e8eef7", // paper-2
 };
 const TICK = { fontSize: 12, fill: C.tick };
-const TOOLTIP = { fontSize: 12, border: `1px solid ${C.axis}`, borderRadius: 0, color: C.ink, background: "#ffffff" };
+const TOOLTIP = { fontSize: 12, border: `1px solid ${C.axis}`, borderRadius: 10, color: C.ink, background: "#ffffff" };
 
 const LABELS: Record<keyof Subscription, string> = { qib: "QIB", nii: "NII", retail: "Retail", employee: "Employee", total: "Total" };
 

@@ -10,7 +10,7 @@ import { Photo, photoCredit } from "./photo";
 // standfirst, meta. Hover is the .story device: a 2px rule draws in across the top
 // and the headline takes its underline; list rows also nudge their kicker.
 
-const authorName = (slug: string) => authors.find((a) => a.slug === slug)?.name ?? authors[0].name;
+export const authorName = (slug: string) => authors.find((a) => a.slug === slug)?.name ?? authors[0].name;
 
 export function StoryMeta({ story, showRead = true, className = "" }: { story: ArticleCard; showRead?: boolean; className?: string }) {
   return (

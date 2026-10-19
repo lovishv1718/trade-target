@@ -10,7 +10,8 @@ import { MegaPanel, type MegaIpo, type MegaPanelData } from "./mega-menu";
 type NavItem = { label: string; href: string };
 type MenuItem = NavItem & { children: NavItem[] };
 
-const BAR_H = 44;
+// The bar is a 56px pill floating 8px below the top edge
+const BAR_H = 64;
 const MARK_H = 24;
 // The slot is always reserved, so revealing the mark never moves the nav items
 const MARK_SLOT = logoWidth(MARK_H, "mark") + 12;
@@ -157,8 +158,8 @@ export function MainNav({
         if (megaKey && !e.currentTarget.contains(e.relatedTarget as Node | null)) showMega(null);
       }}
     >
-      <div className="surface-ink">
-        <div className="wrap flex h-11 items-stretch">
+      <div className="wrap pt-2">
+        <div className="hdr-nav glass flex h-14 items-stretch gap-0.5 rounded-2xl px-3">
           <div
             inert={!stuck}
             className={`hidden shrink-0 items-center transition-[opacity,translate] duration-200 ease-out sm:flex ${
@@ -178,23 +179,24 @@ export function MainNav({
             aria-expanded={open}
             aria-controls="site-menu"
             aria-label="Open menu"
-            className="nav-item -ml-2 min-w-11 justify-center gap-2 px-2 text-ink after:inset-x-2 sm:ml-0 xl:pr-3"
+            className="nav-item min-w-11 justify-center gap-2 rounded-xl px-2.5 text-ink"
           >
-            <svg aria-hidden width="18" height="14" viewBox="0 0 18 14" fill="currentColor">
-              <rect width="18" height="2" />
-              <rect y="6" width="18" height="2" />
-              <rect y="12" width="18" height="2" />
+            <svg aria-hidden width="22" height="16" viewBox="0 0 22 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <path d="M1 2h20M1 8h20M1 14h13" />
             </svg>
-            <span className="sr-only xl:not-sr-only">Menu</span>
+            <span className="sr-only">Menu</span>
           </button>
-          <span aria-hidden className="my-3 w-px shrink-0 bg-rule" />
+          <span aria-hidden className="mx-1 my-4 w-px shrink-0 bg-rule-strong" />
           <Link
             prefetch={false}
             href="/"
             aria-current={pathname === "/" ? "page" : undefined}
-            className="nav-item"
+            className="nav-item gap-2"
             onPointerEnter={(e) => e.pointerType === "mouse" && megaKey && showMega(null)}
           >
+            <svg aria-hidden width="17" height="16" viewBox="0 0 17 16" fill="currentColor" className="hidden sm:block">
+              <path d="M8.5.6a1 1 0 0 1 .66.25l7 6.1a.8.8 0 0 1-.52 1.4H14.5V15a1 1 0 0 1-1 1h-3v-4.5h-4V16h-3a1 1 0 0 1-1-1V8.35H1.36A.8.8 0 0 1 .84 6.95l7-6.1A1 1 0 0 1 8.5.6z" />
+            </svg>
             Home
           </Link>
           <ul className="no-scrollbar flex min-w-0 flex-1 items-stretch overflow-x-auto">
@@ -263,7 +265,7 @@ export function MainNav({
               );
             })}
           </ul>
-          <div className="-mr-3.5 flex shrink-0 items-center border-l border-rule md:hidden">
+          <div className="flex shrink-0 items-center md:hidden">
             <SearchTrigger variant="icon" />
           </div>
         </div>
@@ -295,7 +297,7 @@ export function MainNav({
             (next ?? trigger)?.focus();
           }
         }}
-        className={`absolute inset-x-0 top-full max-h-[calc(100dvh-2.75rem)] overflow-y-auto overscroll-contain border-b border-rule-strong bg-white text-ink shadow-overlay transition-[opacity,translate,visibility] duration-150 ease-out motion-reduce:transition-none ${
+        className={`absolute inset-x-0 top-full mx-auto mt-2 max-h-[calc(100dvh-5rem)] w-[calc(100%-2rem)] max-w-[calc(1240px-3rem)] overflow-y-auto overscroll-contain rounded-2xl border border-white bg-white/95 text-ink shadow-overlay backdrop-blur-xl transition-[opacity,translate,visibility] duration-150 ease-out motion-reduce:transition-none md:w-[calc(100%-3rem)] ${
           megaKey ? "visible translate-y-0 opacity-100" : "pointer-events-none invisible -translate-y-1 opacity-0"
         }`}
       >
@@ -327,7 +329,7 @@ export function MainNav({
         />
         <div
           ref={panel}
-          className={`relative flex h-full w-[min(360px,88vw)] flex-col bg-white text-ink shadow-overlay transition-transform duration-200 ease-out ${
+          className={`relative flex h-full w-[min(360px,88vw)] flex-col rounded-r-2xl bg-white text-ink shadow-overlay transition-transform duration-200 ease-out ${
             open ? "translate-x-0" : "-translate-x-full"
           }`}
         >

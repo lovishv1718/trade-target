@@ -79,6 +79,8 @@ npx vercel --prod
 
 `vercel.json` also adds permanent redirects from the old WordPress category archives (`/category/...`) and the old `/ongoing/` and `/upcoming/` IPO pages to their new homes.
 
+While this is a preview, `vercel.json` also sends an `X-Robots-Tag: noindex, nofollow` header on every page, so search engines do not list the preview copy of TradeTarget's content or its sample IPO figures. **Remove that `headers` entry before launching on tradetarget.in.**
+
 ## Project layout
 
 ```
