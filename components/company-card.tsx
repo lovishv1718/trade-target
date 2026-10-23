@@ -24,7 +24,7 @@ export function CompanyCard({ story, headingLevel = "h3" }: { story: ArticleCard
             </span>
           ) : null}
         </div>
-        <Heading className="mt-8 font-serif text-2xl font-bold leading-tight tracking-tight text-ink group-hover:underline group-hover:decoration-accent group-hover:underline-offset-4">{name}</Heading>
+        <Heading className="mt-8 font-serif text-2xl font-medium leading-tight tracking-tight text-ink group-hover:underline group-hover:decoration-accent group-hover:underline-offset-4">{name}</Heading>
         <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-ink-2">{story.standfirst}</p>
         {company ? (
           <p className="mt-6 border-t border-rule pt-4 text-sm leading-relaxed text-muted">

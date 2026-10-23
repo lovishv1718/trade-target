@@ -526,4 +526,4 @@ export function Formula({ formula, legend, steps }: { formula: string; legend: [
 
 export const inr = (n: number) => formatINR(n);
 /** Chart and swatch colours (literal hex: SVG attributes cannot read CSS variables). */
-export const COLORS = { invested: "#26272b", returns: "#e8603c", interest: "#8c8f96", other: "#f2a37f", muted: "#d4d4d8" };
+export const COLORS = { invested: "#a9c2b3", returns: "#0f4d36", interest: "#c8402f", other: "#a8834f", muted: "#cbbfab" };

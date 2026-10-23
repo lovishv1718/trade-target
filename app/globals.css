@@ -3,7 +3,7 @@
 @import "./css/data.css";
 /* Tokens, base styles and the shared component system */
 @import "./css/system.css";
-/* The premium theme: white ground, ink type, hairlines, square corners and one warm accent,
-   after TradeTarget's own reference design. Loaded last so it restyles the system's components
-   in place. */
-@import "./css/premium.css";
+/* The signature theme: ivory paper, emerald ink from the bull in the mark, an editorial serif,
+   and the bull's red as the one accent. Loaded last so it restyles the system's components in
+   place. */
+@import "./css/signature.css";

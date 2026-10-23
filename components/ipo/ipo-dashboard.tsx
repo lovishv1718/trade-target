@@ -130,7 +130,7 @@ export function IpoDashboard({ ipos, buildDate }: { ipos: Ipo[]; buildDate: stri
               <Link prefetch={false} href={`/ipo/${ipo.slug}/`} className="block p-4">
                 <span className="flex items-start justify-between gap-3">
                   <span className="min-w-0">
-                    <span className="block font-serif text-lg font-bold leading-snug tracking-tight text-ink">{ipo.name}</span>
+                    <span className="block font-serif text-lg font-medium leading-snug tracking-tight text-ink">{ipo.name}</span>
                     <span className="mt-0.5 block text-xs text-muted">
                       {ipo.sector}
                       {ipo.sample ? <span className="text-faint"> · sample</span> : null}

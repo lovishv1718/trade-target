@@ -7,10 +7,10 @@ type SeriesDef = { key: string; name: string; color: string };
 
 // SVG attributes cannot read CSS variables, so the palette is literal hex:
 // grid = rule, axis = rule-strong, ticks = muted, labels = ink-2.
-const GRID = "#e4e4e7";
-const AXIS = "#d4d4d8";
-const TICK = "#5e6168";
-const LABEL = "#2b2b2e";
+const GRID = "#e0d7c8";
+const AXIS = "#cbbfab";
+const TICK = "#5b655f";
+const LABEL = "#2f3c36";
 
 // Animation stays off: easing a whole series on every slider step reads as jitter.
 // The donut and the result figure carry the motion instead.
@@ -19,8 +19,8 @@ const MARGIN = { top: 8, right: 12, left: 4, bottom: 0 };
 const axisProps = { tick: { fontSize: 12, fill: TICK }, tickLine: false };
 const xAxisLine = { stroke: AXIS };
 const tooltipProps = {
-  contentStyle: { fontSize: 14, borderRadius: 0, border: `1px solid ${GRID}`, background: "#ffffff", padding: "8px 10px", boxShadow: "none" },
-  labelStyle: { color: "#0b0b0c", fontWeight: 600, marginBottom: 4 },
+  contentStyle: { fontSize: 14, borderRadius: 6, border: `1px solid ${GRID}`, background: "#fdfbf7", padding: "8px 10px", boxShadow: "none" },
+  labelStyle: { color: "#10201a", fontWeight: 600, marginBottom: 4 },
   itemStyle: { padding: 0 },
 };
 const legendProps = {

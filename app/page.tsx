@@ -1,16 +1,21 @@
 import Link from "next/link";
 import { CompanyCard } from "@/components/company-card";
+import { Facets } from "@/components/facets";
+import { CoverDateline, CoverSentence } from "@/components/home/cover";
 import { IpoDesk } from "@/components/home/ipo-desk";
-import { Icon, type IconName } from "@/components/icons";
+import { Icon } from "@/components/icons";
 import { JsonLd } from "@/components/json-ld";
 import { Kicker } from "@/components/kicker";
 import { NewsletterForm } from "@/components/newsletter-form";
 import { Photo } from "@/components/photo";
+import markets from "@/content/markets.json";
 import { getArticleBySlug, getArticleCards, getArticlesBySection, getCalculators, getEditorial, toCard, type ArticleCard } from "@/lib/content";
 import { formatDate } from "@/lib/format";
 import { getIpos, istToday } from "@/lib/ipo";
 
-/** Date and read time, set in the mono label voice */
+const ROMAN = ["i", "ii", "iii", "iv"];
+
+/** Date and read time */
 function Meta({ story, className = "" }: { story: ArticleCard; className?: string }) {
   return (
     <p className={`pm-meta ${className}`}>
@@ -19,18 +24,25 @@ function Meta({ story, className = "" }: { story: ArticleCard; className?: strin
   );
 }
 
-/** A section's opening: the bracketed eyebrow, a two-tone title and an optional link to the whole section */
-function SectionIntro({ eyebrow, title, soft, href, linkLabel }: { eyebrow: string; title: string; soft: string; href?: string; linkLabel?: string }) {
+/**
+ * A section's opening, as in a magazine: a full-width rule, the section number in the serif's
+ * italic beside its name, then the title with its last words in italic, and a link to the rest.
+ */
+function SectionIntro({ num, label, title, em, dek, href, linkLabel, id }: { num: string; label: string; title: string; em: string; dek?: string; href?: string; linkLabel?: string; id: string }) {
   return (
-    <div className="mb-10 flex flex-wrap items-end justify-between gap-6 md:mb-14">
-      <div className="max-w-2xl">
-        <p className="eyebrow">{eyebrow}</p>
-        <h2 className="pm-title mt-4">
-          {title} <span className="soft">{soft}</span>
+    <div className="mb-10 grid gap-5 border-t border-ink pt-5 md:mb-14 md:grid-cols-[9rem_minmax(0,1fr)_auto] md:items-end md:gap-10 md:pt-6">
+      <p className="flex items-baseline gap-3 self-start md:flex-col md:gap-1">
+        <span className="sg-num text-3xl leading-none">{num}</span>
+        <span className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-2">{label}</span>
+      </p>
+      <div className="max-w-3xl">
+        <h2 id={id} className="sg-title">
+          {title} <em>{em}</em>
         </h2>
+        {dek ? <p className="mt-4 max-w-xl text-md leading-relaxed text-muted">{dek}</p> : null}
       </div>
       {href ? (
-        <Link prefetch={false} href={href} className="link-more text-ink">
+        <Link prefetch={false} href={href} className="link-more whitespace-nowrap">
           {linkLabel} <span className="pm-arrow" aria-hidden>→</span>
         </Link>
       ) : null}
@@ -63,129 +75,108 @@ export default function HomePage() {
     return c ? [{ ...c, icon }] : [];
   });
   const ipos = getIpos();
-
-  const topics: { label: string; note: string; href: string; icon: IconName }[] = [
-    { label: "IPOs and GMP", note: `${ipos.length} issues tracked`, href: "/ipo/", icon: "bell" },
-    { label: "Quarterly results", note: `${all.filter((a) => a.kicker === "Results").length} results covered`, href: "/news/?topic=Results", icon: "bars" },
-    { label: "Company analysis", note: `${getArticlesBySection("share-analysis").length} companies`, href: "/share-analysis/", icon: "building" },
-    { label: "Personal finance", note: `${getArticlesBySection("personal-finance").length} guides`, href: "/personal-finance/", icon: "wallet" },
-    { label: "Calculators", note: `${calcs.length} tools`, href: "/calculators/", icon: "calculator" },
-  ];
+  const buildDate = istToday();
+  const sensex = markets.ticker.find((q) => q.id === "sensex")!;
+  const briefStory = getArticleBySlug(ed.homepage.brief.slug)!;
 
   return (
     <>
       <h1 className="sr-only">TradeTarget: Indian stock market, IPO and personal finance news</h1>
 
-      {/* Hero: the promise on the warm gradient, today's three stories beside it ---------------- */}
-      <section className="wrap pt-6 md:pt-8" aria-label="Introduction">
-        <div className="pm-grad grid lg:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)]">
-          <div className="flex flex-col justify-between gap-10 p-7 sm:p-10 lg:p-14">
-            <p className="font-mono text-[0.71875rem] font-medium uppercase tracking-[0.12em] text-white/80">Indian markets · IPOs · Personal finance</p>
-            <div>
-              <p className="pm-hero-title max-w-[15ch]">Understand the market before you invest.</p>
-              <p className="mt-6 max-w-[46ch] text-lg leading-relaxed text-white/90">
-                Results, IPOs, company analysis and personal finance, explained in plain language by people who follow India&apos;s markets every day.
-              </p>
+      {/* The cover: the day in one sentence, the facet art behind it, three stories under it ------ */}
+      <section aria-label="Today">
+        <div className="wrap pt-6 md:pt-8">
+          <CoverDateline buildDate={buildDate} />
+          <div className="relative pb-12 pt-12 md:pb-16 md:pt-20">
+            <Facets
+              seed={23}
+              cols={8}
+              rows={6}
+              width={800}
+              height={600}
+              className="sg-facets pointer-events-none absolute -right-8 top-0 -z-10 hidden h-full w-[52%] [mask-image:linear-gradient(to_left,black_40%,transparent),linear-gradient(to_top,transparent,black_25%)] [mask-composite:intersect] md:block"
+            />
+            <p className="eyebrow">Today in one sentence</p>
+            <div className="relative mt-6 md:mt-8">
+              <CoverSentence index={{ name: sensex.name, changePct: sensex.changePct }} ipos={ipos} buildDate={buildDate} brief={{ text: ed.homepage.brief.text, href: briefStory.path }} />
             </div>
-            <div className="flex flex-wrap gap-3">
-              <Link prefetch={false} href="/ipo/" className="btn btn-on-grad">
+            <p className="relative mt-8 max-w-[54ch] text-lg leading-relaxed text-ink-2 md:mt-10">
+              Understand the market before you invest. Results, IPOs, company analysis and personal finance, explained in plain language by people who follow India&apos;s markets every day.
+            </p>
+            <div className="relative mt-8 flex flex-wrap gap-3">
+              <Link prefetch={false} href="/ipo/" className="btn">
                 Explore the IPO desk
               </Link>
-              <Link prefetch={false} href="/news/" className="btn btn-on-grad-2">
+              <Link prefetch={false} href="/news/" className="btn btn-secondary">
                 Read today&apos;s news <span className="pm-arrow" aria-hidden>→</span>
               </Link>
             </div>
+            <p className="mt-6 text-xs text-muted">Market figures are indicative sample values in this preview.</p>
           </div>
-          <div className="m-3 bg-white p-6 text-ink sm:m-4 sm:p-8 lg:my-5 lg:ml-0 lg:mr-5">
-            <p className="eyebrow">Today on TradeTarget</p>
-            <ol className="mt-5">
-              {today.map((s) => (
-                <li key={s.slug} className="border-t border-rule first:border-t-0">
-                  <Link prefetch={false} href={s.path} className="group block py-5">
-                    <Kicker label={s.kicker} />
-                    <span className="mt-2 block font-serif text-xl font-bold leading-snug tracking-tight text-ink group-hover:underline group-hover:decoration-accent group-hover:underline-offset-4">{s.title}</span>
-                    <Meta story={s} className="mt-3" />
-                  </Link>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </div>
 
-        {/* What we cover: the five doors into the site. A list until there is room for all five in a row */}
-        <ul aria-label="What we cover" className="mt-6 grid border-l border-t border-rule lg:grid-cols-5">
-          {topics.map((t) => (
-            <li key={t.href} className="border-b border-r border-rule">
-              <Link prefetch={false} href={t.href} className="group flex h-full items-center justify-between gap-3 px-5 py-4 hover:bg-paper-2 lg:py-5">
-                <span className="flex items-center gap-4 lg:gap-3.5">
-                  <Icon name={t.icon} size={22} className="shrink-0 text-ink-2 group-hover:text-accent" />
+          {/* In this edition: three stories, numbered, between hairlines */}
+          <ol aria-label="In this edition" className="grid border-t border-ink md:grid-cols-3">
+            {today.map((s, i) => (
+              <li key={s.slug} className={`border-b border-rule md:border-b-0 ${i ? "md:border-l md:pl-8" : ""} ${i < 2 ? "md:pr-8" : ""}`}>
+                <Link prefetch={false} href={s.path} className="group grid grid-cols-[2rem_minmax(0,1fr)] gap-x-3 py-6 md:py-8">
+                  <span className="sg-num text-2xl leading-none">{ROMAN[i]}</span>
                   <span>
-                    <span className="block font-serif text-base font-bold tracking-tight text-ink">{t.label}</span>
-                    <span className="pm-meta mt-1 block">{t.note}</span>
+                    <Kicker label={s.kicker} />
+                    <span className="mt-2 block font-serif text-xl font-medium leading-snug tracking-[-0.01em] text-ink group-hover:underline group-hover:decoration-accent group-hover:decoration-1 group-hover:underline-offset-4">
+                      {s.title}
+                    </span>
+                    <Meta story={s} className="mt-3" />
                   </span>
-                </span>
-                <span className="pm-arrow text-faint group-hover:text-ink lg:hidden" aria-hidden>
-                  →
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
+                </Link>
+              </li>
+            ))}
+          </ol>
+        </div>
       </section>
 
-      {/* Latest news: one lead, two after it --------------------------------------------------- */}
+      {/* 01 Latest news: the lead in its photograph, two more beside nothing but type ------------- */}
       <section className="pm-section wrap" aria-labelledby="news-title">
-        <div id="news-title">
-          <SectionIntro eyebrow="Latest news" title="What moved today." soft="Results, IPOs and the market, explained." href="/news/" linkLabel="All news" />
-        </div>
-        <article className="pm-lift group grid gap-6 border border-rule bg-white md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] md:gap-0">
+        <SectionIntro id="news-title" num="01" label="Latest news" title="What moved" em="today." dek="Results, IPOs and the market, explained without the noise." href="/news/" linkLabel="All news" />
+        <article className="group grid gap-6 md:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] md:gap-12">
           <Link prefetch={false} href={lead.path} tabIndex={-1} aria-hidden className="block">
-            <Photo image={lead.image} sizes="(min-width: 1024px) 640px, 100vw" crop="standard" />
+            <Photo image={lead.image} sizes="(min-width: 1024px) 680px, 100vw" crop="standard" />
           </Link>
-          <div className="flex flex-col justify-between gap-6 px-6 pb-6 md:p-10">
-            <div>
-              <Kicker label={lead.kicker} />
-              <Link prefetch={false} href={lead.path} className="block">
-                <h3 className="mt-3 font-serif text-2xl font-bold leading-tight tracking-tight text-ink group-hover:underline group-hover:decoration-accent group-hover:underline-offset-4 md:text-3xl">{lead.title}</h3>
-              </Link>
-              <p className="mt-4 text-md leading-relaxed text-ink-2">{lead.standfirst}</p>
-            </div>
-            <Meta story={lead} />
+          <div className="flex flex-col justify-center">
+            <Kicker label={lead.kicker} />
+            <Link prefetch={false} href={lead.path} className="block">
+              <h3 className="mt-3 font-serif text-3xl font-medium leading-[1.1] tracking-[-0.015em] text-ink group-hover:underline group-hover:decoration-accent group-hover:decoration-1 group-hover:underline-offset-4 md:text-4xl">
+                {lead.title}
+              </h3>
+            </Link>
+            <p className="mt-5 text-md leading-relaxed text-ink-2">{lead.standfirst}</p>
+            <Meta story={lead} className="mt-5" />
           </div>
         </article>
-        <div className="mt-6 grid gap-6 md:grid-cols-2">
+        <div className="mt-12 grid gap-x-12 md:grid-cols-2">
           {latest.map((s) => (
-            <article key={s.slug} className="pm-lift group border border-rule bg-white">
-              <Link prefetch={false} href={s.path} className="grid h-full grid-cols-[minmax(0,2fr)_minmax(0,3fr)] items-stretch">
-                <Photo image={s.image} sizes="(min-width: 768px) 260px, 40vw" crop="standard" />
-                <div className="flex flex-col justify-between gap-4 p-5">
-                  <div>
-                    <Kicker label={s.kicker} />
-                    <h3 className="mt-2 font-serif text-lg font-bold leading-snug tracking-tight text-ink group-hover:underline group-hover:decoration-accent group-hover:underline-offset-4">{s.title}</h3>
-                  </div>
-                  <Meta story={s} />
-                </div>
+            <article key={s.slug} className="group border-t border-rule py-6">
+              <Link prefetch={false} href={s.path} className="block">
+                <Kicker label={s.kicker} />
+                <h3 className="mt-2 font-serif text-2xl font-medium leading-snug tracking-[-0.01em] text-ink group-hover:underline group-hover:decoration-accent group-hover:decoration-1 group-hover:underline-offset-4">{s.title}</h3>
+                <p className="mt-3 line-clamp-2 text-md leading-relaxed text-ink-2">{s.standfirst}</p>
+                <Meta story={s} className="mt-3" />
               </Link>
             </article>
           ))}
         </div>
       </section>
 
-      {/* IPO desk ------------------------------------------------------------------------------- */}
-      <section className="pm-section bg-paper-2" aria-labelledby="ipo-title">
+      {/* 02 IPO desk ------------------------------------------------------------------------- */}
+      <section className="pm-section surface-paper-2" aria-labelledby="ipo-title">
         <div className="wrap">
-          <div id="ipo-title">
-            <SectionIntro eyebrow="IPO desk" title="Every issue in one place." soft="Status worked out from each issue's own dates." />
-          </div>
-          <IpoDesk ipos={ipos} buildDate={istToday()} />
+          <SectionIntro id="ipo-title" num="02" label="IPO desk" title="Every issue," em="in one place." dek="Status is worked out from each issue's own dates, so it is never out of step." />
+          <IpoDesk ipos={ipos} buildDate={buildDate} />
         </div>
       </section>
 
-      {/* Company analysis --------------------------------------------------------------------- */}
+      {/* 03 Company analysis ----------------------------------------------------------------- */}
       <section className="pm-section wrap" aria-labelledby="analysis-title">
-        <div id="analysis-title">
-          <SectionIntro eyebrow="Share analysis" title="Companies, read as businesses." soft="Model, financials, valuation and risks." href="/share-analysis/" linkLabel="All analysis" />
-        </div>
+        <SectionIntro id="analysis-title" num="03" label="Share analysis" title="Companies," em="read as businesses." dek="Model, financials, valuation and risks, one company at a time." href="/share-analysis/" linkLabel="All analysis" />
         {/* A swipeable row on phones, three across from 768px */}
         <ul className="no-scrollbar relative -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-1 md:mx-0 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-0 md:pb-0">
           {analysis.map((s) => (
@@ -196,22 +187,22 @@ export default function HomePage() {
         </ul>
       </section>
 
-      {/* Calculators ------------------------------------------------------------------------------ */}
-      <section className="pm-section bg-paper-2" aria-labelledby="calc-title">
+      {/* 04 Calculators ---------------------------------------------------------------------- */}
+      <section className="pm-section surface-paper-2" aria-labelledby="calc-title">
         <div className="wrap">
-          <div id="calc-title">
-            <SectionIntro eyebrow="Calculators" title="Plan with numbers." soft={`${calcs.length} calculators that show their working.`} href="/calculators/" linkLabel="All calculators" />
-          </div>
-          <ul className="grid grid-cols-2 border-l border-t border-rule bg-white lg:grid-cols-4">
+          <SectionIntro id="calc-title" num="04" label="Calculators" title="Plan with" em="numbers." dek={`${calcs.length} calculators that show their working, year by year.`} href="/calculators/" linkLabel="All calculators" />
+          <ul className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
             {featuredCalcs.map((c) => (
-              <li key={c.slug} className="border-b border-r border-rule">
-                <Link prefetch={false} href={`/calculators/${c.slug}/`} className="group flex h-full flex-col justify-between gap-6 p-4 hover:bg-paper-2 sm:p-6 md:gap-8 md:p-7">
+              <li key={c.slug}>
+                <Link prefetch={false} href={`/calculators/${c.slug}/`} className="pm-card pm-lift group flex h-full flex-col justify-between gap-6 p-4 sm:p-6 md:gap-10 md:p-7">
                   <span>
-                    <Icon name={c.icon} size={28} className="mb-4 text-ink group-hover:text-accent md:mb-6" />
-                    <span className="block font-serif text-lg font-bold tracking-tight text-ink">{c.name.replace(" Calculator", "")}</span>
+                    <span className="mb-5 inline-grid size-12 place-items-center rounded-full border border-rule-strong text-emerald transition-colors group-hover:border-emerald group-hover:bg-emerald group-hover:text-paper md:mb-7">
+                      <Icon name={c.icon} size={22} />
+                    </span>
+                    <span className="block font-serif text-xl font-medium tracking-[-0.01em] text-ink md:text-2xl">{c.name.replace(" Calculator", "")}</span>
                     <span className="mt-1.5 block text-sm leading-snug text-muted">{c.short}</span>
                   </span>
-                  <span className="pm-meta flex items-center gap-2 text-ink">
+                  <span className="flex items-center gap-2 text-sm font-semibold text-emerald">
                     Open <span className="pm-arrow" aria-hidden>→</span>
                   </span>
                 </Link>
@@ -221,47 +212,47 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Learn ---------------------------------------------------------------------------------------- */}
+      {/* 05 Learn ------------------------------------------------------------------------------ */}
       <section className="pm-section wrap" aria-labelledby="learn-title">
-        <div id="learn-title">
-          <SectionIntro eyebrow="Learn" title="Learn to think like an investor." soft="Explainers and money guides in plain language." />
-        </div>
-        <div className="grid gap-12 md:grid-cols-2">
+        <SectionIntro id="learn-title" num="05" label="Learn" title="Learn to think" em="like an investor." dek="Explainers and money guides in plain language." />
+        <div className="grid gap-12 md:grid-cols-2 md:gap-16">
           {[
             { name: "Stock Market IQ", href: "/stock-market-iq/", items: learn },
             { name: "Personal Finance", href: "/personal-finance/", items: money },
           ].map((col) => (
             <div key={col.href}>
               <div className="flex items-baseline justify-between border-b border-ink pb-3">
-                <h3 className="font-serif text-xl font-bold tracking-tight text-ink">{col.name}</h3>
-                <Link prefetch={false} href={col.href} className="link-more text-ink">
+                <h3 className="font-serif text-2xl font-medium tracking-[-0.01em] text-ink">{col.name}</h3>
+                <Link prefetch={false} href={col.href} className="link-more">
                   All <span className="pm-arrow" aria-hidden>→</span>
                 </Link>
               </div>
-              <ul>
-                {col.items.map((s) => (
+              <ol>
+                {col.items.map((s, i) => (
                   <li key={s.slug} className="border-b border-rule">
-                    <Link prefetch={false} href={s.path} className="group flex items-baseline justify-between gap-6 py-4">
-                      <span className="font-medium leading-snug text-ink group-hover:underline group-hover:decoration-accent group-hover:underline-offset-4">{s.title}</span>
-                      <span className="pm-meta shrink-0">{s.readTime} min</span>
+                    <Link prefetch={false} href={s.path} className="group grid grid-cols-[1.75rem_minmax(0,1fr)_auto] items-baseline gap-x-3 py-4">
+                      <span className="sg-num text-lg leading-none">{i + 1}</span>
+                      <span className="font-serif text-lg font-medium leading-snug text-ink group-hover:underline group-hover:decoration-accent group-hover:decoration-1 group-hover:underline-offset-4">{s.title}</span>
+                      <span className="pm-meta whitespace-nowrap">{s.readTime} min</span>
                     </Link>
                   </li>
                 ))}
-              </ul>
+              </ol>
             </div>
           ))}
         </div>
       </section>
 
-      {/* The morning brief ------------------------------------------------------------------------ */}
-      <section id="newsletter" className="surface-ink band-closing scroll-mt-20" aria-labelledby="brief-title">
-        <div className="wrap grid gap-10 py-16 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] md:items-end md:gap-16 md:py-24">
+      {/* The morning brief, on the emerald band with its facets --------------------------------- */}
+      <section id="newsletter" className="surface-ink band-closing relative scroll-mt-20 overflow-hidden [background-image:none]" aria-labelledby="brief-title">
+        <Facets seed={8} cols={8} rows={5} width={800} height={500} red={1} className="pointer-events-none absolute -right-24 top-0 hidden h-full w-[55%] text-sage [mask-image:linear-gradient(to_left,black_30%,transparent)] lg:block" />
+        <div className="wrap relative grid gap-10 py-16 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] md:items-end md:gap-16 md:py-24">
           <div>
             <p className="eyebrow">The morning brief</p>
-            <h2 id="brief-title" className="pm-title mt-4 text-white">
-              The market, before 8 am. <span className="text-white/50">No tips, no noise.</span>
+            <h2 id="brief-title" className="sg-title mt-5">
+              The market, <em>before 8 am.</em>
             </h2>
-            <p className="mt-5 max-w-lg text-lg leading-relaxed text-white/80">One email on trading days: IPOs opening that week, results due, and one clear explainer.</p>
+            <p className="mt-5 max-w-lg text-lg leading-relaxed text-ink-2">One email on trading days: IPOs opening that week, results due, and one clear explainer. No tips, no noise.</p>
           </div>
           <div>
             <NewsletterForm id="home-brief" tone="dark" />

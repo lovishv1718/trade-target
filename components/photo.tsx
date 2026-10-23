@@ -41,7 +41,7 @@ type Props = {
  * has decoded (styles in globals.css). The box is reserved before the image arrives, so nothing
  * moves. With no image, or one that fails, the frame shows a printer's layout cross instead.
  * Inside a `group` link the picture scales 2% on hover. The paper's own cover graphics carry its
- * mark in the top-left corner, so those are framed from the right (data-own, premium.css).
+ * mark in the top-left corner, so those are framed from the right (data-own, in the theme CSS).
  */
 export function Photo({ image, sizes, crop = "standard", priority = false, className = "", caption, captionText }: Props) {
   const frame = (

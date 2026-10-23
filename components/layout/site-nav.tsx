@@ -68,7 +68,7 @@ export function SiteNav({ items, menu }: { items: NavItem[]; menu: MenuItem[] })
         <nav aria-label="Main" className="wrap flex h-[4.5rem] items-center gap-4">
           <Link href="/" aria-label="TradeTarget home" className="flex shrink-0 items-center gap-2.5">
             <LogoArt variant="mark" height={22} eager alt="" />
-            <span className="pm-wordmark">tradetarget</span>
+            <span className="pm-wordmark">TradeTarget</span>
           </Link>
           <ul className="mx-auto hidden items-center xl:flex">
             {items.map((item) => (
@@ -112,7 +112,7 @@ export function SiteNav({ items, menu }: { items: NavItem[]; menu: MenuItem[] })
           className={`relative flex h-full w-[min(380px,88vw)] flex-col bg-white text-ink shadow-overlay transition-transform duration-200 ease-out ${open ? "translate-x-0" : "translate-x-full"}`}
         >
           <div className="flex shrink-0 items-center justify-between border-b border-rule py-3 pl-5 pr-3">
-            <span className="pm-wordmark">tradetarget</span>
+            <span className="pm-wordmark">TradeTarget</span>
             <button ref={closeButton} type="button" onClick={() => close()} aria-label="Close menu" className="pm-icon-btn">
               <svg aria-hidden width="12" height="12" viewBox="0 0 12 12" stroke="currentColor" strokeWidth="1.6">
                 <path d="M1 1l10 10M11 1L1 11" />
@@ -127,7 +127,7 @@ export function SiteNav({ items, menu }: { items: NavItem[]; menu: MenuItem[] })
                   href={m.href}
                   onClick={() => close(false)}
                   aria-current={pathname === m.href ? "page" : undefined}
-                  className="flex min-h-11 items-center font-serif text-lg font-bold tracking-tight text-ink"
+                  className="flex min-h-11 items-center font-serif text-lg font-medium tracking-tight text-ink"
                 >
                   {m.label}
                 </Link>

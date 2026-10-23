@@ -57,7 +57,7 @@ export function Ticker() {
             </ul>
           </div>
         </div>
-        <p className="flex shrink-0 items-center border-l border-[#2a2a2a] px-4 uppercase text-white/45">Indicative</p>
+        <p className="flex shrink-0 items-center border-l border-white/12 px-4 uppercase text-white/50">Indicative</p>
       </div>
     </div>
   );

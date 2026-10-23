@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
+import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import site from "@/content/site.json";
 import { AskWidget } from "@/components/assistant/ask-widget";
 import { Footer } from "@/components/layout/footer";
@@ -7,11 +7,12 @@ import { Header } from "@/components/layout/header";
 import { SearchOverlay } from "@/components/search/search-overlay";
 import "./globals.css";
 
-// The reference design's three faces: a geometric display sans for headlines, Inter for reading
-// and interface, and a mono for labels and figures. Variable files cover every weight used.
-const display = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-jakarta", display: "swap" });
-const text = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
-const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jbmono", display: "swap" });
+// Three faces: Newsreader, an editorial serif with optical sizes and a true italic, for headlines
+// and figures; Geist for reading and interface; Geist Mono for the tape and tables. Variable files
+// cover every weight used.
+const display = Newsreader({ subsets: ["latin"], style: ["normal", "italic"], axes: ["opsz"], variable: "--font-newsreader", display: "swap" });
+const text = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
+const mono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono", display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0b0b0c",
+  themeColor: "#0b3427",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -45,6 +46,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="min-h-screen">
+        {/* The photograph tone: luminance mapped from deep emerald through sage to ivory (signature.css) */}
+        <svg aria-hidden width="0" height="0" className="absolute">
+          <filter id="tt-duotone" colorInterpolationFilters="sRGB">
+            <feColorMatrix type="matrix" values="0.2126 0.7152 0.0722 0 0 0.2126 0.7152 0.0722 0 0 0.2126 0.7152 0.0722 0 0 0 0 0 1 0" />
+            <feComponentTransfer>
+              <feFuncR type="table" tableValues="0.043 0.306 0.953" />
+              <feFuncG type="table" tableValues="0.204 0.490 0.933" />
+              <feFuncB type="table" tableValues="0.153 0.408 0.890" />
+            </feComponentTransfer>
+          </filter>
+        </svg>
         <Header />
         <main id="main">{children}</main>
         <Footer />

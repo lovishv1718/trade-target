@@ -1,0 +1,804 @@
+/* ==========================================================================
+   Signature theme
+
+   Private bank meets financial magazine: warm ivory paper, deep emerald ink taken from
+   the bull in TradeTarget's mark, an editorial serif for headlines and figures, and the
+   bull's red kept for one small accent. Photographs share one emerald tone; only the
+   article page shows them in full colour. This file loads after system.css and restyles its
+   components in place, so every page takes the theme without its markup changing.
+
+   Colour roles:
+     ink, emerald   type, primary buttons, the selected state, the dark bands
+     accent         the bull's red: the active nav rule, section numbers, link underlines
+     up / down      market direction, always with a sign or an arrow as well
+   ========================================================================== */
+
+@theme static {
+  --color-white: #fdfbf7; /* cards and fields: a lighter ivory, never a cold white */
+  --color-paper: #f7f3ec;
+  --color-paper-2: #efe9de;
+  --color-paper-3: #e7dfd1;
+  --color-ink: #10201a; /* 15.6:1 on paper */
+  --color-ink-2: #2f3c36; /* 10.9:1 */
+  --color-muted: #5b655f; /* 5.6:1 */
+  --color-faint: #959b95; /* decorative only */
+  --color-rule: #e0d7c8;
+  --color-rule-strong: #cbbfab;
+
+  --color-emerald: #0f4d36; /* 9.1:1 on paper */
+  --color-emerald-2: #1a6a4b;
+  --color-emerald-deep: #0b3427;
+  --color-sage: #a9c2b3;
+
+  --color-up: #1c7a4b; /* 5.0:1 on paper */
+  --color-down: #b7372b; /* 5.3:1 on paper */
+  --color-up-bright: #8ee0b1;
+  --color-down-bright: #ff9a8a;
+  --color-success: #1c7a4b;
+  --color-error: #b7372b;
+
+  --color-ipo: #2a5d7a;
+  --color-company: #8a5a1f;
+  --color-company-mark: #c8402f;
+  --color-money: #1a6a4b;
+  --color-learn: #4f4a7d;
+
+  --color-accent: #c8402f; /* 4.9:1 on paper */
+  --color-accent-deep: #a3321f;
+  --color-accent-tint: #f5e2da;
+  --color-dark: #0b3427;
+  --color-dark-2: #0f3f2f;
+
+  --font-serif: var(--font-newsreader), "Newsreader", ui-serif, Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-geist), "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-geist-mono), "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --shadow-overlay: 0 24px 48px -16px rgb(16 32 26 / 0.22), 0 2px 6px rgb(16 32 26 / 0.06);
+}
+
+:root {
+  --focus: var(--color-emerald);
+  --surface: var(--color-paper);
+  --field-bg: #fdfbf7;
+  --btn-2-bg: transparent;
+  --paper-light: #f7f3ec;
+  --paper-2-light: #efe9de;
+  --photo-tone: transparent;
+  --nav-h: 4.5rem;
+  /* A quiet facet texture for the dark bands, after the triangles of the bull */
+  --facet-tile: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='138' viewBox='0 0 160 138'><g fill='none' stroke='%23f7f3ec' stroke-opacity='.045' stroke-width='1'><path d='M0 0L80 0L40 69Z M80 0L160 0L120 69Z M40 69L120 69L80 0Z M0 138L40 69L80 138Z M80 138L120 69L160 138Z M40 69L80 138L120 69Z M0 0L40 69L0 138 M160 0L120 69L160 138'/></g></svg>");
+}
+
+@layer base {
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+  }
+  ::selection {
+    background: rgb(169 194 179 / 0.55);
+  }
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* ---- Surfaces ----------------------------------------------------------------- */
+  .surface-paper {
+    --color-ink: #10201a;
+    --color-ink-2: #2f3c36;
+    --color-muted: #5b655f;
+    --color-faint: #959b95;
+    --color-rule: #e0d7c8;
+    --color-rule-strong: #cbbfab;
+    --color-paper: #f7f3ec;
+    --color-paper-2: #efe9de;
+    --color-up: #1c7a4b;
+    --color-down: #b7372b;
+    --color-ipo: #2a5d7a;
+    --color-company: #8a5a1f;
+    --color-money: #1a6a4b;
+    --color-learn: #4f4a7d;
+    --color-accent: #c8402f;
+    --focus: #0f4d36;
+    --surface: #f7f3ec;
+    --field-bg: #fdfbf7;
+    background-color: #f7f3ec;
+  }
+  .surface-paper-2 {
+    background-color: var(--color-paper-2);
+    --surface: #efe9de;
+    --btn-2-bg: transparent;
+  }
+  .surface-ink {
+    background-color: var(--color-dark);
+    background-image: var(--facet-tile);
+    color: #f7f3ec;
+    --color-ink: #f7f3ec;
+    --color-ink-2: rgb(247 243 236 / 0.84);
+    --color-muted: #a9bdb2; /* 6.9:1 on the emerald ground */
+    --color-faint: #6f8a7d;
+    --color-rule: rgb(247 243 236 / 0.14);
+    --color-rule-strong: rgb(247 243 236 / 0.26);
+    --color-paper: #0b3427;
+    --color-paper-2: #0f3f2f;
+    --color-up: #8ee0b1;
+    --color-down: #ff9a8a;
+    --color-ipo: #9cc3dd;
+    --color-company: #f0b98a;
+    --color-money: #8ee0b1;
+    --color-learn: #c9c3f0;
+    --color-accent: #f39a84;
+    --focus: #f7f3ec;
+    --surface: #0b3427;
+    --field-bg: #0f3f2f;
+    --btn-2-bg: transparent;
+  }
+
+  .wrap {
+    max-width: 1240px;
+  }
+  @media (min-width: 768px) {
+    .wrap {
+      padding-inline: 2rem;
+    }
+  }
+  .band-text {
+    --band-y: 3.5rem;
+  }
+  .band-data {
+    --band-y: 4rem;
+  }
+  .band-tool {
+    --band-y: 4.5rem;
+  }
+  @media (min-width: 768px) {
+    .band-text {
+      --band-y: 5rem;
+    }
+    .band-data {
+      --band-y: 6rem;
+    }
+    .band-tool {
+      --band-y: 6.5rem;
+    }
+  }
+
+  /* ---- Type ------------------------------------------------------------------------ */
+  .headline {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    font-optical-sizing: auto;
+  }
+  .deck {
+    font-family: var(--font-sans);
+    color: var(--color-ink-2);
+  }
+  .kicker {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+  }
+  .kicker-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.125rem 0.625rem;
+    border: 1px solid var(--color-rule);
+    border-radius: 999px;
+    background: var(--color-white);
+  }
+  /* Eyebrow: small capitals in emerald, led in by a short rule */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-emerald);
+  }
+  .eyebrow::before {
+    content: "";
+    width: 1.75rem;
+    height: 1px;
+    background: currentColor;
+  }
+  .surface-ink .eyebrow {
+    color: var(--color-sage);
+  }
+  .dateline dt,
+  .mkt-stamp,
+  .crumbs {
+    font-family: var(--font-sans);
+    letter-spacing: 0.08em;
+  }
+  .crumbs {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+  @media (min-width: 640px) {
+    .crumbs {
+      font-size: 0.71875rem;
+    }
+  }
+
+  /* ---- Buttons: rounded, sans, emerald -------------------------------------------- */
+  .btn {
+    --btn-bg: var(--color-emerald);
+    --btn-fg: #f7f3ec;
+    --btn-bd: var(--color-emerald);
+    --btn-bg-h: var(--color-emerald-2);
+    --btn-fg-h: #f7f3ec;
+    --btn-bd-h: var(--color-emerald-2);
+    --btn-px: 1.375rem;
+    border-radius: 999px;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .surface-ink .btn {
+    --btn-bg: #f7f3ec;
+    --btn-fg: #0b3427;
+    --btn-bd: #f7f3ec;
+    --btn-bg-h: #ffffff;
+    --btn-fg-h: #0b3427;
+    --btn-bd-h: #ffffff;
+  }
+  .btn-secondary {
+    --btn-bg: var(--btn-2-bg);
+    --btn-fg: var(--color-ink);
+    --btn-bd: var(--color-rule-strong);
+    --btn-bg-h: rgb(16 32 26 / 0.04);
+    --btn-fg-h: var(--color-ink);
+    --btn-bd-h: var(--color-ink);
+  }
+  .surface-ink .btn-secondary {
+    --btn-bg: transparent;
+    --btn-fg: #f7f3ec;
+    --btn-bd: rgb(247 243 236 / 0.3);
+    --btn-bg-h: rgb(247 243 236 / 0.06);
+    --btn-fg-h: #f7f3ec;
+    --btn-bd-h: #f7f3ec;
+  }
+  .btn-tertiary,
+  .btn-text {
+    --btn-bg: transparent;
+    --btn-bd: transparent;
+    --btn-bg-h: transparent;
+    --btn-bd-h: transparent;
+    font-size: var(--text-sm);
+  }
+  /* The theme's padding above outranks the base sizes, so restate them */
+  .btn-text {
+    --btn-px: 0.25rem;
+  }
+  .btn-sm {
+    --btn-px: 0.875rem;
+  }
+  .btn-icon {
+    --btn-px: 0;
+  }
+
+  /* ---- Tags and chips: rounded, sans --------------------------------------------- */
+  .tag,
+  .chip {
+    border-radius: 999px;
+    border-color: var(--color-rule-strong);
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .chip[aria-pressed="true"],
+  .chip[aria-current="page"],
+  .chip[aria-checked="true"] {
+    background: var(--color-emerald);
+    border-color: var(--color-emerald);
+    color: #f7f3ec;
+  }
+
+  /* ---- Fields ------------------------------------------------------------------------- */
+  .field {
+    border-radius: 6px;
+    border-color: var(--color-rule-strong);
+  }
+  .field:focus-visible,
+  .field:focus {
+    border-color: var(--color-emerald);
+    outline: 1px solid var(--color-emerald);
+    outline-offset: 0;
+  }
+
+  /* ---- Sections ----------------------------------------------------------------------- */
+  .section-head {
+    align-items: end;
+    padding-block: 0 1.25rem;
+    border-top: 0;
+    border-bottom: 1px solid var(--color-rule);
+    background: transparent;
+  }
+  .section-head[data-pin] {
+    position: static;
+  }
+  .section-title {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(1.625rem, 2.6vw, 2.25rem);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+  }
+  .section-dek {
+    font-size: var(--text-md);
+  }
+  .link-more {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--color-emerald);
+  }
+  .section-end {
+    border-top-color: var(--color-rule);
+  }
+  .end-bar {
+    background: var(--color-emerald);
+    color: #f7f3ec;
+  }
+  .surface-ink .end-bar {
+    background: #f7f3ec;
+    color: #0b3427;
+  }
+  .end-bar-label {
+    font-family: var(--font-serif);
+    letter-spacing: -0.01em;
+  }
+
+  /* ---- Stories and photographs ------------------------------------------------------ */
+  .story::before {
+    height: 1px;
+    background: var(--color-ink);
+  }
+  .photo-frame {
+    background: var(--color-paper-3);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .photo-frame::after {
+    border-color: rgb(16 32 26 / 0.08);
+  }
+  /* One tone for every photograph: emerald shadows, sage middles, ivory lights (the
+     #tt-duotone filter in the layout). Inside an article the picture keeps its own colour. */
+  .photo-frame img {
+    filter: url(#tt-duotone) contrast(1.04);
+  }
+  #article-main .photo-frame img {
+    filter: none;
+  }
+  /* The paper's own cover graphics carry its mark in the top-left corner. Framing them from the
+     right leaves the mark outside every crop narrower than the picture itself. */
+  .photo-frame[data-own] img {
+    object-position: 100% 50%;
+    transform: scale(1.03);
+    transform-origin: 100% 50%;
+  }
+  .lead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .lead-rule {
+    display: none;
+  }
+  .lead-line {
+    grid-row: 2;
+    grid-column: 1;
+    display: flex;
+    margin-top: 0.5rem;
+    padding-top: 0;
+  }
+  .lead-plate {
+    grid-row: 3;
+    grid-column: 1;
+    margin: 1.25rem 0 0;
+    padding: 0;
+    background: none;
+  }
+
+  /* ---- Notes, tables ------------------------------------------------------------------ */
+  .note {
+    border-left-width: 2px;
+    border-left-color: var(--color-emerald);
+    background: var(--color-paper-2);
+  }
+  .table-wrap {
+    border-color: var(--color-rule);
+    border-radius: 4px;
+  }
+  .article-body thead th,
+  .data-table thead th {
+    background: var(--color-paper-2);
+    color: var(--color-muted);
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-bottom: 0;
+    box-shadow: inset 0 -1px 0 var(--color-rule);
+  }
+  .data-table thead .sticky-col {
+    background: var(--color-paper-2);
+    box-shadow:
+      inset -1px 0 0 var(--color-rule),
+      inset 0 -1px 0 var(--color-rule);
+  }
+  .data-table tbody tr:nth-child(even),
+  .article-body tbody tr:nth-child(even) {
+    background: rgb(16 32 26 / 0.018);
+  }
+  .data-table tbody tr[data-live] {
+    background: rgb(28 122 75 / 0.07);
+  }
+  .data-table tbody tr[data-live] > :first-child {
+    box-shadow: inset 2px 0 0 var(--color-emerald);
+  }
+
+  /* ---- Market state, change chips ---------------------------------------------------- */
+  .mkt-state {
+    font-family: var(--font-sans);
+    letter-spacing: 0.08em;
+    border-color: var(--color-rule-strong);
+    border-radius: 999px;
+  }
+  .mkt-state[data-state="closed"] .mkt-dot {
+    background: var(--color-down);
+    box-shadow: none;
+  }
+  .chg {
+    border-color: transparent;
+    border-radius: 999px;
+    font-family: var(--font-mono);
+  }
+
+  /* ---- Article body ---------------------------------------------------------------- */
+  .article-body {
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    color: var(--color-ink-2);
+  }
+  .article-body > p:first-child,
+  .lede {
+    font-family: var(--font-serif);
+    font-size: 1.3125rem;
+    line-height: 1.55;
+    color: var(--color-ink);
+  }
+  .article-body > p:first-child::first-line,
+  .lede::first-line {
+    font-variant-caps: normal;
+    letter-spacing: 0;
+  }
+  .article-body h2,
+  .article-body h3 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .article-body a {
+    color: var(--color-emerald);
+    text-decoration-color: rgb(200 64 47 / 0.55);
+  }
+  .article-body ul > li::before {
+    background: var(--color-emerald);
+  }
+  .article-body ol > li::marker {
+    color: var(--color-emerald);
+  }
+  .article-body blockquote::before {
+    color: var(--color-accent);
+  }
+  .article-body blockquote::after,
+  .stat {
+    text-decoration-color: var(--color-accent);
+  }
+
+  /* ---- Calculators: soft instruments, the readout on the emerald band --------------- */
+  .instrument {
+    border-color: var(--color-rule);
+    border-radius: 6px;
+  }
+  .instrument-label {
+    border-bottom-color: var(--color-rule);
+    background: var(--color-paper-2);
+    font-weight: 600;
+    color: var(--color-muted);
+  }
+  .cx-unit {
+    --cx-thumb-w: 18px;
+    --cx-thumb-h: 18px;
+    border-color: var(--color-rule);
+    border-radius: 6px;
+    background: var(--color-white);
+  }
+  .cx-unit:focus-within {
+    border-color: var(--color-emerald);
+    outline: 1px solid var(--color-emerald);
+  }
+  .cx-unit-label {
+    font-weight: 500;
+  }
+  .cx-num-affix {
+    background: var(--color-paper-2);
+    font-family: var(--font-mono);
+  }
+  .cx-num-input {
+    font-family: var(--font-mono);
+    font-weight: 500;
+  }
+  .cx-num::after,
+  .cx-stop,
+  .cx-preset::before {
+    background: var(--color-emerald);
+  }
+  .cx-fill {
+    background: var(--color-emerald);
+  }
+  .cx-thumb {
+    border: 2px solid var(--color-emerald);
+    border-radius: 50%;
+    background: var(--color-white);
+    box-shadow: 0 2px 6px rgb(16 32 26 / 0.18);
+  }
+  .cx-thumb::after {
+    display: none;
+  }
+  .cx-unit[data-drag] .cx-thumb,
+  .cx-range:active ~ .cx-rail .cx-thumb {
+    background: var(--color-emerald);
+  }
+  .cx-readout {
+    border-radius: 6px;
+    background-color: var(--color-emerald-deep);
+    background-image:
+      radial-gradient(120% 140% at 100% 0%, rgb(169 194 179 / 0.26) 0%, rgb(169 194 179 / 0) 55%),
+      var(--facet-tile);
+    --color-ink: #f7f3ec;
+    --color-ink-2: rgb(247 243 236 / 0.9);
+    --color-muted: #a9bdb2;
+    --color-rule: rgb(247 243 236 / 0.2);
+  }
+  .cx-readout .kicker {
+    color: #a9bdb2;
+  }
+  /* The switch: a rounded track with a round thumb, emerald when on */
+  .calc-switch-track {
+    border-radius: 999px;
+    background: var(--color-paper-3);
+  }
+  .calc-switch-thumb {
+    border-radius: 999px;
+    background: var(--color-white);
+    box-shadow: 0 1px 3px rgb(16 32 26 / 0.25);
+  }
+  .calc-switch-input:checked + .calc-switch-track {
+    border-color: var(--color-emerald);
+    background: var(--color-emerald);
+  }
+  .calc-switch-input:checked ~ .calc-switch-thumb {
+    background: #f7f3ec;
+  }
+
+  /* ==========================================================================
+     Header
+     ========================================================================== */
+  .pm-tape {
+    background: var(--color-dark);
+    color: #f7f3ec;
+    font-family: var(--font-mono);
+    font-size: 0.71875rem;
+    letter-spacing: 0.02em;
+  }
+  /* A rule after every quote, so the join between the two copies of the moving track matches */
+  .pm-tape li {
+    border-right: 1px solid rgb(247 243 236 / 0.12);
+  }
+  .pm-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: rgb(247 243 236 / 0.9);
+    -webkit-backdrop-filter: saturate(1.3) blur(10px);
+    backdrop-filter: saturate(1.3) blur(10px);
+    border-bottom: 1px solid var(--color-rule);
+  }
+  .pm-nav-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding-inline: 0.75rem;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-ink-2);
+    white-space: nowrap;
+  }
+  .pm-nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0.5rem;
+    height: 1.5px;
+    background: var(--color-accent);
+    transform: scaleX(0);
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .pm-nav-link:hover,
+  .pm-nav-link[aria-current="page"] {
+    color: var(--color-ink);
+  }
+  .pm-nav-link[aria-current="page"]::after,
+  .pm-nav-link:hover::after {
+    transform: scaleX(1);
+  }
+  .pm-wordmark {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+  }
+  .pm-icon-btn {
+    display: inline-grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--color-rule-strong);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--color-ink);
+    transition: border-color var(--duration-base) var(--ease-out);
+  }
+  .pm-icon-btn:hover {
+    border-color: var(--color-ink);
+  }
+
+  /* ==========================================================================
+     Front page
+     ========================================================================== */
+  /* The cover: today in one sentence, set large in the serif */
+  .sg-cover {
+    max-width: 17ch;
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: clamp(2.375rem, 5.6vw, 5rem);
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+    font-optical-sizing: auto;
+    color: var(--color-ink);
+  }
+  .sg-cover em {
+    font-style: italic;
+    color: var(--color-emerald);
+  }
+  .sg-cover a {
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.14em;
+    text-decoration-color: var(--color-rule-strong);
+    transition: text-decoration-color var(--duration-base) var(--ease-out);
+  }
+  .sg-cover a:hover {
+    text-decoration-color: var(--color-accent);
+  }
+  /* Section numbers and story numerals: the serif's italic in the bull's red */
+  .sg-num {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--color-accent);
+  }
+  .sg-title {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(2rem, 3.8vw, 3.25rem);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  .sg-title em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--color-emerald);
+  }
+  .surface-ink .sg-title em {
+    color: var(--color-sage);
+  }
+  .sg-facets {
+    color: var(--color-emerald);
+  }
+  .pm-section {
+    padding-block: 4.5rem;
+  }
+  @media (min-width: 768px) {
+    .pm-section {
+      padding-block: 6.5rem;
+    }
+  }
+  .pm-card {
+    border: 1px solid var(--color-rule);
+    border-radius: 6px;
+    background: var(--color-white);
+    transition: border-color var(--duration-base) var(--ease-out);
+  }
+  a.pm-card:hover,
+  .pm-card:has(a:hover) {
+    border-color: var(--color-ink);
+  }
+  /* Cards rise a hair under the pointer: a lift and a soft shadow, nothing more */
+  .pm-lift {
+    transition:
+      transform 200ms var(--ease-out),
+      box-shadow 200ms var(--ease-out),
+      border-color 200ms var(--ease-out);
+  }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .pm-lift:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 24px 44px -30px rgb(11 52 39 / 0.45);
+    }
+  }
+  .pm-lift:hover,
+  .pm-lift:has(a:focus-visible) {
+    border-color: var(--color-ink);
+  }
+  /* The company card's stand-in for a picture: initials in the serif italic on an emerald disc */
+  .pm-monogram {
+    display: inline-grid;
+    place-items: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 999px;
+    background: var(--color-emerald);
+    font-family: var(--font-serif);
+    font-size: 1.375rem;
+    font-style: italic;
+    font-weight: 400;
+    color: #f7f3ec;
+    transition: background-color 200ms var(--ease-out);
+  }
+  .group:hover .pm-monogram {
+    background: var(--color-accent);
+  }
+  .pm-figure {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    letter-spacing: -0.025em;
+    line-height: 1;
+    font-optical-sizing: auto;
+  }
+  .pm-meta {
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    color: var(--color-muted);
+  }
+  .pm-arrow {
+    display: inline-block;
+    transition: transform var(--duration-fast) var(--ease-out);
+  }
+  a:hover .pm-arrow,
+  .pm-card:hover .pm-arrow {
+    transform: translateX(3px);
+  }
+}
