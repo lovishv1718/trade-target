@@ -11,7 +11,7 @@ type MenuItem = NavItem & { children: NavItem[] };
 
 function SearchIcon() {
   return (
-    <svg aria-hidden width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6">
+    <svg aria-hidden width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.3">
       <circle cx="7" cy="7" r="5.2" />
       <path d="M11 11l3.8 3.8" strokeLinecap="square" />
     </svg>
@@ -65,9 +65,9 @@ export function SiteNav({ items, menu }: { items: NavItem[]; menu: MenuItem[] })
   return (
     <>
       <div className="pm-header">
-        <nav aria-label="Main" className="wrap flex h-[4.5rem] items-center gap-4">
-          <Link href="/" aria-label="TradeTarget home" className="flex shrink-0 items-center gap-2.5">
-            <LogoArt variant="mark" height={22} eager alt="" />
+        <nav aria-label="Main" className="wrap flex h-[5.25rem] items-center gap-4">
+          <Link href="/" aria-label="TradeTarget home" className="flex shrink-0 items-center gap-3">
+            <LogoArt variant="mark" height={26} eager alt="" />
             <span className="pm-wordmark">tradetarget</span>
           </Link>
           <ul className="mx-auto hidden items-center xl:flex">
@@ -83,8 +83,9 @@ export function SiteNav({ items, menu }: { items: NavItem[]; menu: MenuItem[] })
             <button type="button" onClick={openSearch} aria-label="Search stories, IPOs and calculators" className="pm-icon-btn">
               <SearchIcon />
             </button>
-            <Link prefetch={false} href="/hire-writers/" className="btn hidden min-h-11 sm:inline-flex">
-              Hire our writers
+            <span aria-hidden className="mx-4 hidden h-10 w-px bg-ink/50 sm:block" />
+            <Link prefetch={false} href="/hire-writers/" className="hm-bar-link hidden sm:inline-flex">
+              Hire our writers <span className="pm-arrow" aria-hidden>→</span>
             </Link>
             <button
               ref={menuButton}

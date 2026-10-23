@@ -45,7 +45,9 @@ const BOARD_LABEL = { mainboard: "Mainboard", sme: "SME" } as const;
 export function IpoDashboard({ ipos, buildDate }: { ipos: Ipo[]; buildDate: string }) {
   const params = useSearchParams();
   const [board, setBoard] = useState<"mainboard" | "sme">(params.get("board") === "sme" ? "sme" : "mainboard");
-  const [filter, setFilter] = useState<"all" | IpoStatus>("all");
+  // A status in the address (?status=open, from the footer's IPO links) opens the table filtered
+  const initialFilter = FILTERS.find((f) => f.key === params.get("status"))?.key ?? "all";
+  const [filter, setFilter] = useState<"all" | IpoStatus>(initialFilter);
   const today = useIstToday(buildDate);
 
   const boardIpos = useMemo(() => ipos.filter((i) => i.board === board), [ipos, board]);

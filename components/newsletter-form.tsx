@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 /** Email sign-up. Works on any surface: .field and .btn take their look from the band they sit in. */
-export function NewsletterForm({ tone = "light", id }: { tone?: "light" | "dark"; id?: string }) {
+export function NewsletterForm({ tone = "light", id, inline = false, cta = "Sign up" }: { tone?: "light" | "dark"; id?: string; inline?: boolean; cta?: string }) {
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
   const [error, setError] = useState("");
@@ -33,10 +33,10 @@ export function NewsletterForm({ tone = "light", id }: { tone?: "light" | "dark"
         }
       }}
     >
-      <label htmlFor={inputId} className="field-label">
+      <label htmlFor={inputId} className={inline ? "sr-only" : "field-label"}>
         Email address
       </label>
-      <div className="mt-1.5 flex flex-col gap-2 sm:flex-row">
+      <div className={inline ? "flex flex-col gap-2 sm:flex-row sm:gap-0" : "mt-1.5 flex flex-col gap-2 sm:flex-row"}>
         <input
           id={inputId}
           type="email"
@@ -50,10 +50,10 @@ export function NewsletterForm({ tone = "light", id }: { tone?: "light" | "dark"
           placeholder="Your email address"
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? errorId : undefined}
-          className="field mt-0 min-w-0 flex-1"
+          className={`field mt-0 min-w-0 flex-1 ${inline ? "min-h-14 border-white bg-white px-5 shadow-[0_8px_24px_-16px_rgb(20_20_20/0.35)]" : ""}`}
         />
-        <button type="submit" className="btn shrink-0">
-          Sign up <span className="arrow" aria-hidden>→</span>
+        <button type="submit" className={`btn shrink-0 ${inline ? "min-h-14 px-8" : ""}`}>
+          {cta} <span className="arrow" aria-hidden>→</span>
         </button>
       </div>
       {error ? (

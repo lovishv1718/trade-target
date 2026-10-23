@@ -197,7 +197,7 @@ export function getCalculator(slug: string) {
   return calculatorsJson.find((c) => c.slug === slug) ?? null;
 }
 
-export type Company = { name: string; ticker: string; mark: string; sector: string; covers: string[] };
+export type Company = { name: string; ticker: string; mark: string; sector: string; covers: string[]; summary?: string };
 
 /** The company behind a share-analysis story: name, NSE symbol, sector and what the analysis covers. */
 export function getCompany(slug: string): Company | null {

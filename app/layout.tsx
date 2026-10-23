@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
+import { Inter, JetBrains_Mono, Newsreader } from "next/font/google";
 import site from "@/content/site.json";
 import { AskWidget } from "@/components/assistant/ask-widget";
 import { Footer } from "@/components/layout/footer";
@@ -7,9 +7,10 @@ import { Header } from "@/components/layout/header";
 import { SearchOverlay } from "@/components/search/search-overlay";
 import "./globals.css";
 
-// The reference design's three faces: a geometric display sans for headlines, Inter for reading
-// and interface, and a mono for labels and figures. Variable files cover every weight used.
-const display = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-jakarta", display: "swap" });
+// Three faces: Newsreader, an editorial serif with optical sizes and a true italic, for headlines
+// and figures; Inter for reading and interface; JetBrains Mono for labels, the tape and the nav.
+// Variable files cover every weight used.
+const display = Newsreader({ subsets: ["latin"], style: ["normal", "italic"], axes: ["opsz"], variable: "--font-newsreader", display: "swap" });
 const text = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jbmono", display: "swap" });
 

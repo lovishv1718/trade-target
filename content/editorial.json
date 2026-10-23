@@ -1,4 +1,28 @@
 {
+  "home": {
+    "feature": {
+      "slug": "ntpc-q4-2026-result",
+      "kicker": "News · Results · Q4 FY26",
+      "summary": "Profit after tax up a third year on year, with a final dividend of ₹3.50 a share.",
+      "stats": [
+        { "value": "+34%", "label": "Profit after tax, year on year" },
+        { "value": "₹3.50", "label": "Final dividend per share" }
+      ]
+    },
+    "cards": [
+      { "slug": "divis-lab-q4-2026-results" },
+      { "slug": "gold-and-silver-prices-surge" },
+      { "slug": "nse-ipo-allotment-status" },
+      { "slug": "hero-motors-ipo-allotment-status", "photo": "stock-chart-screen" }
+    ],
+    "results": [
+      { "name": "NTPC", "slug": "ntpc-q4-2026-result", "line": "Q4 FY26 · Dividend ₹3.50", "change": 34, "pat": [7897, 10615] },
+      { "name": "Divi’s Laboratories", "slug": "divis-lab-q4-2026-results", "line": "Q4 FY26 · Dividend ₹30.00", "change": 13, "pat": [662, 751] }
+    ],
+    "learnSummaries": {
+      "dividend-reinvestment-plan": "What a DRIP is, how it compounds, and when it is worth choosing."
+    }
+  },
   "homepage": {
     "lead": "nse-ipo-allotment-status",
     "secondary": ["hero-motors-ipo-allotment-status", "ntpc-q4-2026-result", "gold-and-silver-prices-surge"],

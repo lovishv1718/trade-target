@@ -13,14 +13,14 @@ function Item({ q, echo = false }: { q: Quote; echo?: boolean }) {
   const up = q.change >= 0;
   const decimals = q.id === "usdinr" ? 2 : q.unit === "rupee" ? 0 : 2;
   return (
-    <li aria-hidden={echo || undefined} className={`flex shrink-0 items-center gap-2 whitespace-nowrap px-4 tabular ${echo ? "dx-tape-copy" : ""}`}>
-      <span className="uppercase text-white/60">{q.name}</span>
+    <li aria-hidden={echo || undefined} className={`flex shrink-0 items-center gap-4 whitespace-nowrap tabular ${echo ? "dx-tape-copy" : ""}`}>
+      <span className="uppercase text-white/85">{q.name}</span>
       <span className="text-white">
         {q.unit === "rupee" ? "₹" : ""}
         {formatNumber(q.value, decimals)}
       </span>
       <span className={up ? "text-up-bright" : "text-down-bright"}>
-        <span aria-hidden>{up ? "▲" : "▼"}</span>
+        <span aria-hidden>{up ? "+" : "−"}</span>
         <span className="sr-only">{up ? "up" : "down"}</span> {Math.abs(q.changePct).toFixed(2)}%
       </span>
     </li>
@@ -37,7 +37,7 @@ function Item({ q, echo = false }: { q: Quote; echo?: boolean }) {
 export function Ticker() {
   return (
     <div className="pm-tape">
-      <div className="flex h-9 items-stretch">
+      <div className="flex h-[2.375rem] items-stretch">
         <div
           role="region"
           aria-label="Market figures, indicative, sample values"
@@ -57,7 +57,7 @@ export function Ticker() {
             </ul>
           </div>
         </div>
-        <p className="flex shrink-0 items-center border-l border-[#2a2a2a] px-4 uppercase text-white/45">Indicative</p>
+        <p className="flex shrink-0 items-center border-l border-[#3a3835] px-4 uppercase text-white/45">Indicative</p>
       </div>
     </div>
   );

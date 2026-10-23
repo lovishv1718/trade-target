@@ -2,17 +2,17 @@ import Image from "next/image";
 import type { ArticleImage } from "@/lib/content";
 
 /**
- * The four crops a photograph may take, and nothing else:
- *   panorama 2:1 (page-wide bands), wide 16:9 (leads, article heroes),
- *   standard 3:2 (tiles), compact 4:3 (reading lists and thumbnails).
+ * The five crops a photograph may take, and nothing else:
+ *   band 5:2 (the front page's slim story cards), panorama 2:1 (page-wide bands),
+ *   wide 16:9 (leads, article heroes), standard 3:2 (tiles), compact 4:3 (reading lists).
  * A crop can change at md and lg; the class names are written out so Tailwind sees them.
  */
-export type Crop = "panorama" | "wide" | "standard" | "compact";
+export type Crop = "band" | "panorama" | "wide" | "standard" | "compact";
 type CropSpec = Crop | { base: Crop; md?: Crop; lg?: Crop };
 
-const BASE: Record<Crop, string> = { panorama: "aspect-[2/1]", wide: "aspect-[16/9]", standard: "aspect-[3/2]", compact: "aspect-[4/3]" };
-const MD: Record<Crop, string> = { panorama: "md:aspect-[2/1]", wide: "md:aspect-[16/9]", standard: "md:aspect-[3/2]", compact: "md:aspect-[4/3]" };
-const LG: Record<Crop, string> = { panorama: "lg:aspect-[2/1]", wide: "lg:aspect-[16/9]", standard: "lg:aspect-[3/2]", compact: "lg:aspect-[4/3]" };
+const BASE: Record<Crop, string> = { band: "aspect-[5/2]", panorama: "aspect-[2/1]", wide: "aspect-[16/9]", standard: "aspect-[3/2]", compact: "aspect-[4/3]" };
+const MD: Record<Crop, string> = { band: "md:aspect-[5/2]", panorama: "md:aspect-[2/1]", wide: "md:aspect-[16/9]", standard: "md:aspect-[3/2]", compact: "md:aspect-[4/3]" };
+const LG: Record<Crop, string> = { band: "lg:aspect-[5/2]", panorama: "lg:aspect-[2/1]", wide: "lg:aspect-[16/9]", standard: "lg:aspect-[3/2]", compact: "lg:aspect-[4/3]" };
 
 function cropClass(crop: CropSpec) {
   if (typeof crop === "string") return BASE[crop];
