@@ -8,16 +8,22 @@ import { Stagger } from "./stagger";
 import { Pagination, scrollToList } from "./paginated-stories";
 
 const PER_PAGE = 8;
+// Topics shown before "More": the biggest by story count, plus whichever one is chosen
+const FIRST_TOPICS = 4;
 
 export function NewsListing({ stories, topics }: { stories: ArticleCard[]; topics: string[] }) {
   const params = useSearchParams();
   const initialTopic = params.get("topic");
   const [topic, setTopic] = useState<string>(initialTopic && topics.includes(initialTopic) ? initialTopic : "All");
   const [page, setPage] = useState(Math.max(Number(params.get("page")) || 1, 1));
+  const [allTopics, setAllTopics] = useState(false);
   const top = useRef<HTMLDivElement>(null);
 
   const counts = useMemo(() => Object.fromEntries(topics.map((t) => [t, stories.filter((s) => s.kicker === t).length])), [stories, topics]);
   const filtered = topic === "All" ? stories : stories.filter((s) => s.kicker === topic);
+  const ranked = topics.filter((t) => counts[t]).sort((a, b) => counts[b] - counts[a]);
+  const visible = allTopics ? ranked : ranked.filter((t, i) => i < FIRST_TOPICS || t === topic);
+  const hidden = ranked.length - visible.length;
   const total = Math.max(Math.ceil(filtered.length / PER_PAGE), 1);
   const current = Math.min(page, total);
   const shown = filtered.slice((current - 1) * PER_PAGE, current * PER_PAGE);
@@ -39,7 +45,7 @@ export function NewsListing({ stories, topics }: { stories: ArticleCard[]; topic
   return (
     <div ref={top} className="scroll-mt-20">
       <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 py-1 md:mx-0 md:flex-wrap md:overflow-visible md:px-0" role="group" aria-label="Filter by topic">
-        {["All", ...topics.filter((t) => counts[t])].map((t) => {
+        {["All", ...visible].map((t) => {
           const on = topic === t;
           return (
             <button key={t} type="button" aria-pressed={on} onClick={() => choose(t)} className="chip shrink-0">
@@ -48,6 +54,11 @@ export function NewsListing({ stories, topics }: { stories: ArticleCard[]; topic
             </button>
           );
         })}
+        {hidden > 0 || allTopics ? (
+          <button type="button" aria-expanded={allTopics} onClick={() => setAllTopics((v) => !v)} className="btn btn-text shrink-0">
+            {allTopics ? "Fewer topics" : `More topics (${hidden})`}
+          </button>
+        ) : null}
       </div>
 
       {filtered.length ? (

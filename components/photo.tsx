@@ -40,11 +40,12 @@ type Props = {
  * A placed photograph: fixed crop, warm tone, hairline edge, and a wipe with a settle once it
  * has decoded (styles in globals.css). The box is reserved before the image arrives, so nothing
  * moves. With no image, or one that fails, the frame shows a printer's layout cross instead.
- * Inside a `group` link the picture scales 2% on hover.
+ * Inside a `group` link the picture scales 2% on hover. The paper's own cover graphics carry its
+ * mark in the top-left corner, so those are framed from the right (data-own, premium.css).
  */
 export function Photo({ image, sizes, crop = "standard", priority = false, className = "", caption, captionText }: Props) {
   const frame = (
-    <div className={`photo-frame ${cropClass(crop)}`} data-empty={image ? undefined : ""}>
+    <div className={`photo-frame ${cropClass(crop)}`} data-empty={image ? undefined : ""} data-own={image?.credit === "TradeTarget" ? "" : undefined}>
       {image ? (
         <div className="photo-wipe">
           <div className="photo-wipe-inner">

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { IpoThisWeek } from "@/components/home/ipo-week";
-import { MarketsBoard } from "@/components/home/markets-board";
 import { NewsListing } from "@/components/listing/news-listing";
 import { SectionMasthead } from "@/components/listing/section-masthead";
 import { SectionHeader } from "@/components/section-header";
@@ -49,8 +48,7 @@ export default function NewsPage() {
               </Suspense>
             </div>
           </section>
-          <aside className="grid content-start gap-6 self-start">
-            <MarketsBoard />
+          <aside className="grid content-start gap-6 self-start lg:sticky lg:top-24">
             <IpoThisWeek ipos={getIpos()} buildDate={istToday()} />
           </aside>
         </div>

@@ -1,0 +1,44 @@
+{
+  "steel-authority-of-india-fundamental-analysis": {
+    "name": "Steel Authority of India",
+    "ticker": "SAIL",
+    "mark": "SA",
+    "sector": "Metals and mining",
+    "covers": ["5-year returns", "Peers", "Shareholding", "Financials", "Ratios", "Cash flow"]
+  },
+  "colgate-palmolive-fundamental-analysis": {
+    "name": "Colgate-Palmolive (India)",
+    "ticker": "COLPAL",
+    "mark": "CP",
+    "sector": "FMCG",
+    "covers": ["5-year returns", "Peers", "Shareholding", "Financials", "Ratios", "Cash flow"]
+  },
+  "godrej-consumer-products-fundamental-analysis": {
+    "name": "Godrej Consumer Products",
+    "ticker": "GODREJCP",
+    "mark": "GC",
+    "sector": "FMCG",
+    "covers": ["5-year returns", "Peers", "Shareholding", "Financials", "Ratios", "Cash flow"]
+  },
+  "persistent-systems-fundamental-analysis": {
+    "name": "Persistent Systems",
+    "ticker": "PERSISTENT",
+    "mark": "PS",
+    "sector": "IT services",
+    "covers": ["5-year returns", "Peers", "Shareholding", "Financials", "Ratios", "Cash flow"]
+  },
+  "polycab-india-fundamental-analysis": {
+    "name": "Polycab India",
+    "ticker": "POLYCAB",
+    "mark": "PI",
+    "sector": "Cables and wires",
+    "covers": ["5-year returns", "Peers", "Shareholding", "Financials", "Ratios", "Cash flow"]
+  },
+  "ireda-fundamental-analysis": {
+    "name": "IREDA",
+    "ticker": "IREDA",
+    "mark": "IR",
+    "sector": "Renewable energy finance",
+    "covers": ["Price history", "Analyst view", "Financials", "Ratios", "Shareholding"]
+  }
+}

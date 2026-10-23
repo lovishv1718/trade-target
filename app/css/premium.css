@@ -387,8 +387,25 @@
   .photo-frame img {
     filter: none;
   }
+  .lead {
+    grid-template-columns: minmax(0, 1fr);
+  }
   .lead-rule {
-    background: var(--color-rule);
+    display: none;
+  }
+  .lead-line {
+    grid-row: 2;
+    grid-column: 1;
+    display: flex;
+    margin-top: 0.5rem;
+    padding-top: 0;
+  }
+  .lead-plate {
+    grid-row: 3;
+    grid-column: 1;
+    margin: 1.25rem 0 0;
+    padding: 0;
+    background: none;
   }
 
   /* ---- Notes, tables ------------------------------------------------------------------ */
@@ -693,6 +710,53 @@
   a.pm-card:hover,
   .pm-card:has(a:hover) {
     border-color: var(--color-ink);
+  }
+  /* Cards rise a hair under the pointer: a lift and a soft shadow, nothing more */
+  .pm-lift {
+    transition:
+      transform 200ms var(--ease-out),
+      box-shadow 200ms var(--ease-out),
+      border-color 200ms var(--ease-out);
+  }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .pm-lift:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 22px 40px -28px rgb(11 11 12 / 0.4);
+    }
+  }
+  .pm-lift:hover,
+  .pm-lift:has(a:focus-visible) {
+    border-color: var(--color-ink);
+  }
+  /* The company card's stand-in for a picture: initials in a square, warm under the pointer */
+  .pm-monogram {
+    display: inline-grid;
+    place-items: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    border: 1px solid var(--color-rule);
+    background: var(--color-paper-2);
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--color-ink);
+    transition:
+      background-color 200ms var(--ease-out),
+      border-color 200ms var(--ease-out),
+      color 200ms var(--ease-out);
+  }
+  .group:hover .pm-monogram {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: #ffffff;
+  }
+  /* The paper's own cover graphics carry its mark in the top-left corner. Framing them from the
+     right leaves the mark outside every crop narrower than the picture itself. */
+  .photo-frame[data-own] img {
+    object-position: 100% 50%;
+    transform: scale(1.03);
+    transform-origin: 100% 50%;
   }
   .pm-figure {
     font-family: var(--font-serif);

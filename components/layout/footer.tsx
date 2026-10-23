@@ -46,7 +46,7 @@ export function Footer() {
 
   return (
     <footer className="surface-ink border-t border-rule text-sm text-ink-2">
-      <div className="wrap pb-6 pt-10 md:pt-12">
+      <div className="wrap pb-24 pt-10 md:pt-12">
         {/* Identity: mark, what we are, where to follow */}
         <div className="grid gap-6 border-b border-rule pb-8 md:grid-cols-[auto_minmax(0,1fr)_auto] md:items-center md:gap-8">
           <Link href="/" aria-label="TradeTarget home" className="flex items-center gap-2.5">
@@ -88,12 +88,9 @@ export function Footer() {
 
         <div className="border-t border-rule pt-6 text-xs leading-relaxed text-muted">
           <p className="max-w-[100ch]">
-            <strong className="font-semibold text-ink">Disclaimer:</strong> TradeTarget is a financial news and education platform. It is not registered with the
-            Securities and Exchange Board of India (SEBI) as an investment adviser or research analyst, and nothing on this site is a recommendation to buy,
-            sell or hold any security, fund or other product. Investments in the securities market are subject to market risks; read all related documents
-            carefully before investing. Past performance does not indicate future returns. Grey market premium (GMP) figures are unofficial, come from market
-            sources and can change quickly; they are reported for information only. Calculator results are estimates based on the inputs and assumptions you
-            enter. Consult a SEBI-registered investment adviser before making investment decisions.{" "}
+            <strong className="font-semibold text-ink">Disclaimer:</strong> TradeTarget is a financial news and education platform, not a SEBI-registered
+            investment adviser or research analyst, and nothing here is a recommendation to buy, sell or hold. Investments in the securities market are subject to
+            market risks; GMP figures are unofficial and calculator results are estimates.{" "}
             <Link prefetch={false} href="/disclaimer/" className="link">
               Read the full disclaimer
             </Link>

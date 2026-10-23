@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { CompanyCard } from "@/components/company-card";
 import { SectionMasthead } from "@/components/listing/section-masthead";
 import { Photo } from "@/components/photo";
 import { SectionHeader } from "@/components/section-header";
-import { StoryMeta, StoryTile } from "@/components/story";
+import { StoryMeta } from "@/components/story";
 import { getArticlesBySection, getSection, toCard } from "@/lib/content";
 import { formatDate } from "@/lib/format";
 
@@ -27,7 +28,7 @@ export default function ShareAnalysisPage() {
           <Link prefetch={false} href={lead.path} className="grid gap-6 md:grid-cols-[1.3fr_1fr] md:items-center">
             <Photo image={lead.image} sizes="(min-width: 768px) 700px, 100vw" crop="wide" priority />
             <div>
-              <span className="kicker kicker-rule text-company">Fundamental analysis</span>
+              <span className="eyebrow">Fundamental analysis</span>
               <h2 className="headline mt-2 text-balance text-3xl md:text-4xl">{lead.title}</h2>
               <p className="deck mt-3 text-lg leading-normal md:text-xl">{lead.standfirst}</p>
               <StoryMeta story={lead} className="mt-3" />
@@ -35,9 +36,9 @@ export default function ShareAnalysisPage() {
           </Link>
         </article>
 
-        <div className="mt-8 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {rest.map((s) => (
-            <StoryTile key={s.slug} story={{ ...s, kicker: "Share Analysis" }} standfirst />
+            <CompanyCard key={s.slug} story={s} />
           ))}
         </div>
 

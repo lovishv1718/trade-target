@@ -4,6 +4,7 @@ import Link from "next/link";
 import { formatDayMonth } from "@/lib/format";
 import { ipoStatus, priceBandLabel, statusOrder, summarise, type Ipo } from "@/lib/ipo";
 import { useIstToday } from "@/lib/use-ist-today";
+import { CountUp } from "../count-up";
 import { StatusPill } from "../ipo/status-pill";
 
 /**
@@ -19,9 +20,14 @@ export function IpoDesk({ ipos, buildDate }: { ipos: Ipo[]; buildDate: string })
     .map((ipo) => ({ ipo, status: ipoStatus(ipo, today) }))
     .sort((a, b) => statusOrder(a.status) - statusOrder(b.status) || ((b.ipo.dates.close ?? "") > (a.ipo.dates.close ?? "") ? 1 : -1))
     .slice(0, 5);
-  const counts = [
+  // With nothing upcoming, a zero says little: show the next listing day instead
+  const nextListing = ipos
+    .map((i) => i.dates.listing)
+    .filter((d): d is string => !!d && d >= today)
+    .sort()[0];
+  const counts: { label: string; value: number | string }[] = [
     { label: "Open now", value: s.open },
-    { label: "Upcoming", value: s.upcoming },
+    s.upcoming || !nextListing ? { label: "Upcoming", value: s.upcoming } : { label: "Next listing", value: formatDayMonth(nextListing) },
     { label: `Listed in ${today.slice(0, 4)}`, value: s.listedThisYear },
   ];
   return (
@@ -31,7 +37,7 @@ export function IpoDesk({ ipos, buildDate }: { ipos: Ipo[]; buildDate: string })
           {counts.map((c, i) => (
             <div key={c.label} className={`py-5 ${i ? "border-l border-rule pl-5 lg:border-l-0 lg:border-t lg:pl-0" : "lg:border-t lg:border-rule"} lg:py-6`}>
               <dt className="pm-meta">{c.label}</dt>
-              <dd className="pm-figure mt-2 text-4xl md:text-5xl">{String(c.value).padStart(2, "0")}</dd>
+              <dd className="pm-figure mt-2 whitespace-nowrap text-4xl md:text-5xl">{typeof c.value === "number" ? <CountUp value={c.value} /> : c.value}</dd>
             </div>
           ))}
         </dl>

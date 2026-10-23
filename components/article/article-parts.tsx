@@ -62,8 +62,8 @@ export function AuthorBox({ author }: { author: Author }) {
 
 export function KeyTakeaways({ text }: { text: string }) {
   return (
-    <aside aria-label="Quick summary" className="border-t-3 border-company-mark bg-white px-4 pb-4 pt-3 md:px-5">
-      <p className="kicker text-ink">Quick summary</p>
+    <aside aria-label="Quick summary" className="border border-rule border-t-2 border-t-accent bg-white px-4 pb-4 pt-3 md:px-5">
+      <p className="eyebrow">Quick summary</p>
       <p className="mt-2 text-lg leading-relaxed text-ink">{text}</p>
     </aside>
   );

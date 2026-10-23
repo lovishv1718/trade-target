@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { CompanyCard } from "@/components/company-card";
 import { IpoDesk } from "@/components/home/ipo-desk";
+import { Icon, type IconName } from "@/components/icons";
 import { JsonLd } from "@/components/json-ld";
 import { Kicker } from "@/components/kicker";
 import { NewsletterForm } from "@/components/newsletter-form";
@@ -43,22 +45,31 @@ export default function HomePage() {
   const used = new Set(today.map((s) => s.slug));
   const newsroom = all.filter((a) => a.section === "news" || a.section === "ipo" || ed.newsTopics.includes(a.kicker));
   const [lead, ...rest] = newsroom.filter((a) => !used.has(a.slug));
-  const latest = rest.slice(0, 3);
+  const latest = rest.slice(0, 2);
   const analysis = getArticlesBySection("share-analysis").map(toCard).slice(0, 3);
   const learn = getArticlesBySection("stock-market-iq").map(toCard).slice(0, 4);
   const money = getArticlesBySection("personal-finance").map(toCard).slice(0, 4);
   const calcs = getCalculators();
-  const featuredCalcs = ["sip-calculator", "income-tax-calculator", "home-loan-emi-calculator", "ppf-calculator", "fd-calculator", "retirement-calculator", "epf-calculator", "step-up-sip-calculator"]
-    .map((slug) => calcs.find((c) => c.slug === slug))
-    .filter((c) => c !== undefined);
+  // Four of the most used, each with its icon; the rest are a click away
+  const featuredCalcs = (
+    [
+      ["sip-calculator", "growth"],
+      ["income-tax-calculator", "percent"],
+      ["home-loan-emi-calculator", "home"],
+      ["ppf-calculator", "shield"],
+    ] as const
+  ).flatMap(([slug, icon]) => {
+    const c = calcs.find((x) => x.slug === slug);
+    return c ? [{ ...c, icon }] : [];
+  });
   const ipos = getIpos();
 
-  const topics = [
-    { label: "IPOs and GMP", note: `${ipos.length} issues tracked`, href: "/ipo/" },
-    { label: "Quarterly results", note: `${all.filter((a) => a.kicker === "Results").length} results covered`, href: "/news/?topic=Results" },
-    { label: "Company analysis", note: `${getArticlesBySection("share-analysis").length} companies`, href: "/share-analysis/" },
-    { label: "Personal finance", note: `${getArticlesBySection("personal-finance").length} guides`, href: "/personal-finance/" },
-    { label: "Calculators", note: `${calcs.length} tools`, href: "/calculators/" },
+  const topics: { label: string; note: string; href: string; icon: IconName }[] = [
+    { label: "IPOs and GMP", note: `${ipos.length} issues tracked`, href: "/ipo/", icon: "bell" },
+    { label: "Quarterly results", note: `${all.filter((a) => a.kicker === "Results").length} results covered`, href: "/news/?topic=Results", icon: "bars" },
+    { label: "Company analysis", note: `${getArticlesBySection("share-analysis").length} companies`, href: "/share-analysis/", icon: "building" },
+    { label: "Personal finance", note: `${getArticlesBySection("personal-finance").length} guides`, href: "/personal-finance/", icon: "wallet" },
+    { label: "Calculators", note: `${calcs.length} tools`, href: "/calculators/", icon: "calculator" },
   ];
 
   return (
@@ -101,16 +112,19 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* What we cover: the five doors into the site */}
-        <ul aria-label="What we cover" className="mt-6 grid grid-cols-2 border-l border-t border-rule sm:grid-cols-3 lg:grid-cols-5">
+        {/* What we cover: the five doors into the site. A list until there is room for all five in a row */}
+        <ul aria-label="What we cover" className="mt-6 grid border-l border-t border-rule lg:grid-cols-5">
           {topics.map((t) => (
             <li key={t.href} className="border-b border-r border-rule">
-              <Link prefetch={false} href={t.href} className="group flex h-full items-center justify-between gap-3 p-5 hover:bg-paper-2">
-                <span>
-                  <span className="block font-serif text-base font-bold tracking-tight text-ink">{t.label}</span>
-                  <span className="pm-meta mt-1 block">{t.note}</span>
+              <Link prefetch={false} href={t.href} className="group flex h-full items-center justify-between gap-3 px-5 py-4 hover:bg-paper-2 lg:py-5">
+                <span className="flex items-center gap-4 lg:gap-3.5">
+                  <Icon name={t.icon} size={22} className="shrink-0 text-ink-2 group-hover:text-accent" />
+                  <span>
+                    <span className="block font-serif text-base font-bold tracking-tight text-ink">{t.label}</span>
+                    <span className="pm-meta mt-1 block">{t.note}</span>
+                  </span>
                 </span>
-                <span className="pm-arrow text-faint group-hover:text-ink" aria-hidden>
+                <span className="pm-arrow text-faint group-hover:text-ink lg:hidden" aria-hidden>
                   →
                 </span>
               </Link>
@@ -119,12 +133,12 @@ export default function HomePage() {
         </ul>
       </section>
 
-      {/* Latest news: one lead, three after it ------------------------------------------------ */}
+      {/* Latest news: one lead, two after it --------------------------------------------------- */}
       <section className="pm-section wrap" aria-labelledby="news-title">
         <div id="news-title">
           <SectionIntro eyebrow="Latest news" title="What moved today." soft="Results, IPOs and the market, explained." href="/news/" linkLabel="All news" />
         </div>
-        <article className="group grid gap-6 border border-rule md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] md:gap-0">
+        <article className="pm-lift group grid gap-6 border border-rule bg-white md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] md:gap-0">
           <Link prefetch={false} href={lead.path} tabIndex={-1} aria-hidden className="block">
             <Photo image={lead.image} sizes="(min-width: 1024px) 640px, 100vw" crop="standard" />
           </Link>
@@ -139,15 +153,17 @@ export default function HomePage() {
             <Meta story={lead} />
           </div>
         </article>
-        <div className="mt-6 grid gap-6 md:grid-cols-3">
+        <div className="mt-6 grid gap-6 md:grid-cols-2">
           {latest.map((s) => (
-            <article key={s.slug} className="group border border-rule">
-              <Link prefetch={false} href={s.path} className="block">
-                <Photo image={s.image} sizes="(min-width: 768px) 400px, 100vw" crop="standard" />
-                <div className="p-5">
-                  <Kicker label={s.kicker} />
-                  <h3 className="mt-2 font-serif text-lg font-bold leading-snug tracking-tight text-ink group-hover:underline group-hover:decoration-accent group-hover:underline-offset-4">{s.title}</h3>
-                  <Meta story={s} className="mt-3" />
+            <article key={s.slug} className="pm-lift group border border-rule bg-white">
+              <Link prefetch={false} href={s.path} className="grid h-full grid-cols-[minmax(0,2fr)_minmax(0,3fr)] items-stretch">
+                <Photo image={s.image} sizes="(min-width: 768px) 260px, 40vw" crop="standard" />
+                <div className="flex flex-col justify-between gap-4 p-5">
+                  <div>
+                    <Kicker label={s.kicker} />
+                    <h3 className="mt-2 font-serif text-lg font-bold leading-snug tracking-tight text-ink group-hover:underline group-hover:decoration-accent group-hover:underline-offset-4">{s.title}</h3>
+                  </div>
+                  <Meta story={s} />
                 </div>
               </Link>
             </article>
@@ -170,20 +186,14 @@ export default function HomePage() {
         <div id="analysis-title">
           <SectionIntro eyebrow="Share analysis" title="Companies, read as businesses." soft="Model, financials, valuation and risks." href="/share-analysis/" linkLabel="All analysis" />
         </div>
-        <div className="grid gap-6 md:grid-cols-3">
+        {/* A swipeable row on phones, three across from 768px */}
+        <ul className="no-scrollbar relative -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-1 md:mx-0 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-0 md:pb-0">
           {analysis.map((s) => (
-            <article key={s.slug} className="group border border-rule">
-              <Link prefetch={false} href={s.path} className="block">
-                <Photo image={s.image} sizes="(min-width: 768px) 400px, 100vw" crop="standard" />
-                <div className="p-5">
-                  <h3 className="font-serif text-lg font-bold leading-snug tracking-tight text-ink group-hover:underline group-hover:decoration-accent group-hover:underline-offset-4">{s.title}</h3>
-                  <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-ink-2">{s.standfirst}</p>
-                  <p className="pm-meta mt-4">{s.readTime} min read</p>
-                </div>
-              </Link>
-            </article>
+            <li key={s.slug} className="w-[84%] shrink-0 snap-start md:w-auto">
+              <CompanyCard story={s} />
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
 
       {/* Calculators ------------------------------------------------------------------------------ */}
@@ -192,11 +202,12 @@ export default function HomePage() {
           <div id="calc-title">
             <SectionIntro eyebrow="Calculators" title="Plan with numbers." soft={`${calcs.length} calculators that show their working.`} href="/calculators/" linkLabel="All calculators" />
           </div>
-          <ul className="grid border-l border-t border-rule bg-white sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="grid grid-cols-2 border-l border-t border-rule bg-white lg:grid-cols-4">
             {featuredCalcs.map((c) => (
               <li key={c.slug} className="border-b border-r border-rule">
-                <Link prefetch={false} href={`/calculators/${c.slug}/`} className="group flex h-full flex-col justify-between gap-6 p-6 hover:bg-paper-2">
+                <Link prefetch={false} href={`/calculators/${c.slug}/`} className="group flex h-full flex-col justify-between gap-6 p-4 hover:bg-paper-2 sm:p-6 md:gap-8 md:p-7">
                   <span>
+                    <Icon name={c.icon} size={28} className="mb-4 text-ink group-hover:text-accent md:mb-6" />
                     <span className="block font-serif text-lg font-bold tracking-tight text-ink">{c.name.replace(" Calculator", "")}</span>
                     <span className="mt-1.5 block text-sm leading-snug text-muted">{c.short}</span>
                   </span>

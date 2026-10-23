@@ -77,6 +77,9 @@ export function ArticleView({ article }: { article: Article }) {
     .map(toCard);
   const calcs = (CALCS_FOR[article.subsection ?? ""] ?? CALCS_FOR[article.section] ?? []).map((s) => getCalculator(s)).filter((c) => c !== null);
   const updated = new Date(article.modified).getTime() - new Date(article.date).getTime() > 3600_000;
+  // Many migrated posts repeat the standfirst as their summary; show the box only when it adds something
+  const words = (t: string) => t.toLowerCase().replace(/[^a-z0-9₹%]+/g, " ").trim();
+  const summary = article.summary && words(article.summary) !== words(article.standfirst) ? article.summary : null;
 
   const stamp = (iso: string) => <time dateTime={iso}>{formatDateTime(iso)}</time>;
 
@@ -91,10 +94,10 @@ export function ArticleView({ article }: { article: Article }) {
             <header>
               <Kicker label={article.kicker} className="kicker-rule" />
               <h1 className="headline mt-3 max-w-[22ch] text-balance text-3xl md:text-4xl xl:text-5xl">{article.title}</h1>
-              <p className="deck mt-4 max-w-[60ch] text-xl leading-normal md:mt-5 md:text-2xl md:leading-snug">{article.standfirst}</p>
+              <p className="deck mt-4 max-w-[62ch] text-lg leading-relaxed md:mt-5 md:text-xl md:leading-normal">{article.standfirst}</p>
 
-              {/* Byline, dates and read time as one ruled dateline, the share tools at its end */}
-              <div className="mt-6 flex flex-col gap-3 border-y border-ink py-3">
+              {/* Byline, dates and read time as one ruled dateline; the share tools sit beside it when there is room */}
+              <div className="mt-6 flex flex-wrap items-center justify-between gap-x-8 gap-y-3 border-y border-ink py-3">
                 <div className="flex min-w-0 items-center gap-3">
                   <AuthorAvatar author={author} size={44} />
                   <dl className="dateline border-t-0">
@@ -123,9 +126,7 @@ export function ArticleView({ article }: { article: Article }) {
                     </div>
                   </dl>
                 </div>
-                <div className="border-t border-rule pt-3">
-                  <ShareButtons title={article.title} path={article.path} compact />
-                </div>
+                <ShareButtons title={article.title} path={article.path} compact />
               </div>
             </header>
 
@@ -143,9 +144,9 @@ export function ArticleView({ article }: { article: Article }) {
 
             {/* Reading column: one measure (66ch of body type) for everything the reader reads */}
             <div className="mt-8 max-w-[66ch] text-lg">
-              {article.summary || headings.length > 1 ? (
+              {summary || headings.length > 1 ? (
                 <div className="mb-8 space-y-6">
-                  {article.summary ? <KeyTakeaways text={article.summary} /> : null}
+                  {summary ? <KeyTakeaways text={summary} /> : null}
                   <TableOfContents headings={headings} variant="inline" />
                 </div>
               ) : null}

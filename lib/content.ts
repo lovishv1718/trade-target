@@ -10,6 +10,7 @@ import sectionsJson from "@/content/sections.json";
 import editorialJson from "@/content/editorial.json";
 import photoCreditsJson from "@/content/photo-credits.json";
 import calculatorsJson from "@/content/calculators.json";
+import companiesJson from "@/content/companies.json";
 
 export type ArticleImage = {
   src: string;
@@ -194,6 +195,13 @@ export function getCalculators(): CalculatorMeta[] {
 
 export function getCalculator(slug: string) {
   return calculatorsJson.find((c) => c.slug === slug) ?? null;
+}
+
+export type Company = { name: string; ticker: string; mark: string; sector: string; covers: string[] };
+
+/** The company behind a share-analysis story: name, NSE symbol, sector and what the analysis covers. */
+export function getCompany(slug: string): Company | null {
+  return (companiesJson as Record<string, Company>)[slug] ?? null;
 }
 
 /** Breadcrumb trail for an article permalink. */

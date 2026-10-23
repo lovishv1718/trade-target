@@ -122,9 +122,45 @@ export function IpoDashboard({ ipos, buildDate }: { ipos: Ipo[]; buildDate: stri
           </p>
         </SectionHeader>
       </div>
-      <p className="scroll-hint mt-3">Swipe the table sideways for more columns. The company name stays in view.</p>
+      {/* Phones: one card per issue with the figures that decide it; the full table from 768px */}
+      {rows.length ? (
+        <ul className="mt-4 grid gap-3 md:hidden" aria-label={`${boardName} IPOs`}>
+          {rows.map(({ ipo, status }) => (
+            <li key={ipo.slug} className="border border-rule bg-white" data-live={status === "open" || undefined}>
+              <Link prefetch={false} href={`/ipo/${ipo.slug}/`} className="block p-4">
+                <span className="flex items-start justify-between gap-3">
+                  <span className="min-w-0">
+                    <span className="block font-serif text-lg font-bold leading-snug tracking-tight text-ink">{ipo.name}</span>
+                    <span className="mt-0.5 block text-xs text-muted">
+                      {ipo.sector}
+                      {ipo.sample ? <span className="text-faint"> · sample</span> : null}
+                    </span>
+                  </span>
+                  <StatusPill status={status} />
+                </span>
+                <span className="mt-4 grid grid-cols-3 gap-3 border-t border-rule pt-3 text-sm">
+                  <span>
+                    <span className="pm-meta block">Dates</span>
+                    <span className="mt-1 block tabular text-ink">{dateRange(ipo)}</span>
+                  </span>
+                  <span>
+                    <span className="pm-meta block">Price band</span>
+                    <span className="mt-1 block tabular text-ink">{priceBandLabel(ipo)}</span>
+                  </span>
+                  <span>
+                    <span className="pm-meta block">GMP</span>
+                    <span className="mt-1 block [&_.gmp-bar]:hidden">
+                      <GmpCell ipo={ipo} scale={scale} />
+                    </span>
+                  </span>
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      ) : null}
 
-      <div className="table-wrap table-scroll mt-3" tabIndex={0} role="region" aria-label={`${boardName} IPOs table`}>
+      <div className={`table-wrap table-scroll mt-3 ${rows.length ? "hidden md:block" : ""}`} tabIndex={0} role="region" aria-label={`${boardName} IPOs table`}>
         <table className="data-table min-w-[960px]">
           <caption className="sr-only">
             {boardName} IPOs, status filter: {filterLabel}. GMP and listing gain show a plus or minus sign.
@@ -179,7 +215,7 @@ export function IpoDashboard({ ipos, buildDate }: { ipos: Ipo[]; buildDate: stri
                       </Link>
                       <span className="mt-0.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-xs font-normal text-muted">
                         {ipo.sector}
-                        {ipo.sample ? <span className="border border-company-mark px-1 text-2xs font-bold uppercase leading-snug tracking-caps text-company">Sample</span> : null}
+                        {ipo.sample ? <span className="text-faint">· sample</span> : null}
                       </span>
                     </th>
                     <td className="whitespace-nowrap tabular">{dateRange(ipo)}</td>

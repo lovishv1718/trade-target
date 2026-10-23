@@ -3,9 +3,9 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Thin progress rule fixed to the top of the viewport, filled by how far the reader
- * is through the element with `targetId`. Transform only (scaleX), one write per frame.
- * White with difference blending reads as ink on paper and stays visible over the black nav.
+ * Thin progress rule in the accent, fixed along the bottom edge of the sticky nav bar and filled
+ * by how far the reader is through the element with `targetId`. Transform only (scaleX), one
+ * write per frame.
  */
 export function ReadingProgress({ targetId }: { targetId: string }) {
   const bar = useRef<HTMLDivElement>(null);
@@ -41,7 +41,7 @@ export function ReadingProgress({ targetId }: { targetId: string }) {
     <div
       ref={bar}
       aria-hidden
-      className="pointer-events-none fixed left-0 top-0 z-[45] h-[3px] w-full origin-left bg-white mix-blend-difference transition-transform duration-100 ease-out will-change-transform motion-reduce:transition-none print:hidden"
+      className="pointer-events-none fixed left-0 top-[calc(var(--nav-h)-1px)] z-[45] h-[2px] w-full origin-left bg-accent transition-transform duration-100 ease-out will-change-transform motion-reduce:transition-none print:hidden"
       style={{ transform: "scaleX(0)" }}
     />
   );
