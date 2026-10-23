@@ -401,7 +401,7 @@ export default function HomePage() {
         <LearnAccordion
           groups={groups}
           intro={
-            <div className="lg:px-5">
+            <div key="intro" className="lg:px-5">
               <p className="eyebrow">Learn</p>
               <h2 id="learn-title" className="hm-title mt-5">
                 <span className="block">Learn to think</span>

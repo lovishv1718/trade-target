@@ -3,19 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { LogoArt } from "../logo";
 import { openSearch } from "../search/search-trigger";
 
 type NavItem = { label: string; href: string };
 type MenuItem = NavItem & { children: NavItem[] };
-
-function ArrowMark() {
-  return (
-    <svg aria-hidden viewBox="0 0 24 21" className="hm-mark" fill="none" stroke="currentColor">
-      <path d="M2.4 19.6L19 3" strokeWidth="3.9" />
-      <path d="M9.5 2.3H20V12.5" strokeWidth="3.6" />
-    </svg>
-  );
-}
 
 function SearchIcon() {
   return (
@@ -35,7 +27,7 @@ function LinkArrow() {
 }
 
 /**
- * One bar, as in the reference design: the mark and wordmark, the section links in mono capitals,
+ * One bar, as in the reference design: TradeTarget's own logo, the section links in mono capitals,
  * search and the writers button. It sticks to the top. Below 1280px the links move into a drawer.
  */
 export function SiteNav({ items, menu }: { items: NavItem[]; menu: MenuItem[] }) {
@@ -84,8 +76,7 @@ export function SiteNav({ items, menu }: { items: NavItem[]; menu: MenuItem[] })
         {/* From 1280px every position follows the design, drawn at 1600px wide (1 design px = --u) */}
         <nav aria-label="Main" className="hm-bar flex h-[85px] items-center">
           <Link href="/" aria-label="TradeTarget home" className="hm-bar-logo flex shrink-0 items-center">
-            <ArrowMark />
-            <span className="pm-wordmark">tradetarget</span>
+            <LogoArt variant="clear" height={64} eager alt="" />
           </Link>
           <ul className="hm-bar-links hidden items-center xl:flex">
             {items.map((item) => (
@@ -130,7 +121,7 @@ export function SiteNav({ items, menu }: { items: NavItem[]; menu: MenuItem[] })
           className={`relative flex h-full w-[min(380px,88vw)] flex-col bg-white text-ink shadow-overlay transition-transform duration-200 ease-out ${open ? "translate-x-0" : "translate-x-full"}`}
         >
           <div className="flex shrink-0 items-center justify-between border-b border-rule py-3 pl-5 pr-3">
-            <span className="pm-wordmark">tradetarget</span>
+            <LogoArt variant="clear" height={44} alt="TradeTarget" />
             <button ref={closeButton} type="button" onClick={() => close()} aria-label="Close menu" className="pm-icon-btn">
               <svg aria-hidden width="12" height="12" viewBox="0 0 12 12" stroke="currentColor" strokeWidth="1.6">
                 <path d="M1 1l10 10M11 1L1 11" />

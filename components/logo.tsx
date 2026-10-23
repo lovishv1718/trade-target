@@ -5,10 +5,12 @@ import type { CSSProperties } from "react";
 // The supplied logo files, used exactly as delivered. Each has wide built-in margins, so the
 // component frames the artwork box (measured in the file's own pixels) instead of the whole file.
 //   full: bull above the black wordmark. Delivered on a near-white ground, so it belongs on white.
+//   clear: the full logo cut to its artwork with the white ground taken out, for the ivory header.
 //   mark: the bull alone, transparent. Used for compact placements, on black, and as the favicon.
 // A white-wordmark file for dark bands has not arrived yet; until it does, `inverse` shows the mark.
 const ASSETS = {
   full: { src: "/brand/trade-target-logo.webp", file: { w: 1254, h: 1254 }, box: { x: 148, y: 296, w: 976, h: 681 }, clear: 85 },
+  clear: { src: "/brand/trade-target-logo-clear.webp", file: { w: 488, h: 341 }, box: { x: 0, y: 0, w: 488, h: 341 }, clear: 43 },
   mark: { src: "/brand/trade-target-mark.webp", file: { w: 1270, h: 1239 }, box: { x: 47, y: 269, w: 1198, h: 726 }, clear: 109 },
 };
 

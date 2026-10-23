@@ -599,16 +599,12 @@
     font-size: 0.6875rem;
     letter-spacing: 0.01em;
   }
-  /* A rule after every quote, so the join between the two copies of the moving track matches */
+  /* The design's 29px hairlines, one after every quote, so the join between the two copies of
+     the moving track matches */
   .pm-tape li {
-    border-right: 1px solid #3a3835;
-  }
-  /* The still strip on a wide screen, measured from the design: 10px type, 29px hairlines, the
-     row set 49px right of centre and a wider step after the first quote */
-  .hm-tape-still {
-    padding-left: 3.0625vw;
-    font-size: 0.625rem;
-    letter-spacing: 0.075em;
+    height: 29px;
+    padding: 3px 19.5px 0 22px;
+    border-right: 1px solid #696b69;
   }
   .hm-tape-v {
     margin-left: 1.58em;
@@ -616,32 +612,12 @@
   .hm-tape-c {
     margin-left: 1.04em;
   }
-  .hm-tape-still li {
-    height: 29px;
-    padding: 3px 19.5px 0 22px;
-    border-right: 0;
-  }
-  /* The design's gap before each figure varies from quote to quote; kept, so its hairlines land
-     where it draws them */
-  .hm-tape-still li:nth-child(1) .hm-tape-v,
-  .hm-tape-still li:nth-child(2) .hm-tape-v {
-    margin-left: calc(1.58em - 1px);
-  }
-  .hm-tape-still li:nth-child(3) .hm-tape-v,
-  .hm-tape-still li:nth-child(4) .hm-tape-v {
-    margin-left: calc(1.58em - 8px);
-  }
-  .hm-tape-still li:nth-child(5) .hm-tape-v {
-    margin-left: calc(1.58em - 6px);
-  }
-  .hm-tape-still li:nth-child(6) .hm-tape-v {
-    margin-left: calc(1.58em + 2px);
-  }
-  .hm-tape-still li + li {
-    border-left: 1px solid #696b69;
-  }
-  .hm-tape-still li:nth-child(2) {
-    padding-left: 28.5px;
+  /* The design's 10px type, from where the bar has room for it */
+  @media (min-width: 1024px) {
+    .pm-tape {
+      font-size: 0.625rem;
+      letter-spacing: 0.075em;
+    }
   }
   .pm-header {
     position: sticky;
@@ -681,13 +657,6 @@
   .pm-nav-link:hover::after {
     transform: scaleX(1);
   }
-  .pm-wordmark {
-    font-family: "Helvetica Neue", Helvetica, var(--font-arimo), Arimo, Arial, sans-serif;
-    font-size: 1.5rem;
-    font-weight: 650;
-    letter-spacing: -0.035em;
-    color: #0b0b0b;
-  }
   .pm-icon-btn {
     display: inline-grid;
     place-items: center;
@@ -710,14 +679,6 @@
     .hm-bar {
       padding-inline: 2rem;
     }
-  }
-  .hm-bar-logo {
-    gap: 0.875rem;
-  }
-  .hm-mark {
-    width: 1.375rem;
-    height: 1.2rem;
-    color: #de6815;
   }
   .hm-bar-search {
     display: inline-grid;
@@ -766,15 +727,9 @@
       padding-left: calc(var(--u) * 54);
       padding-right: calc(var(--u) * 50);
     }
+    /* The logo keeps the slot the design's mark and wordmark take, so the links stay where drawn */
     .hm-bar-logo {
-      gap: calc(var(--u) * 18);
-    }
-    .hm-mark {
-      width: calc(var(--u) * 24);
-      height: calc(var(--u) * 21);
-    }
-    .pm-wordmark {
-      font-size: max(20px, calc(var(--u) * 29));
+      width: calc(var(--u) * 182);
     }
     .hm-bar-links {
       margin-left: calc(var(--u) * 187);
