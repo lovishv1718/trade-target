@@ -181,8 +181,8 @@ export function ArticleView({ article }: { article: Article }) {
             <div className="sticky top-20 space-y-10 pt-1">
               <TableOfContents headings={headings} variant="rail" />
               {calcs.length ? (
-                <div className="surface-ink border-t-3 border-learn px-4 pb-2 pt-3">
-                  <p className="kicker text-learn">Work it out</p>
+                <div className="border border-rule bg-white px-4 pb-2 pt-3">
+                  <p className="eyebrow">Work it out</p>
                   <ul className="mt-2 divide-y divide-rule">
                     {calcs.map((c) => (
                       <li key={c.slug}>

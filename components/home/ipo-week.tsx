@@ -24,7 +24,7 @@ export function IpoThisWeek({ ipos, buildDate }: { ipos: Ipo[]; buildDate: strin
     .sort((a, b) => statusOrder(a.status) - statusOrder(b.status));
 
   return (
-    <section aria-labelledby="ipo-week" className="surface-ink glass-navy terminal flex flex-col">
+    <section aria-labelledby="ipo-week" className="terminal flex flex-col border border-rule bg-white">
       <div className="terminal-head">
         <h2 id="ipo-week" className="terminal-title">
           IPO this week

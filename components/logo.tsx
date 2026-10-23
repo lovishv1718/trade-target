@@ -37,8 +37,9 @@ export function logoClearSpace(height: number, variant: Variant = "full") {
   return Math.round((a.clear * height) / a.box.h);
 }
 
-export function Logo({ variant = "full", height, inverse = false, eager = false, className = "" }: Props) {
-  const a = ASSETS[inverse ? "mark" : variant];
+/** The artwork alone, framed to its box, for placements that supply their own link and label. */
+export function LogoArt({ variant = "full", height, eager = false, alt = "TradeTarget home" }: { variant?: Variant; height: number; eager?: boolean; alt?: string }) {
+  const a = ASSETS[variant];
   const scale = height / a.box.h;
   const frame: CSSProperties = { width: Math.round(a.box.w * scale), height };
   const img: CSSProperties = {
@@ -50,11 +51,17 @@ export function Logo({ variant = "full", height, inverse = false, eager = false,
     top: -a.box.y * scale,
   };
   return (
+    // The frame reserves the exact box before the image arrives, so nothing shifts
+    <span className="relative block shrink-0 overflow-hidden" style={frame}>
+      <Image src={a.src} alt={alt} width={a.file.w} height={a.file.h} unoptimized loading={eager ? "eager" : "lazy"} style={img} />
+    </span>
+  );
+}
+
+export function Logo({ variant = "full", height, inverse = false, eager = false, className = "" }: Props) {
+  return (
     <Link href="/" className={`inline-block shrink-0 align-middle ${className}`}>
-      {/* The frame reserves the exact box before the image arrives, so nothing shifts */}
-      <span className="relative block overflow-hidden" style={frame}>
-        <Image src={a.src} alt="TradeTarget home" width={a.file.w} height={a.file.h} unoptimized loading={eager ? "eager" : "lazy"} style={img} />
-      </span>
+      <LogoArt variant={inverse ? "mark" : variant} height={height} eager={eager} />
     </Link>
   );
 }

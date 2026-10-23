@@ -1,303 +1,263 @@
-import Image from "next/image";
 import Link from "next/link";
-import hire from "@/content/hire.json";
-import { FrontHero, Glance } from "@/components/home/front-hero";
-import { IpoPreviewTable, IpoThisWeek } from "@/components/home/ipo-week";
-import { CommoditiesCard, MarketsBoard } from "@/components/home/markets-board";
-import { MiniSip } from "@/components/home/mini-sip";
+import { IpoDesk } from "@/components/home/ipo-desk";
 import { JsonLd } from "@/components/json-ld";
 import { Kicker } from "@/components/kicker";
-import { NewsletterBand } from "@/components/newsletter-band";
+import { NewsletterForm } from "@/components/newsletter-form";
 import { Photo } from "@/components/photo";
-import { Seen, Stagger } from "@/components/listing/stagger";
-import { Scroller } from "@/components/scroller";
-import { SectionEnd, SectionHeader } from "@/components/section-header";
-import { StoryLink, StoryMeta, StoryRow, StoryTile } from "@/components/story";
-import { getArticleBySlug, getArticleCards, getArticlesBySection, getCalculators, getEditorial, getSubsections, toCard } from "@/lib/content";
+import { getArticleBySlug, getArticleCards, getArticlesBySection, getCalculators, getEditorial, toCard, type ArticleCard } from "@/lib/content";
+import { formatDate } from "@/lib/format";
 import { getIpos, istToday } from "@/lib/ipo";
 
+/** Date and read time, set in the mono label voice */
+function Meta({ story, className = "" }: { story: ArticleCard; className?: string }) {
+  return (
+    <p className={`pm-meta ${className}`}>
+      <time dateTime={story.date}>{formatDate(story.date)}</time> · {story.readTime} min read
+    </p>
+  );
+}
+
+/** A section's opening: the bracketed eyebrow, a two-tone title and an optional link to the whole section */
+function SectionIntro({ eyebrow, title, soft, href, linkLabel }: { eyebrow: string; title: string; soft: string; href?: string; linkLabel?: string }) {
+  return (
+    <div className="mb-10 flex flex-wrap items-end justify-between gap-6 md:mb-14">
+      <div className="max-w-2xl">
+        <p className="eyebrow">{eyebrow}</p>
+        <h2 className="pm-title mt-4">
+          {title} <span className="soft">{soft}</span>
+        </h2>
+      </div>
+      {href ? (
+        <Link prefetch={false} href={href} className="link-more text-ink">
+          {linkLabel} <span className="pm-arrow" aria-hidden>→</span>
+        </Link>
+      ) : null}
+    </div>
+  );
+}
+
 export default function HomePage() {
-  const ed = getEditorial().homepage;
+  const ed = getEditorial();
   const all = getArticleCards();
-  const lead = toCard(getArticleBySlug(ed.lead)!);
-  const secondary = ed.secondary.map((s) => toCard(getArticleBySlug(s)!));
-  const used = new Set([lead.slug, ...secondary.map((s) => s.slug)]);
-  const latest = all.filter((a) => !used.has(a.slug) && (a.section === "news" || a.section === "ipo" || a.section === "blog-junction")).slice(0, 7);
-  latest.forEach((a) => used.add(a.slug));
-
-  const shareLead = toCard(getArticleBySlug(ed.shareAnalysisLead)!);
-  const shareRest = getArticlesBySection("share-analysis").filter((a) => a.slug !== shareLead.slug).map(toCard).slice(0, 4);
-  const smiq = getArticlesBySection("stock-market-iq").map(toCard).slice(0, 7);
-  const pfLead = toCard(getArticleBySlug(ed.personalFinanceLead)!);
-  const pfRest = getArticlesBySection("personal-finance").filter((a) => a.slug !== pfLead.slug).map(toCard).slice(0, 6);
-  const funds = getArticlesBySection("blog-junction").filter((a) => !used.has(a.slug)).map(toCard).slice(0, 4);
-  const subs = getSubsections();
+  const today = [ed.homepage.lead, ...ed.homepage.secondary].map((s) => toCard(getArticleBySlug(s)!)).slice(0, 3);
+  const used = new Set(today.map((s) => s.slug));
+  const newsroom = all.filter((a) => a.section === "news" || a.section === "ipo" || ed.newsTopics.includes(a.kicker));
+  const [lead, ...rest] = newsroom.filter((a) => !used.has(a.slug));
+  const latest = rest.slice(0, 3);
+  const analysis = getArticlesBySection("share-analysis").map(toCard).slice(0, 3);
+  const learn = getArticlesBySection("stock-market-iq").map(toCard).slice(0, 4);
+  const money = getArticlesBySection("personal-finance").map(toCard).slice(0, 4);
   const calcs = getCalculators();
+  const featuredCalcs = ["sip-calculator", "income-tax-calculator", "home-loan-emi-calculator", "ppf-calculator", "fd-calculator", "retirement-calculator", "epf-calculator", "step-up-sip-calculator"]
+    .map((slug) => calcs.find((c) => c.slug === slug))
+    .filter((c) => c !== undefined);
   const ipos = getIpos();
-  const buildDate = istToday();
-  // What each section ending reports is left to read
-  const topics = getEditorial().newsTopics;
-  const newsCount = all.filter((a) => a.section === "news" || a.section === "ipo" || topics.includes(a.kicker)).length;
-  const count = (section: string) => getArticlesBySection(section).length;
-  const mainboard = ipos.filter((i) => i.board === "mainboard").length;
 
-  // The page runs in a repeating beat: a text section on paper, a data or visual section on
-  // paper-2, then a tool or commercial block on ink. Each band type carries its own spacing.
+  const topics = [
+    { label: "IPOs and GMP", note: `${ipos.length} issues tracked`, href: "/ipo/" },
+    { label: "Quarterly results", note: `${all.filter((a) => a.kicker === "Results").length} results covered`, href: "/news/?topic=Results" },
+    { label: "Company analysis", note: `${getArticlesBySection("share-analysis").length} companies`, href: "/share-analysis/" },
+    { label: "Personal finance", note: `${getArticlesBySection("personal-finance").length} guides`, href: "/personal-finance/" },
+    { label: "Calculators", note: `${calcs.length} tools`, href: "/calculators/" },
+  ];
+
   return (
     <>
-      <h1 className="sr-only">TradeTarget: stock market, IPO and personal finance news</h1>
+      <h1 className="sr-only">TradeTarget: Indian stock market, IPO and personal finance news</h1>
 
-      {/* Front page: the hero (folio line, switchable lead, numbered index) and the market terminal ---- */}
-      <div className="wrap pt-5 md:pt-6">
-        {/* Glance cards and the lead on the left, the market panels on the right (grid areas in glass.css) */}
-        <div className="home-top">
-          <div className="home-glance">
-            <Glance ipos={ipos} buildDate={buildDate} />
-          </div>
-          <div className="home-hero">
-            <FrontHero stories={[lead, ...secondary]} />
-          </div>
-          <div className="home-side grid content-start gap-4">
-            <MarketsBoard />
-            <CommoditiesCard />
-          </div>
-        </div>
-      </div>
-
-      {/* Text: latest news and most read ----------------------------------------------- */}
-      <div className="band band-text">
-        <div className="wrap grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px] xl:grid-cols-[minmax(0,1fr)_380px]">
-          <section aria-label="Latest news" className="glass p-5 md:p-7">
-            <SectionHeader title="Latest news" href="/news/" accent="ink" more={false} />
-            <Stagger className="divide-y divide-rule">
-              {latest.map((s) => (
-                <StoryRow key={s.slug} story={s} standfirst />
-              ))}
-            </Stagger>
-            <SectionEnd
-              href="/news/"
-              label="All news"
-              accent="ink"
-              note={
-                <>
-                  <b className="stat">{latest.length}</b> of <b className="stat">{newsCount}</b> stories from the newsroom
-                </>
-              }
-            />
-          </section>
-          <aside className="grid content-start gap-6 md:grid-cols-2 lg:grid-cols-1">
-            <section aria-label="Most read" className="glass self-start p-5 md:p-6">
-              <SectionHeader title="Most read" accent="ink" pin={false} />
-              <ol className="divide-y divide-rule">
-                {[getArticleBySlug("employees-provident-fund-epf"), getArticleBySlug("ppf-interest-rate"), getArticleBySlug("section-80c"), getArticleBySlug("what-is-an-ipo"), getArticleBySlug("parag-parikh-flexi-cap-fund-vs-hdfc-flexi-cap-fund")]
-                  .filter((a) => a !== null)
-                  .map((a, i) => (
-                    <li key={a.slug}>
-                      <StoryLink story={toCard(a)} index={i + 1} />
-                    </li>
-                  ))}
-              </ol>
-            </section>
-            <IpoThisWeek ipos={ipos} buildDate={buildDate} />
-            <section aria-label="Hire our writers" className="surface-ink glass-navy self-start p-6">
-              <p className="kicker text-company">For brokers, AMCs and fintechs</p>
-              <p className="headline mt-2 text-xl">The writers behind these stories can write for you</p>
-              <Link prefetch={false} href="/hire-writers/" className="btn mt-5">
-                Hire our writers <span className="arrow" aria-hidden>→</span>
-              </Link>
-            </section>
-          </aside>
-        </div>
-      </div>
-
-      {/* Data: the IPO dashboard ----------------------------------------------------- */}
-      <section className="surface-paper-2 band band-data border-y border-rule" aria-label="IPO dashboard">
-        <div className="wrap">
-          <SectionHeader title="IPO dashboard" href="/ipo/" accent="ipo" more={false} dek="Mainboard issues, status from today’s date" />
-          <div className="mt-5">
-            <IpoPreviewTable ipos={ipos} buildDate={buildDate} />
-          </div>
-          <p className="mt-3 text-xs text-muted">Bonfiglioli, Jio Platforms, Paras Healthcare, Zetwerk and Tonbo use sample figures. GMP is unofficial.</p>
-          <SectionEnd href="/ipo/" label="Open the IPO dashboard" accent="ipo" weight="strong" note={`${mainboard} mainboard and ${ipos.length - mainboard} SME issues tracked, with dates, GMP and subscription`} />
-        </div>
-      </section>
-
-      {/* Tool: calculators ------------------------------------------------------------ */}
-      <section className="surface-ink band band-tool" aria-label="Calculators">
-        <div className="wrap">
-          <SectionHeader title="Calculators" href="/calculators/" accent="learn" more={false} />
-          <div className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-12">
-            <MiniSip prompt="Try it: what could a monthly SIP grow to?" />
-            <ul className="grid grid-cols-1 gap-x-6 self-start border-t border-rule sm:grid-cols-2">
-              {calcs
-                .filter((c) => c.slug !== "sip-calculator")
-                .slice(0, 12)
-                .map((c) => (
-                  <li key={c.slug} className="border-b border-rule">
-                    <Link prefetch={false} href={`/calculators/${c.slug}/`} className="link-row text-md">
-                      <span className="link-row-label">{c.name.replace(" Calculator", "")}</span>
-                      <span aria-hidden className="arrow">
-                        →
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-            </ul>
-          </div>
-          <SectionEnd href="/calculators/" label={`All ${calcs.length} calculators`} accent="learn" weight="strong" note="Investing, savings, retirement, loans and tax" />
-        </div>
-      </section>
-
-      {/* Text: Share Analysis, a lead and a list ------------------------------------------- */}
-      <section className="band band-text" aria-label="Share Analysis">
-        <div className="wrap">
-          <div className="glass p-5 md:p-7">
-            <SectionHeader title="Share Analysis" href="/share-analysis/" accent="company" more={false} />
-            <div className="mt-5 grid lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
-              <article className="story group pb-2 lg:border-r lg:border-rule lg:pb-0 lg:pr-8">
-                <Link prefetch={false} href={shareLead.path} className="grid gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-1 lg:gap-4">
-                  <Photo image={shareLead.image} sizes="(min-width: 1024px) 640px, (min-width: 768px) 360px, 100vw" crop={{ base: "standard", lg: "wide" }} />
-                  <div>
-                    <span className="kicker text-company">Fundamental analysis</span>
-                    <h3 className="headline mt-1.5 text-balance text-2xl md:text-3xl">{shareLead.title}</h3>
-                    <p className="deck mt-2 text-lg leading-normal">{shareLead.standfirst}</p>
-                    <StoryMeta story={shareLead} className="mt-3" />
-                  </div>
-                </Link>
-              </article>
-              <Stagger className="mt-4 divide-y divide-rule border-t border-rule lg:-mt-5 lg:border-t-0 lg:pl-8">
-                {shareRest.map((s) => (
-                  <StoryRow key={s.slug} story={s} />
-                ))}
-              </Stagger>
+      {/* Hero: the promise on the warm gradient, today's three stories beside it ---------------- */}
+      <section className="wrap pt-6 md:pt-8" aria-label="Introduction">
+        <div className="pm-grad grid lg:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)]">
+          <div className="flex flex-col justify-between gap-10 p-7 sm:p-10 lg:p-14">
+            <p className="font-mono text-[0.71875rem] font-medium uppercase tracking-[0.12em] text-white/80">Indian markets · IPOs · Personal finance</p>
+            <div>
+              <p className="pm-hero-title max-w-[15ch]">Understand the market before you invest.</p>
+              <p className="mt-6 max-w-[46ch] text-lg leading-relaxed text-white/90">
+                Results, IPOs, company analysis and personal finance, explained in plain language by people who follow India&apos;s markets every day.
+              </p>
             </div>
-            <SectionEnd
-              href="/share-analysis/"
-              label="All share analysis"
-              accent="company"
-              note={
-                <>
-                  <b className="stat">{count("share-analysis")}</b> companies analysed: financials, ratios and shareholding
-                </>
-              }
-            />
+            <div className="flex flex-wrap gap-3">
+              <Link prefetch={false} href="/ipo/" className="btn btn-on-grad">
+                Explore the IPO desk
+              </Link>
+              <Link prefetch={false} href="/news/" className="btn btn-on-grad-2">
+                Read today&apos;s news <span className="pm-arrow" aria-hidden>→</span>
+              </Link>
+            </div>
           </div>
-        </div>
-      </section>
-
-      {/* Visual: Stock Market IQ, a row that scrolls; the next card always peeks in ---------- */}
-      <section className="surface-paper-2 band band-data border-y border-rule" aria-label="Stock Market IQ">
-        <div className="wrap">
-          <SectionHeader title="Stock Market IQ" href="/stock-market-iq/" accent="learn" more={false} dek="Explainers in plain language" />
-          <p className="scroll-hint mt-4">Swipe sideways for more explainers</p>
-          <Scroller label="Stock Market IQ explainers" className="mt-3 lg:mt-5">
-            {smiq.map((s) => (
-              <div key={s.slug} className="w-[72%] sm:w-[42%] md:w-[30%] lg:w-[21%]">
-                <StoryTile story={s} sizes="(min-width: 1024px) 260px, (min-width: 768px) 30vw, 72vw" />
-              </div>
-            ))}
-          </Scroller>
-          <SectionEnd
-            href="/stock-market-iq/"
-            label="All explainers"
-            accent="learn"
-            weight="quiet"
-            note={smiq.length < count("stock-market-iq") ? `${smiq.length} of ${count("stock-market-iq")} explainers in this row` : `All ${smiq.length} explainers are in this row`}
-          />
-        </div>
-      </section>
-
-      {/* Commercial: content services ------------------------------------------------- */}
-      <section className="surface-ink band band-tool" aria-labelledby="hire-band">
-        <div className="wrap grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:items-center lg:gap-x-16">
-          {/* Arrives once: the amber rule draws across, then the pitch rises into place under it */}
-          <Seen className="hire-reveal">
-            <p className="kicker text-company">TradeTarget content services</p>
-            <h2 id="hire-band" className="headline mt-3 text-balance text-3xl md:text-4xl">
-              Finance writing for brokers, AMCs and fintechs
-            </h2>
-            <p className="deck mt-4 max-w-lg text-lg leading-relaxed">{hire.intro}</p>
-            <Link prefetch={false} href="/hire-writers/" className="btn mt-7">
-              Send us a brief <span className="arrow" aria-hidden>→</span>
-            </Link>
-          </Seen>
-          <div>
-            <p className="kicker text-muted">Teams we have written for</p>
-            <ul className="mt-3 grid grid-cols-3 border-l border-t border-rule">
-              {hire.clients.map((c) => (
-                <li key={c.name} className="flex min-h-28 flex-col items-center justify-center gap-2 border-b border-r border-rule p-3 text-center">
-                  <span className="block size-12 bg-white p-1">
-                    <Image src={c.logo} alt="" width={56} height={56} className="img-fade size-full object-contain" />
-                  </span>
-                  <span className="text-xs leading-snug text-ink-2">{c.name}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* Text: Personal Finance, a lead and four -------------------------------------- */}
-      <section className="band band-text" aria-label="Personal Finance">
-        <div className="wrap">
-          <div className="glass p-5 md:p-7">
-            <SectionHeader title="Personal Finance" href="/personal-finance/" accent="money" more={false} />
-            <ul aria-label="Personal Finance topics" className="flex flex-wrap gap-x-5 border-b border-rule">
-              {subs.map((s) => (
-                <li key={s.slug}>
-                  <Link prefetch={false} href={s.path} className="link-quiet inline-flex min-h-11 items-center text-sm font-semibold text-money">
-                    {s.name}
+          <div className="m-3 bg-white p-6 text-ink sm:m-4 sm:p-8 lg:my-5 lg:ml-0 lg:mr-5">
+            <p className="eyebrow">Today on TradeTarget</p>
+            <ol className="mt-5">
+              {today.map((s) => (
+                <li key={s.slug} className="border-t border-rule first:border-t-0">
+                  <Link prefetch={false} href={s.path} className="group block py-5">
+                    <Kicker label={s.kicker} />
+                    <span className="mt-2 block font-serif text-xl font-bold leading-snug tracking-tight text-ink group-hover:underline group-hover:decoration-accent group-hover:underline-offset-4">{s.title}</span>
+                    <Meta story={s} className="mt-3" />
                   </Link>
                 </li>
               ))}
-            </ul>
-            <div className="mt-6 grid gap-y-8 lg:grid-cols-2">
-              <article className="story group lg:border-r lg:border-rule lg:pr-8">
-                <Link prefetch={false} href={pfLead.path} className="block">
-                  <Photo image={pfLead.image} sizes="(min-width: 1024px) 590px, 100vw" crop={{ base: "standard", md: "panorama", lg: "standard" }} />
-                  <Kicker label={pfLead.kicker} className="mt-4 block" />
-                  <h3 className="headline mt-1.5 text-balance text-2xl md:text-3xl">{pfLead.title}</h3>
-                  <p className="deck mt-2 text-lg leading-normal">{pfLead.standfirst}</p>
-                </Link>
-                <StoryMeta story={pfLead} className="mt-3" />
-              </article>
-              <div className="grid grid-cols-2 content-start gap-x-4 gap-y-8 sm:gap-x-6 md:grid-cols-4 lg:grid-cols-2 lg:pl-8">
-                {pfRest.slice(0, 4).map((s) => (
-                  <StoryTile key={s.slug} story={s} headingSize="text-md leading-snug sm:text-lg" sizes="(min-width: 1024px) 280px, 50vw" />
-                ))}
-              </div>
+            </ol>
+          </div>
+        </div>
+
+        {/* What we cover: the five doors into the site */}
+        <ul aria-label="What we cover" className="mt-6 grid grid-cols-2 border-l border-t border-rule sm:grid-cols-3 lg:grid-cols-5">
+          {topics.map((t) => (
+            <li key={t.href} className="border-b border-r border-rule">
+              <Link prefetch={false} href={t.href} className="group flex h-full items-center justify-between gap-3 p-5 hover:bg-paper-2">
+                <span>
+                  <span className="block font-serif text-base font-bold tracking-tight text-ink">{t.label}</span>
+                  <span className="pm-meta mt-1 block">{t.note}</span>
+                </span>
+                <span className="pm-arrow text-faint group-hover:text-ink" aria-hidden>
+                  →
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* Latest news: one lead, three after it ------------------------------------------------ */}
+      <section className="pm-section wrap" aria-labelledby="news-title">
+        <div id="news-title">
+          <SectionIntro eyebrow="Latest news" title="What moved today." soft="Results, IPOs and the market, explained." href="/news/" linkLabel="All news" />
+        </div>
+        <article className="group grid gap-6 border border-rule md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] md:gap-0">
+          <Link prefetch={false} href={lead.path} tabIndex={-1} aria-hidden className="block">
+            <Photo image={lead.image} sizes="(min-width: 1024px) 640px, 100vw" crop="standard" />
+          </Link>
+          <div className="flex flex-col justify-between gap-6 px-6 pb-6 md:p-10">
+            <div>
+              <Kicker label={lead.kicker} />
+              <Link prefetch={false} href={lead.path} className="block">
+                <h3 className="mt-3 font-serif text-2xl font-bold leading-tight tracking-tight text-ink group-hover:underline group-hover:decoration-accent group-hover:underline-offset-4 md:text-3xl">{lead.title}</h3>
+              </Link>
+              <p className="mt-4 text-md leading-relaxed text-ink-2">{lead.standfirst}</p>
             </div>
-            <SectionEnd href="/personal-finance/" label="All personal finance" accent="money" note={`${count("personal-finance")} guides across ${subs.length} topics`} />
+            <Meta story={lead} />
           </div>
+        </article>
+        <div className="mt-6 grid gap-6 md:grid-cols-3">
+          {latest.map((s) => (
+            <article key={s.slug} className="group border border-rule">
+              <Link prefetch={false} href={s.path} className="block">
+                <Photo image={s.image} sizes="(min-width: 768px) 400px, 100vw" crop="standard" />
+                <div className="p-5">
+                  <Kicker label={s.kicker} />
+                  <h3 className="mt-2 font-serif text-lg font-bold leading-snug tracking-tight text-ink group-hover:underline group-hover:decoration-accent group-hover:underline-offset-4">{s.title}</h3>
+                  <Meta story={s} className="mt-3" />
+                </div>
+              </Link>
+            </article>
+          ))}
         </div>
       </section>
 
-      {/* Visual: Blog Junction, a reading list with pictures ---------------------------- */}
-      <section className="surface-paper-2 band band-data border-t border-rule" aria-label="Blog Junction">
+      {/* IPO desk ------------------------------------------------------------------------------- */}
+      <section className="pm-section bg-paper-2" aria-labelledby="ipo-title">
         <div className="wrap">
-          <SectionHeader title="Blog Junction" href="/blog-junction/" accent="money" more={false} dek="Fund comparisons and longer reads" />
-          {/* A reading list rather than a row of cards: image beside the text, two columns from tablet up */}
-          <div className="mt-2 grid md:grid-cols-2 md:gap-x-10">
-            {funds.map((s) => (
-              <article key={s.slug} className="story group border-b border-rule py-5 last:border-b-0 md:[&:nth-last-child(-n+2)]:border-b-0">
-                <Link prefetch={false} href={s.path} className="grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] items-start gap-4 sm:gap-5">
-                  <Photo image={s.image} sizes="(min-width: 1024px) 220px, (min-width: 768px) 180px, 40vw" crop="compact" />
-                  <div className="min-w-0">
-                    <Kicker label={s.kicker} />
-                    <h3 className="headline mt-1 text-lg md:text-xl">{s.title}</h3>
-                    <p className="mt-1.5 hidden text-md text-ink-2 sm:line-clamp-2">{s.standfirst}</p>
-                    <StoryMeta story={s} className="mt-2" />
-                  </div>
-                </Link>
-              </article>
-            ))}
+          <div id="ipo-title">
+            <SectionIntro eyebrow="IPO desk" title="Every issue in one place." soft="Status worked out from each issue's own dates." />
           </div>
-          <SectionEnd href="/blog-junction/" label="All of Blog Junction" accent="money" weight="quiet" note={`${funds.length} of ${count("blog-junction")} reads shown`} />
+          <IpoDesk ipos={ipos} buildDate={istToday()} />
         </div>
       </section>
 
-      {/* Tool: the morning brief, closing onto the footer ---------------------------------- */}
-      <NewsletterBand />
+      {/* Company analysis --------------------------------------------------------------------- */}
+      <section className="pm-section wrap" aria-labelledby="analysis-title">
+        <div id="analysis-title">
+          <SectionIntro eyebrow="Share analysis" title="Companies, read as businesses." soft="Model, financials, valuation and risks." href="/share-analysis/" linkLabel="All analysis" />
+        </div>
+        <div className="grid gap-6 md:grid-cols-3">
+          {analysis.map((s) => (
+            <article key={s.slug} className="group border border-rule">
+              <Link prefetch={false} href={s.path} className="block">
+                <Photo image={s.image} sizes="(min-width: 768px) 400px, 100vw" crop="standard" />
+                <div className="p-5">
+                  <h3 className="font-serif text-lg font-bold leading-snug tracking-tight text-ink group-hover:underline group-hover:decoration-accent group-hover:underline-offset-4">{s.title}</h3>
+                  <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-ink-2">{s.standfirst}</p>
+                  <p className="pm-meta mt-4">{s.readTime} min read</p>
+                </div>
+              </Link>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* Calculators ------------------------------------------------------------------------------ */}
+      <section className="pm-section bg-paper-2" aria-labelledby="calc-title">
+        <div className="wrap">
+          <div id="calc-title">
+            <SectionIntro eyebrow="Calculators" title="Plan with numbers." soft={`${calcs.length} calculators that show their working.`} href="/calculators/" linkLabel="All calculators" />
+          </div>
+          <ul className="grid border-l border-t border-rule bg-white sm:grid-cols-2 lg:grid-cols-4">
+            {featuredCalcs.map((c) => (
+              <li key={c.slug} className="border-b border-r border-rule">
+                <Link prefetch={false} href={`/calculators/${c.slug}/`} className="group flex h-full flex-col justify-between gap-6 p-6 hover:bg-paper-2">
+                  <span>
+                    <span className="block font-serif text-lg font-bold tracking-tight text-ink">{c.name.replace(" Calculator", "")}</span>
+                    <span className="mt-1.5 block text-sm leading-snug text-muted">{c.short}</span>
+                  </span>
+                  <span className="pm-meta flex items-center gap-2 text-ink">
+                    Open <span className="pm-arrow" aria-hidden>→</span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* Learn ---------------------------------------------------------------------------------------- */}
+      <section className="pm-section wrap" aria-labelledby="learn-title">
+        <div id="learn-title">
+          <SectionIntro eyebrow="Learn" title="Learn to think like an investor." soft="Explainers and money guides in plain language." />
+        </div>
+        <div className="grid gap-12 md:grid-cols-2">
+          {[
+            { name: "Stock Market IQ", href: "/stock-market-iq/", items: learn },
+            { name: "Personal Finance", href: "/personal-finance/", items: money },
+          ].map((col) => (
+            <div key={col.href}>
+              <div className="flex items-baseline justify-between border-b border-ink pb-3">
+                <h3 className="font-serif text-xl font-bold tracking-tight text-ink">{col.name}</h3>
+                <Link prefetch={false} href={col.href} className="link-more text-ink">
+                  All <span className="pm-arrow" aria-hidden>→</span>
+                </Link>
+              </div>
+              <ul>
+                {col.items.map((s) => (
+                  <li key={s.slug} className="border-b border-rule">
+                    <Link prefetch={false} href={s.path} className="group flex items-baseline justify-between gap-6 py-4">
+                      <span className="font-medium leading-snug text-ink group-hover:underline group-hover:decoration-accent group-hover:underline-offset-4">{s.title}</span>
+                      <span className="pm-meta shrink-0">{s.readTime} min</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* The morning brief ------------------------------------------------------------------------ */}
+      <section id="newsletter" className="surface-ink band-closing scroll-mt-20" aria-labelledby="brief-title">
+        <div className="wrap grid gap-10 py-16 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] md:items-end md:gap-16 md:py-24">
+          <div>
+            <p className="eyebrow">The morning brief</p>
+            <h2 id="brief-title" className="pm-title mt-4 text-white">
+              The market, before 8 am. <span className="text-white/50">No tips, no noise.</span>
+            </h2>
+            <p className="mt-5 max-w-lg text-lg leading-relaxed text-white/80">One email on trading days: IPOs opening that week, results due, and one clear explainer.</p>
+          </div>
+          <div>
+            <NewsletterForm id="home-brief" tone="dark" />
+            <p className="pm-meta mt-3">Free. Unsubscribe whenever you like.</p>
+          </div>
+        </div>
+      </section>
 
       <JsonLd
         data={{

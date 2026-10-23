@@ -2,25 +2,10 @@ import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";
 import { ACCENT_VAR } from "./kicker";
 
-/** Text colour for the "More" link, by section. company-mark is a fill colour, so Share Analysis links use company. */
-const LINK_TONE: Record<string, string> = {
-  ink: "text-ink",
-  news: "text-ink",
-  ipo: "text-ipo",
-  company: "text-company",
-  money: "text-money",
-  learn: "text-learn",
-  navy: "text-ink",
-  accent: "text-ink",
-  results: "text-company",
-  commodities: "text-ink",
-  funds: "text-money",
-};
-
 const ruleStyle = (accent: string) => ({ "--rule-color": ACCENT_VAR[accent] ?? accent }) as CSSProperties;
 
 /**
- * Section header: a 3px rule in the section colour, a serif title, an optional dek and an optional
+ * Section header: a rule (ink in the premium theme), a serif title, an optional dek and an optional
  * "More" link. It pins under the navigation bar while its section is on screen (md and up).
  * Pass `pin={false}` where a header sits in a short aside.
  */
@@ -63,7 +48,7 @@ export function SectionHeader({
         {children}
       </div>
       {href && more ? (
-        <Link prefetch={false} href={href} className={`link-more shrink-0 ${LINK_TONE[accent] ?? "text-ink"}`}>
+        <Link prefetch={false} href={href} className="link-more shrink-0 text-ink">
           {linkLabel} <span className="arrow" aria-hidden>→</span>
         </Link>
       ) : null}

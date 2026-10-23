@@ -3,6 +3,7 @@
 @import "./css/data.css";
 /* Tokens, base styles and the shared component system */
 @import "./css/system.css";
-/* The glass theme: cool light ground, rounded translucent panels, navy instrument panels.
-   Loaded last so it restyles the system's components without editing them one by one. */
-@import "./css/glass.css";
+/* The premium theme: white ground, ink type, hairlines, square corners and one warm accent,
+   after TradeTarget's own reference design. Loaded last so it restyles the system's components
+   in place. */
+@import "./css/premium.css";

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import site from "@/content/site.json";
 import { getCalculators, getSubsections } from "@/lib/content";
-import { Logo } from "../logo";
+import { LogoArt } from "../logo";
 
 // The .link-soft look: ink-2, ink and underlined on hover. Compact on a mouse, 44px tall on touch.
 const link = "link-soft";
@@ -49,7 +49,10 @@ export function Footer() {
       <div className="wrap pb-6 pt-10 md:pt-12">
         {/* Identity: mark, what we are, where to follow */}
         <div className="grid gap-6 border-b border-rule pb-8 md:grid-cols-[auto_minmax(0,1fr)_auto] md:items-center md:gap-8">
-          <Logo inverse height={56} />
+          <Link href="/" aria-label="TradeTarget home" className="flex items-center gap-2.5">
+            <LogoArt variant="mark" height={26} alt="" />
+            <span className="pm-wordmark">tradetarget</span>
+          </Link>
           <p className="max-w-md text-md leading-normal text-ink-2">{site.tagline}. Finance content writing for brokers, AMCs and fintechs.</p>
           <div>
             <p className="kicker text-muted">Follow us</p>
@@ -63,19 +66,6 @@ export function Footer() {
               ))}
             </ul>
           </div>
-        </div>
-
-        <div className="flex flex-col gap-2 border-b border-rule py-5 md:flex-row md:items-baseline md:gap-6">
-          <p className="kicker shrink-0 text-ink">Trending</p>
-          <ul className="flex flex-wrap items-center">
-            {site.trending.map((t) => (
-              <li key={t.href} className="flex items-center after:mx-3 after:h-3 after:w-px after:bg-rule-strong last:after:hidden">
-                <Link prefetch={false} href={t.href} className={`flex min-h-8 items-center pointer-coarse:min-h-11 ${link}`}>
-                  {t.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
         </div>
 
         {/* Sitemap */}

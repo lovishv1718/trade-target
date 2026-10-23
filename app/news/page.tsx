@@ -34,7 +34,7 @@ export default function NewsPage() {
           <div className="md:border-r md:border-rule md:pr-8">
             <LeadStory story={lead} priority sizes="(min-width: 1024px) 700px, (min-width: 768px) 440px, 100vw" />
           </div>
-          <div className="grid content-start gap-6 border-t-2 border-ink md:border-t-0 md:pl-8">
+          <div className="grid content-start gap-6 border-t border-rule md:border-t-0 md:pl-8">
             <StoryTile story={second} standfirst />
             <StoryTile story={third} />
           </div>
@@ -49,7 +49,7 @@ export default function NewsPage() {
               </Suspense>
             </div>
           </section>
-          <aside className="surface-ink grid content-start gap-px self-start bg-rule">
+          <aside className="grid content-start gap-6 self-start">
             <MarketsBoard />
             <IpoThisWeek ipos={getIpos()} buildDate={istToday()} />
           </aside>

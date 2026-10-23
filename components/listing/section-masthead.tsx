@@ -1,19 +1,16 @@
-import type { CSSProperties, ReactNode } from "react";
+import type { ReactNode } from "react";
 import { Breadcrumbs } from "../breadcrumbs";
-import { ACCENT_VAR } from "../kicker";
-
-const KICKER_TONE: Record<string, string> = { ink: "text-ink", ipo: "text-ipo", company: "text-company", money: "text-money", learn: "text-learn" };
 
 /**
  * Page head, the same on every section and index page: breadcrumbs, then a paper-2 masthead band
- * with a 3px rule in the section colour, an optional kicker, the display title and the deck. On
- * the right sits either the story count, set as a ledger figure, or any `aside` (figures, a
- * directory). `children` run full width under the title (topic tabs).
+ * with one ink hairline, an optional bracketed kicker, the display title and the deck. On the
+ * right sits either the story count, set as a figure, or any `aside` (figures, a directory).
+ * `children` run full width under the title (topic tabs). Every section shares the one look, so
+ * `accent` is accepted from callers but no longer changes the colour.
  */
 export function SectionMasthead({
   title,
   description,
-  accent = "ink",
   crumbs,
   crumb,
   kicker,
@@ -36,18 +33,18 @@ export function SectionMasthead({
     <div className="surface-paper-2 border-b border-rule">
       <div className="wrap pt-4 md:pt-6">
         <Breadcrumbs items={crumbs} current={crumb ?? title} />
-        <header className="mt-3 border-t-3 border-(--rule-color) pt-4 pb-6 md:pb-8" style={{ "--rule-color": ACCENT_VAR[accent] ?? ACCENT_VAR.ink } as CSSProperties}>
+        <header className="mt-3 border-t border-ink pt-5 pb-6 md:pb-8">
           <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between md:gap-10">
             <div className="min-w-0">
-              {kicker ? <p className={`kicker mb-2 ${KICKER_TONE[accent] ?? "text-ink"}`}>{kicker}</p> : null}
+              {kicker ? <p className="eyebrow mb-3">{kicker}</p> : null}
               <h1 className="headline max-w-[24ch] text-balance text-4xl md:text-5xl">{title}</h1>
               {description ? <p className="deck mt-3 max-w-2xl text-lg leading-normal md:text-xl">{description}</p> : null}
             </div>
             {aside ??
               (count !== undefined ? (
-                <p className="tabular shrink-0 border-l border-rule-strong pl-4 md:text-right">
-                  <span className="block text-3xl font-semibold leading-none text-ink">{count}</span>
-                  <span className="mt-1 block text-xs font-semibold uppercase tracking-caps text-muted">{count === 1 ? "story" : "stories"}</span>
+                <p className="shrink-0 border-l border-rule-strong pl-4 md:text-right">
+                  <span className="pm-figure block text-3xl leading-none">{String(count).padStart(2, "0")}</span>
+                  <span className="pm-meta mt-1.5 block">{count === 1 ? "story" : "stories"}</span>
                 </p>
               ) : null)}
           </div>

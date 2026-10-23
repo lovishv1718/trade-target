@@ -59,7 +59,7 @@ export default function CalculatorsHub() {
         {ORDER.map((group) => {
           const list = calcs.filter((c) => c.category === group);
           return (
-            <section key={group} aria-labelledby={`g-${group}`} className="grid gap-x-8 gap-y-3 border-t-3 border-learn pt-3 md:grid-cols-[15rem_1fr]">
+            <section key={group} aria-labelledby={`g-${group}`} className="grid gap-x-8 gap-y-3 border-t border-ink pt-3 md:grid-cols-[15rem_1fr]">
               <div>
                 <h2 id={`g-${group}`} className="headline text-xl md:text-2xl">
                   {group}

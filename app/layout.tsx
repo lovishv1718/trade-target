@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Source_Sans_3, Source_Serif_4 } from "next/font/google";
+import { Inter, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import site from "@/content/site.json";
 import { AskWidget } from "@/components/assistant/ask-widget";
 import { Footer } from "@/components/layout/footer";
@@ -7,10 +7,11 @@ import { Header } from "@/components/layout/header";
 import { SearchOverlay } from "@/components/search/search-overlay";
 import "./globals.css";
 
-// Variable fonts: one file per family covers every weight used. The serif also carries its
-// optical-size axis, so display headlines get the tighter Display cut automatically.
-const serif = Source_Serif_4({ subsets: ["latin"], axes: ["opsz"], variable: "--font-source-serif", display: "swap" });
-const sans = Source_Sans_3({ subsets: ["latin"], variable: "--font-source-sans", display: "swap" });
+// The reference design's three faces: a geometric display sans for headlines, Inter for reading
+// and interface, and a mono for labels and figures. Variable files cover every weight used.
+const display = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-jakarta", display: "swap" });
+const text = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jbmono", display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -26,12 +27,12 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0e1b30",
+  themeColor: "#0b0b0c",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-IN" className={`${serif.variable} ${sans.variable}`} suppressHydrationWarning>
+    <html lang="en-IN" className={`${display.variable} ${text.variable} ${mono.variable}`} suppressHydrationWarning>
       <head>
         {/* Flags scripting for the reveal styles, then marks every image as loaded once it decodes,
             so photographs wipe in. Registered before any image parses and independent of
