@@ -12,7 +12,7 @@ export function CompanyCard({ story, headingLevel = "h3" }: { story: ArticleCard
   const name = company?.name ?? story.title.replace(/\s*Fundamental Analysis\s*$/i, "");
   return (
     <article className="pm-card pm-lift group h-full">
-      <Link prefetch={false} href={story.path} className="flex h-full flex-col p-6 md:p-7">
+      <Link prefetch={false} href={story.path} className="flex h-full flex-col pt-6">
         <div className="flex items-start justify-between gap-4">
           <span aria-hidden className="pm-monogram">
             {company?.mark ?? name.slice(0, 2).toUpperCase()}
@@ -24,10 +24,10 @@ export function CompanyCard({ story, headingLevel = "h3" }: { story: ArticleCard
             </span>
           ) : null}
         </div>
-        <Heading className="mt-8 font-serif text-2xl font-bold leading-tight tracking-tight text-ink group-hover:underline group-hover:decoration-accent group-hover:underline-offset-4">{name}</Heading>
+        <Heading className="mt-8 font-serif text-3xl font-normal leading-[1.05] tracking-[-0.015em] text-ink group-hover:underline group-hover:decoration-accent-bright group-hover:decoration-1 group-hover:underline-offset-4">{name}</Heading>
         <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-ink-2">{story.standfirst}</p>
         {company ? (
-          <p className="mt-6 border-t border-rule pt-4 text-sm leading-relaxed text-muted">
+          <p className="mt-6 text-xs font-medium uppercase leading-relaxed tracking-[0.12em] text-muted">
             <span className="sr-only">Covers: </span>
             {company.covers.slice(0, 4).join(" · ")}
           </p>

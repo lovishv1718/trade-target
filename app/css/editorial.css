@@ -1,64 +1,65 @@
 /* ==========================================================================
-   Insights theme
+   Editorial theme
 
-   White and a warm off-white, near-black type, a bold serif for headlines and the orange
-   of the bull in TradeTarget's mark as the one accent. Bands alternate between the two
-   grounds; the tape, the morning brief and the footer sit on near-black. This file loads
-   after system.css and restyles its components in place, so every page takes the theme
-   without its markup changing.
+   After a fashion house's own pages: black on white, a high-contrast Didone at display
+   size, small letter-spaced capitals for labels, hairlines in place of boxes, square
+   black buttons and fields that are only an underline. Pictures run to the edges and
+   carry the colour. The orange of TradeTarget's reference is kept to a handful of marks:
+   the italic words of a headline, bracketed numbers, the active link, a call's arrow.
+   Text stays at reading size; only the labels are small. This file loads after
+   system.css and restyles its components in place.
 
    Colour roles:
-     ink            type, rules, the selected state, the dark bands
-     accent         the bull's orange: buttons, links, category labels, numbers
-     accent-bright  the same orange at display size only (headline words, rules, marks)
-     up / down      market direction, always with a sign or an arrow as well
+     ink      type, rules, buttons, the selected state
+     accent   the orange marks above, never a fill behind text
+     up/down  market direction, always with a sign or an arrow as well
    ========================================================================== */
 
 @theme static {
   --color-paper: #ffffff;
-  --color-paper-2: #faf7f3;
-  --color-paper-3: #f2ede6;
-  --color-ink: #121212; /* 18.4:1 on white */
-  --color-ink-2: #34322f; /* 12.2:1 */
-  --color-muted: #6b6762; /* 5.6:1 */
-  --color-faint: #a19c95; /* decorative only */
-  --color-rule: #ebe6df;
-  --color-rule-strong: #d8d1c7;
+  --color-paper-2: #f5f4f1;
+  --color-paper-3: #ecebe7;
+  --color-ink: #0a0a0a; /* 19.8:1 on white */
+  --color-ink-2: #262626; /* 15.1:1 */
+  --color-muted: #5f5f5f; /* 6.4:1 */
+  --color-faint: #9a9a9a; /* decorative only */
+  --color-rule: #e6e6e6;
+  --color-rule-strong: #cfcfcf;
 
-  --color-up: #0f8048; /* 5.0:1 on white */
-  --color-down: #c83a2b; /* 5.1:1 on white */
+  --color-up: #0b7a45; /* 5.4:1 on white */
+  --color-down: #c4372b; /* 5.2:1 on white */
   --color-up-bright: #46d98a;
   --color-down-bright: #ff7a66;
-  --color-success: #0f8048;
-  --color-error: #c83a2b;
+  --color-success: #0b7a45;
+  --color-error: #c4372b;
 
-  --color-ipo: #2b5d8a;
-  --color-company: #a8361a;
-  --color-company-mark: #e8521f;
-  --color-money: #0f8048;
-  --color-learn: #574a9e;
+  --color-ipo: #0a0a0a;
+  --color-company: #0a0a0a;
+  --color-company-mark: #e8603c;
+  --color-money: #0a0a0a;
+  --color-learn: #0a0a0a;
 
-  --color-accent: #d1441a; /* 4.6:1 on white: buttons and small text */
-  --color-accent-bright: #ee5622; /* 3.4:1: display sizes and marks only */
+  --color-accent: #c94a28; /* 4.6:1 on white: small text */
+  --color-accent-bright: #e8603c; /* the reference's orange: display sizes and marks */
   --color-accent-deep: #a8361a;
-  --color-accent-tint: #fdece4;
-  --color-dark: #121212;
-  --color-dark-2: #1c1c1c;
+  --color-accent-tint: #fcebe5;
+  --color-dark: #0a0a0a;
+  --color-dark-2: #161616;
 
-  --font-serif: var(--font-sourceserif), "Source Serif 4", ui-serif, Georgia, "Times New Roman", serif;
-  --font-sans: var(--font-inter), "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: var(--font-bodoni), "Bodoni Moda", "Didot", "Bodoni 72", ui-serif, Georgia, serif;
+  --font-sans: var(--font-inter), "Inter", "Helvetica Neue", Helvetica, Arial, ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-inter), "Inter", ui-sans-serif, system-ui, sans-serif;
 
-  --shadow-overlay: 0 24px 48px -16px rgb(18 18 18 / 0.2), 0 2px 6px rgb(18 18 18 / 0.06);
+  --shadow-overlay: 0 24px 48px -16px rgb(10 10 10 / 0.18), 0 2px 6px rgb(10 10 10 / 0.05);
 }
 
 :root {
   --focus: var(--color-ink);
   --surface: #ffffff;
-  --field-bg: #ffffff;
+  --field-bg: transparent;
   --btn-2-bg: #ffffff;
   --paper-light: #ffffff;
-  --paper-2-light: #faf7f3;
+  --paper-2-light: #f5f4f1;
   --photo-tone: transparent;
   --nav-h: 4.5rem;
 }
@@ -86,26 +87,26 @@
 @layer components {
   /* ---- Surfaces ----------------------------------------------------------------- */
   .surface-paper {
-    --color-ink: #121212;
-    --color-ink-2: #34322f;
-    --color-muted: #6b6762;
-    --color-faint: #a19c95;
-    --color-rule: #ebe6df;
-    --color-rule-strong: #d8d1c7;
+    --color-ink: #0a0a0a;
+    --color-ink-2: #262626;
+    --color-muted: #5f5f5f;
+    --color-faint: #9a9a9a;
+    --color-rule: #e6e6e6;
+    --color-rule-strong: #cfcfcf;
     --color-paper: #ffffff;
-    --color-paper-2: #faf7f3;
-    --color-up: #0f8048;
-    --color-down: #c83a2b;
-    --color-accent: #d1441a;
-    --focus: #121212;
+    --color-paper-2: #f5f4f1;
+    --color-up: #0b7a45;
+    --color-down: #c4372b;
+    --color-accent: #c94a28;
+    --focus: #0a0a0a;
     --surface: #ffffff;
-    --field-bg: #ffffff;
+    --field-bg: transparent;
     background-color: #ffffff;
   }
   .surface-paper-2 {
     background-color: var(--color-paper-2);
-    --surface: #faf7f3;
-    --btn-2-bg: #ffffff;
+    --surface: #f5f4f1;
+    --btn-2-bg: transparent;
   }
   .surface-ink {
     background-color: var(--color-dark);
@@ -113,31 +114,31 @@
     color: #ffffff;
     --color-ink: #ffffff;
     --color-ink-2: rgb(255 255 255 / 0.84);
-    --color-muted: #a8a49e; /* 7.9:1 on the dark ground */
-    --color-faint: #75716b;
-    --color-rule: rgb(255 255 255 / 0.12);
-    --color-rule-strong: rgb(255 255 255 / 0.24);
-    --color-paper: #121212;
-    --color-paper-2: #1c1c1c;
+    --color-muted: #a3a3a3; /* 8.4:1 on black */
+    --color-faint: #707070;
+    --color-rule: rgb(255 255 255 / 0.14);
+    --color-rule-strong: rgb(255 255 255 / 0.28);
+    --color-paper: #0a0a0a;
+    --color-paper-2: #161616;
     --color-up: #46d98a;
     --color-down: #ff7a66;
-    --color-ipo: #8fb5e0;
-    --color-company: #ffa27e;
-    --color-money: #46d98a;
-    --color-learn: #c4baf2;
-    --color-accent: #ff8a5c;
+    --color-ipo: #ffffff;
+    --color-company: #ffffff;
+    --color-money: #ffffff;
+    --color-learn: #ffffff;
+    --color-accent: #ff8a66;
     --focus: #ffffff;
-    --surface: #121212;
-    --field-bg: #1c1c1c;
+    --surface: #0a0a0a;
+    --field-bg: transparent;
     --btn-2-bg: transparent;
   }
 
   .wrap {
-    max-width: 1280px;
+    max-width: 1360px;
   }
   @media (min-width: 768px) {
     .wrap {
-      padding-inline: 2rem;
+      padding-inline: 2.5rem;
     }
   }
   .band-text {
@@ -162,11 +163,21 @@
   }
 
   /* ---- Type ------------------------------------------------------------------------ */
+  /* The Didone's display cut thins its hairlines to nothing below about 60px, where a 4 starts
+     to read as a 1. Headlines, card titles, figures and article headings take the sturdier text
+     cut; only the display sizes (hero, section titles, the menu) keep the fine one. */
+  .headline,
+  .font-serif,
+  .pm-figure,
+  .section-title,
+  .article-body h2,
+  .article-body h3 {
+    font-variation-settings: "opsz" 18;
+  }
   .headline {
     font-family: var(--font-serif);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    font-optical-sizing: auto;
+    font-weight: 500;
+    letter-spacing: -0.015em;
   }
   .deck {
     font-family: var(--font-sans);
@@ -175,40 +186,31 @@
   .kicker {
     font-family: var(--font-sans);
     font-size: 0.6875rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
+    font-weight: 600;
+    letter-spacing: 0.14em;
   }
   .kicker-pill {
     display: inline-flex;
     align-items: center;
     padding: 0.125rem 0.5rem;
-    border: 1px solid var(--color-rule);
-    border-radius: 3px;
-    background: var(--color-paper);
+    border: 1px solid var(--color-ink);
+    border-radius: 0;
+    background: transparent;
   }
-  /* Eyebrow: letter-spaced capitals led in by a short orange rule */
+  /* Eyebrow: small letter-spaced capitals, nothing more */
   .eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.875rem;
     font-family: var(--font-sans);
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.2em;
+    font-size: 0.71875rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--color-ink-2);
-  }
-  .eyebrow::before {
-    content: "";
-    width: 2rem;
-    height: 2px;
-    background: var(--color-accent-bright);
+    color: var(--color-ink);
   }
   .dateline dt,
   .mkt-stamp,
   .crumbs {
     font-family: var(--font-sans);
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
   }
   .crumbs {
     font-size: 0.6875rem;
@@ -221,44 +223,44 @@
     }
   }
 
-  /* ---- Buttons: orange, a small radius ------------------------------------------- */
+  /* ---- Buttons: square, black, small capitals -------------------------------------- */
   .btn {
-    --btn-bg: var(--color-accent);
+    --btn-bg: var(--color-ink);
     --btn-fg: #ffffff;
-    --btn-bd: var(--color-accent);
-    --btn-bg-h: var(--color-accent-deep);
+    --btn-bd: var(--color-ink);
+    --btn-bg-h: #2a2a2a;
     --btn-fg-h: #ffffff;
-    --btn-bd-h: var(--color-accent-deep);
-    --btn-px: 1.375rem;
-    border-radius: 4px;
+    --btn-bd-h: #2a2a2a;
+    --btn-px: 1.5rem;
+    border-radius: 0;
     font-family: var(--font-sans);
-    font-size: 0.9375rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    letter-spacing: 0;
-    text-transform: none;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
   }
   .surface-ink .btn {
-    --btn-bg: #ee5622;
-    --btn-fg: #ffffff;
-    --btn-bd: #ee5622;
-    --btn-bg-h: #d1441a;
-    --btn-fg-h: #ffffff;
-    --btn-bd-h: #d1441a;
+    --btn-bg: #ffffff;
+    --btn-fg: #0a0a0a;
+    --btn-bd: #ffffff;
+    --btn-bg-h: #e6e6e6;
+    --btn-fg-h: #0a0a0a;
+    --btn-bd-h: #e6e6e6;
   }
   .btn-secondary {
     --btn-bg: var(--btn-2-bg);
     --btn-fg: var(--color-ink);
-    --btn-bd: var(--color-rule-strong);
-    --btn-bg-h: var(--btn-2-bg);
-    --btn-fg-h: var(--color-ink);
+    --btn-bd: var(--color-ink);
+    --btn-bg-h: var(--color-ink);
+    --btn-fg-h: #ffffff;
     --btn-bd-h: var(--color-ink);
   }
   .surface-ink .btn-secondary {
     --btn-bg: transparent;
     --btn-fg: #ffffff;
-    --btn-bd: rgb(255 255 255 / 0.3);
-    --btn-bg-h: rgb(255 255 255 / 0.06);
-    --btn-fg-h: #ffffff;
+    --btn-bd: #ffffff;
+    --btn-bg-h: #ffffff;
+    --btn-fg-h: #0a0a0a;
     --btn-bd-h: #ffffff;
   }
   .btn-tertiary,
@@ -267,7 +269,7 @@
     --btn-bd: transparent;
     --btn-bg-h: transparent;
     --btn-bd-h: transparent;
-    font-size: var(--text-sm);
+    font-size: 0.75rem;
   }
   /* The theme's padding above outranks the base sizes, so restate them */
   .btn-text {
@@ -279,22 +281,37 @@
   .btn-icon {
     --btn-px: 0;
   }
-  .btn-lg {
-    --btn-h: 3.5rem;
-    --btn-px: 1.875rem;
-    font-size: 1rem;
+  /* The call to action as the house sets it: capitals on an underline, the arrow in orange */
+  .tt-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.25rem;
+    min-height: 2.75rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid var(--color-ink);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-ink);
+  }
+  .tt-cta .pm-arrow {
+    color: var(--color-accent-bright);
+  }
+  .tt-cta:hover {
+    border-bottom-color: var(--color-accent-bright);
   }
 
-  /* ---- Tags and chips -------------------------------------------------------------- */
+  /* ---- Tags and chips: square, small capitals -------------------------------------- */
   .tag,
   .chip {
-    border-radius: 4px;
+    border-radius: 0;
     border-color: var(--color-rule-strong);
     font-family: var(--font-sans);
-    font-size: 0.8125rem;
-    font-weight: 500;
-    letter-spacing: 0;
-    text-transform: none;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
   }
   .chip[aria-pressed="true"],
   .chip[aria-current="page"],
@@ -304,16 +321,19 @@
     color: #ffffff;
   }
 
-  /* ---- Fields ------------------------------------------------------------------------- */
+  /* ---- Fields: an underline -------------------------------------------------------- */
   .field {
-    border-radius: 4px;
-    border-color: var(--color-rule-strong);
+    border-width: 0 0 1px;
+    border-radius: 0;
+    border-color: var(--color-ink);
+    background: transparent;
+    padding-inline: 0;
   }
   .field:focus-visible,
   .field:focus {
     border-color: var(--color-ink);
-    outline: 1px solid var(--color-ink);
-    outline-offset: 0;
+    outline: none;
+    box-shadow: inset 0 -2px 0 var(--color-accent-bright);
   }
 
   /* ---- Sections ----------------------------------------------------------------------- */
@@ -321,7 +341,7 @@
     align-items: end;
     padding-block: 0 1.25rem;
     border-top: 0;
-    border-bottom: 1px solid var(--color-rule);
+    border-bottom: 1px solid var(--color-ink);
     background: transparent;
   }
   .section-head[data-pin] {
@@ -329,24 +349,24 @@
   }
   .section-title {
     font-family: var(--font-serif);
-    font-weight: 700;
-    font-size: clamp(1.625rem, 2.6vw, 2.25rem);
-    line-height: 1.1;
-    letter-spacing: -0.02em;
+    font-weight: 500;
+    font-size: clamp(1.75rem, 2.8vw, 2.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.015em;
   }
   .section-dek {
     font-size: var(--text-md);
   }
   .link-more {
     font-family: var(--font-sans);
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    letter-spacing: 0;
-    text-transform: none;
-    color: var(--color-accent);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-ink);
   }
   .section-end {
-    border-top-color: var(--color-rule);
+    border-top-color: var(--color-ink);
   }
   .end-bar {
     background: var(--color-ink);
@@ -354,25 +374,24 @@
   }
   .surface-ink .end-bar {
     background: #ffffff;
-    color: #121212;
+    color: #0a0a0a;
   }
   .end-bar-label {
     font-family: var(--font-serif);
     letter-spacing: -0.01em;
   }
 
-  /* ---- Stories and photographs ------------------------------------------------------ */
+  /* ---- Stories and photographs: edge to edge, no frames ----------------------------- */
   .story::before {
-    height: 2px;
-    background: var(--color-accent-bright);
+    height: 1px;
+    background: var(--color-ink);
   }
   .photo-frame {
     background: var(--color-paper-3);
-    border-radius: 3px;
-    overflow: hidden;
+    border-radius: 0;
   }
   .photo-frame::after {
-    border-color: rgb(18 18 18 / 0.06);
+    border-color: transparent;
   }
   .photo-frame img {
     filter: none;
@@ -407,38 +426,38 @@
 
   /* ---- Notes, tables ------------------------------------------------------------------ */
   .note {
-    border-left-width: 2px;
-    border-left-color: var(--color-accent-bright);
+    border-left-width: 1px;
+    border-left-color: var(--color-ink);
     background: var(--color-paper-2);
   }
   .table-wrap {
     border-color: var(--color-rule);
-    border-radius: 4px;
+    border-radius: 0;
   }
   .article-body thead th,
   .data-table thead th {
-    background: var(--color-paper-2);
-    color: var(--color-muted);
+    background: #ffffff;
+    color: var(--color-ink);
     font-family: var(--font-sans);
     font-size: 0.6875rem;
     font-weight: 600;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     border-bottom: 0;
-    box-shadow: inset 0 -1px 0 var(--color-rule);
+    box-shadow: inset 0 -1px 0 var(--color-ink);
   }
   .data-table thead .sticky-col {
-    background: var(--color-paper-2);
+    background: #ffffff;
     box-shadow:
       inset -1px 0 0 var(--color-rule),
-      inset 0 -1px 0 var(--color-rule);
+      inset 0 -1px 0 var(--color-ink);
   }
   .data-table tbody tr:nth-child(even),
   .article-body tbody tr:nth-child(even) {
-    background: #fcfbf9;
+    background: transparent;
   }
   .data-table tbody tr[data-live] {
-    background: var(--color-accent-tint);
+    background: var(--color-paper-2);
   }
   .data-table tbody tr[data-live] > :first-child {
     box-shadow: inset 2px 0 0 var(--color-accent-bright);
@@ -447,9 +466,9 @@
   /* ---- Market state, change chips ---------------------------------------------------- */
   .mkt-state {
     font-family: var(--font-sans);
-    letter-spacing: 0.08em;
-    border-color: var(--color-rule-strong);
-    border-radius: 999px;
+    letter-spacing: 0.1em;
+    border-color: var(--color-ink);
+    border-radius: 0;
   }
   .mkt-state[data-state="closed"] .mkt-dot {
     background: var(--color-down);
@@ -457,7 +476,7 @@
   }
   .chg {
     border-color: transparent;
-    border-radius: 4px;
+    border-radius: 0;
     font-variant-numeric: tabular-nums;
   }
 
@@ -482,15 +501,15 @@
   .article-body h2,
   .article-body h3 {
     font-family: var(--font-serif);
-    font-weight: 700;
-    letter-spacing: -0.015em;
+    font-weight: 500;
+    letter-spacing: -0.01em;
   }
   .article-body a {
-    color: var(--color-accent);
-    text-decoration-color: rgb(209 68 26 / 0.4);
+    color: var(--color-ink);
+    text-decoration-color: var(--color-accent-bright);
   }
   .article-body ul > li::before {
-    background: var(--color-accent-bright);
+    background: var(--color-ink);
   }
   .article-body ol > li::marker {
     color: var(--color-accent);
@@ -503,22 +522,25 @@
     text-decoration-color: var(--color-accent-bright);
   }
 
-  /* ---- Calculators: soft instruments, the readout on near-black --------------------- */
+  /* ---- Calculators: hairline instruments, the readout in black ---------------------- */
   .instrument {
     border-color: var(--color-rule);
-    border-radius: 6px;
+    border-radius: 0;
   }
   .instrument-label {
     border-bottom-color: var(--color-rule);
-    background: var(--color-paper-2);
+    background: #ffffff;
+    font-size: 0.6875rem;
     font-weight: 600;
-    color: var(--color-muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink);
   }
   .cx-unit {
-    --cx-thumb-w: 18px;
-    --cx-thumb-h: 18px;
+    --cx-thumb-w: 16px;
+    --cx-thumb-h: 16px;
     border-color: var(--color-rule);
-    border-radius: 6px;
+    border-radius: 0;
     background: #ffffff;
   }
   .cx-unit:focus-within {
@@ -529,7 +551,7 @@
     font-weight: 500;
   }
   .cx-num-affix {
-    background: var(--color-paper-2);
+    background: #ffffff;
   }
   .cx-num-input {
     font-weight: 600;
@@ -538,16 +560,15 @@
   .cx-num::after,
   .cx-stop,
   .cx-preset::before {
-    background: var(--color-accent-bright);
+    background: var(--color-ink);
   }
   .cx-fill {
-    background: var(--color-accent-bright);
+    background: var(--color-ink);
   }
   .cx-thumb {
-    border: 2px solid var(--color-accent-bright);
+    border: 2px solid var(--color-ink);
     border-radius: 50%;
     background: #ffffff;
-    box-shadow: 0 2px 6px rgb(18 18 18 / 0.16);
   }
   .cx-thumb::after {
     display: none;
@@ -555,35 +576,23 @@
   .cx-unit[data-drag] .cx-thumb,
   .cx-range:active ~ .cx-rail .cx-thumb {
     background: var(--color-accent-bright);
+    border-color: var(--color-accent-bright);
   }
   .cx-readout {
-    border-radius: 6px;
+    border-radius: 0;
     background-color: var(--color-dark);
-    background-image: radial-gradient(110% 140% at 100% 0%, rgb(238 86 34 / 0.38) 0%, rgb(238 86 34 / 0) 58%);
+    background-image: none;
     --color-ink: #ffffff;
     --color-ink-2: rgb(255 255 255 / 0.9);
-    --color-muted: #a8a49e;
-    --color-rule: rgb(255 255 255 / 0.18);
+    --color-muted: #a3a3a3;
+    --color-rule: rgb(255 255 255 / 0.2);
   }
   .cx-readout .kicker {
-    color: #a8a49e;
-  }
-  /* The switch: a rounded track with a round thumb, orange when on */
-  .calc-switch-track {
-    border-radius: 999px;
-    background: var(--color-paper-3);
-  }
-  .calc-switch-thumb {
-    border-radius: 999px;
-    background: #ffffff;
-    box-shadow: 0 1px 3px rgb(18 18 18 / 0.25);
+    color: #a3a3a3;
   }
   .calc-switch-input:checked + .calc-switch-track {
-    border-color: var(--color-accent);
-    background: var(--color-accent);
-  }
-  .calc-switch-input:checked ~ .calc-switch-thumb {
-    background: #ffffff;
+    border-color: var(--color-ink);
+    background: var(--color-ink);
   }
 
   /* ==========================================================================
@@ -593,22 +602,23 @@
     background: var(--color-dark);
     color: #ffffff;
     font-family: var(--font-sans);
-    font-size: 0.8125rem;
+    font-size: 0.71875rem;
     font-weight: 500;
+    letter-spacing: 0.06em;
     font-variant-numeric: tabular-nums;
   }
   /* A rule after every quote, so the join between the two copies of the moving track matches */
   .pm-tape li {
-    border-right: 1px solid rgb(255 255 255 / 0.1);
+    border-right: 1px solid rgb(255 255 255 / 0.12);
     padding-inline: 1.25rem;
   }
   .pm-header {
     position: sticky;
     top: 0;
     z-index: 40;
-    background: rgb(255 255 255 / 0.94);
-    -webkit-backdrop-filter: saturate(1.3) blur(10px);
-    backdrop-filter: saturate(1.3) blur(10px);
+    background: rgb(255 255 255 / 0.96);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--color-rule);
   }
   .pm-nav-link {
@@ -618,8 +628,10 @@
     min-height: 2.75rem;
     padding-inline: 0.75rem;
     font-family: var(--font-sans);
-    font-size: 0.9375rem;
+    font-size: 0.71875rem;
     font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
     color: var(--color-ink);
     white-space: nowrap;
   }
@@ -628,15 +640,11 @@
     position: absolute;
     left: 0.75rem;
     right: 0.75rem;
-    bottom: 0.375rem;
-    height: 2px;
+    bottom: 0.5rem;
+    height: 1px;
     background: var(--color-accent-bright);
     transform: scaleX(0);
     transition: transform var(--duration-base) var(--ease-out);
-  }
-  .pm-nav-link:hover,
-  .pm-nav-link[aria-current="page"] {
-    color: var(--color-ink);
   }
   .pm-nav-link[aria-current="page"]::after,
   .pm-nav-link:hover::after {
@@ -644,9 +652,10 @@
   }
   .pm-wordmark {
     font-family: var(--font-sans);
-    font-size: 1.625rem;
-    font-weight: 800;
-    letter-spacing: -0.04em;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
     color: var(--color-ink);
   }
   .pm-icon-btn {
@@ -654,104 +663,106 @@
     place-items: center;
     width: 2.75rem;
     height: 2.75rem;
-    border: 1px solid var(--color-rule-strong);
-    border-radius: 4px;
+    border: 0;
+    border-radius: 0;
     background: transparent;
     color: var(--color-ink);
-    transition: border-color var(--duration-base) var(--ease-out);
   }
   .pm-icon-btn:hover {
-    border-color: var(--color-ink);
+    color: var(--color-accent);
   }
-  /* The search field in the bar: a button that looks like the box it opens */
+  /* Search as the house sets it: the word on an underline */
   .tt-search {
     flex-shrink: 0;
     align-items: center;
-    white-space: nowrap;
-    gap: 0.625rem;
-    width: 17.5rem;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 13rem;
     min-height: 2.75rem;
-    padding-inline: 0.875rem;
-    border: 1px solid var(--color-rule-strong);
-    border-radius: 4px;
-    background: var(--color-paper-2);
-    font-size: 0.875rem;
-    color: var(--color-muted);
-    text-align: left;
-    transition: border-color var(--duration-base) var(--ease-out);
+    border-bottom: 1px solid var(--color-ink);
+    font-size: 0.71875rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-ink);
+    white-space: nowrap;
   }
   .tt-search:hover {
-    border-color: var(--color-ink);
+    border-bottom-color: var(--color-accent-bright);
+  }
+  /* The full-screen menu: section names in the Didone, groups under bracketed numbers */
+  .tt-menu-main {
+    font-family: var(--font-serif);
+    font-size: clamp(1.75rem, 3.2vw, 2.625rem);
+    font-weight: 400;
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    color: var(--color-ink);
+  }
+  .tt-menu-main:hover,
+  .tt-menu-main[aria-current="page"] {
+    font-style: italic;
+    color: var(--color-accent-bright);
   }
 
   /* ==========================================================================
      Front page
      ========================================================================== */
-  .tt-hero {
-    background: var(--color-paper-2);
-  }
   .tt-hero-title {
     font-family: var(--font-serif);
-    font-weight: 700;
-    font-size: clamp(2.625rem, 5.4vw, 5.25rem);
-    line-height: 1.02;
-    letter-spacing: -0.03em;
-    text-wrap: balance;
+    font-weight: 400;
+    font-size: clamp(3.25rem, 8.4vw, 8.75rem);
+    line-height: 0.92;
+    letter-spacing: -0.035em;
     font-optical-sizing: auto;
     color: var(--color-ink);
   }
   .tt-hero-title em {
-    font-style: normal;
+    font-style: italic;
     color: var(--color-accent-bright);
   }
-  /* The hero picture, cut on the slant, with a warm wash over its lower half */
-  .tt-frame {
-    clip-path: polygon(14% 0, 100% 0, 86% 100%, 0 100%);
+  /* The hero picture runs off the right edge and fades into the page on its left. The warmth of
+     late afternoon comes from a filter on the picture itself, so one overlay does the fade. */
+  .tt-hero-photo img {
+    filter: sepia(0.28) saturate(1.25) contrast(1.04) brightness(1.03);
   }
-  @media (min-width: 1024px) {
-    .tt-frame {
-      clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%);
-    }
-  }
-  /* A late-afternoon wash: orange rising from the street, a peach sky over the tower */
-  .tt-frame::after {
+  .tt-hero-photo::after {
     content: "";
     position: absolute;
     inset: 0;
-    background:
-      linear-gradient(to top, rgb(238 86 34 / 0.58), rgb(238 86 34 / 0) 62%),
-      radial-gradient(120% 70% at 85% 0%, rgb(244 162 97 / 0.55), rgb(244 162 97 / 0) 62%);
-    mix-blend-mode: multiply;
+    background: linear-gradient(to right, #ffffff 0%, rgb(255 255 255 / 0.55) 18%, rgb(255 255 255 / 0) 42%);
     pointer-events: none;
   }
-  /* Section numbers: the serif at a light weight in orange */
-  .tt-num {
-    font-family: var(--font-serif);
-    font-size: clamp(2.75rem, 4.4vw, 3.75rem);
-    font-weight: 300;
-    line-height: 0.85;
-    letter-spacing: -0.03em;
-    color: var(--color-accent-bright);
-    font-optical-sizing: auto;
+  @media (max-width: 1023px) {
+    .tt-hero-photo::after {
+      background: linear-gradient(to bottom, #ffffff 0%, rgb(255 255 255 / 0) 22%);
+    }
   }
+  /* Bracketed numbers and labels, as on the house's menus */
   .tt-label {
     font-family: var(--font-sans);
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.2em;
+    font-size: 0.71875rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--color-muted);
+    color: var(--color-ink);
+  }
+  .tt-label b {
+    font-weight: 500;
+    color: var(--color-accent-bright);
   }
   .tt-title {
     font-family: var(--font-serif);
-    font-weight: 700;
-    font-size: clamp(1.875rem, 3.4vw, 2.875rem);
-    line-height: 1.06;
-    letter-spacing: -0.025em;
+    font-weight: 400;
+    font-size: clamp(2.25rem, 4.6vw, 4.25rem);
+    line-height: 0.98;
+    letter-spacing: -0.03em;
     text-wrap: balance;
+    font-optical-sizing: auto;
   }
   .tt-title em {
-    font-style: normal;
+    font-style: italic;
     color: var(--color-accent-bright);
   }
   .pm-section {
@@ -759,66 +770,49 @@
   }
   @media (min-width: 768px) {
     .pm-section {
-      padding-block: 6rem;
+      padding-block: 7rem;
     }
   }
+  /* Cards are only a rule above and the space around them */
   .pm-card {
-    border: 1px solid var(--color-rule);
-    border-radius: 6px;
-    background: #ffffff;
-    transition: border-color var(--duration-base) var(--ease-out);
+    border-top: 1px solid var(--color-ink);
+    border-radius: 0;
+    background: transparent;
   }
-  a.pm-card:hover,
-  .pm-card:has(a:hover) {
-    border-color: var(--color-ink);
-  }
-  /* Cards rise a hair under the pointer: a lift and a soft shadow, nothing more */
   .pm-lift {
-    transition:
-      transform 200ms var(--ease-out),
-      box-shadow 200ms var(--ease-out),
-      border-color 200ms var(--ease-out);
-  }
-  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-    .pm-lift:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 24px 44px -30px rgb(18 18 18 / 0.4);
-    }
+    transition: border-color 200ms var(--ease-out);
   }
   .pm-lift:hover,
   .pm-lift:has(a:focus-visible) {
-    border-color: var(--color-ink);
+    border-top-color: var(--color-accent-bright);
   }
-  /* The company card's stand-in for a picture: initials on a soft orange disc */
+  /* The company card's stand-in for a picture: initials in the Didone italic */
   .pm-monogram {
-    display: inline-grid;
-    place-items: center;
-    width: 3.5rem;
-    height: 3.5rem;
-    border-radius: 999px;
-    background: var(--color-accent-tint);
     font-family: var(--font-serif);
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--color-accent-deep);
-    transition:
-      background-color 200ms var(--ease-out),
-      color 200ms var(--ease-out);
+    font-size: 3rem;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    transition: color 200ms var(--ease-out);
   }
   .group:hover .pm-monogram {
-    background: var(--color-accent-bright);
-    color: #ffffff;
+    color: var(--color-accent-bright);
   }
   .pm-figure {
     font-family: var(--font-serif);
-    font-weight: 700;
+    font-weight: 400;
     letter-spacing: -0.03em;
     line-height: 1;
     font-optical-sizing: auto;
   }
   .pm-meta {
     font-family: var(--font-sans);
-    font-size: 0.8125rem;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
     color: var(--color-muted);
   }
   .pm-arrow {

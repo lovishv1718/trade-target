@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Source_Serif_4 } from "next/font/google";
+import { Bodoni_Moda, Inter } from "next/font/google";
 import site from "@/content/site.json";
 import { AskWidget } from "@/components/assistant/ask-widget";
 import { Footer } from "@/components/layout/footer";
@@ -7,10 +7,10 @@ import { Header } from "@/components/layout/header";
 import { SearchOverlay } from "@/components/search/search-overlay";
 import "./globals.css";
 
-// Two faces: Source Serif 4, a sturdy serif with optical sizes, set bold for headlines and figures;
-// Inter for reading, interface and the tape, with tabular figures where numbers line up. Variable
-// files cover every weight used.
-const display = Source_Serif_4({ subsets: ["latin"], style: ["normal", "italic"], axes: ["opsz"], variable: "--font-sourceserif", display: "swap" });
+// Two faces, as in a fashion house's editorial pages: Bodoni Moda, a high-contrast Didone with
+// optical sizes, for headlines and figures; Inter for reading, interface and the tape, with tabular
+// figures where numbers line up. Variable files cover every weight used.
+const display = Bodoni_Moda({ subsets: ["latin"], style: ["normal", "italic"], axes: ["opsz"], variable: "--font-bodoni", display: "swap" });
 const text = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 
 export const metadata: Metadata = {
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#121212",
+  themeColor: "#ffffff",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

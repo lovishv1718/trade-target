@@ -45,13 +45,13 @@ export function Footer() {
   ];
 
   return (
-    <footer className="surface-ink border-t border-rule text-sm text-ink-2">
+    <footer className="border-t border-ink bg-white text-sm text-ink-2">
       <div className="wrap pb-24 pt-10 md:pt-12">
         {/* Identity: mark, what we are, where to follow */}
         <div className="grid gap-6 border-b border-rule pb-8 md:grid-cols-[auto_minmax(0,1fr)_auto] md:items-center md:gap-8">
           <Link href="/" aria-label="TradeTarget home" className="flex items-center gap-2.5">
             <LogoArt variant="mark" height={26} alt="" />
-            <span className="pm-wordmark">tradetarget</span>
+            <span className="pm-wordmark">TradeTarget</span>
           </Link>
           <p className="max-w-md text-md leading-normal text-ink-2">{site.tagline}. Finance content writing for brokers, AMCs and fintechs.</p>
           <div>

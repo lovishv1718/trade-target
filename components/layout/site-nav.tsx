@@ -11,7 +11,7 @@ type MenuItem = NavItem & { children: NavItem[] };
 
 function SearchIcon() {
   return (
-    <svg aria-hidden width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6">
+    <svg aria-hidden width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4">
       <circle cx="7" cy="7" r="5.2" />
       <path d="M11 11l3.8 3.8" strokeLinecap="square" />
     </svg>
@@ -19,9 +19,10 @@ function SearchIcon() {
 }
 
 /**
- * One bar: the mark and wordmark, the section links, one search and the Subscribe button. Search
- * is a field from 1360px and an icon below it, never both. The bar sticks to the top; below 1280px
- * the links move into a drawer.
+ * One bar, as a fashion house sets it: the menu and the mark on the left, the section links in
+ * small capitals, search on an underline and Subscribe on the right. Search is the underlined
+ * word from 1440px and an icon below it, never both; the links show from 1280px. The menu button
+ * opens the full-screen menu at every width.
  */
 export function SiteNav({ items, menu }: { items: NavItem[]; menu: MenuItem[] }) {
   const pathname = usePathname();
@@ -30,13 +31,14 @@ export function SiteNav({ items, menu }: { items: NavItem[]; menu: MenuItem[] })
   const closeButton = useRef<HTMLButtonElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const active = (href: string) => (href === "/" ? pathname === "/" : pathname?.startsWith(href));
+  const groups = menu.filter((m) => m.children.length);
 
   const close = useCallback((restoreFocus = true) => {
     setOpen(false);
     if (restoreFocus) menuButton.current?.focus();
   }, []);
 
-  // Drawer: focus moves in, Tab stays inside, Esc closes and focus returns to the menu button
+  // Menu: focus moves in, Tab stays inside, Esc closes and focus returns to the menu button
   useEffect(() => {
     if (!open) return;
     closeButton.current?.focus();
@@ -66,10 +68,15 @@ export function SiteNav({ items, menu }: { items: NavItem[]; menu: MenuItem[] })
   return (
     <>
       <div className="pm-header">
-        <nav aria-label="Main" className="wrap flex h-[4.5rem] items-center gap-4">
+        <nav aria-label="Main" className="wrap flex h-[4.5rem] items-center gap-3">
+          <button ref={menuButton} type="button" onClick={() => setOpen(true)} aria-expanded={open} aria-controls="site-menu" aria-label="Open menu" className="pm-icon-btn -ml-3">
+            <svg aria-hidden width="22" height="10" viewBox="0 0 22 10" fill="none" stroke="currentColor" strokeWidth="1.2">
+              <path d="M0 1h22M0 9h22" />
+            </svg>
+          </button>
           <Link href="/" aria-label="TradeTarget home" className="flex shrink-0 items-center gap-2.5">
             <LogoArt variant="mark" height={22} eager alt="" />
-            <span className="pm-wordmark">tradetarget</span>
+            <span className="pm-wordmark">TradeTarget</span>
           </Link>
           <ul className="mx-auto hidden items-center xl:flex">
             {items.map((item) => (
@@ -80,83 +87,80 @@ export function SiteNav({ items, menu }: { items: NavItem[]; menu: MenuItem[] })
               </li>
             ))}
           </ul>
-          <div className="ml-auto flex shrink-0 items-center gap-2 xl:ml-0">
-            <button type="button" onClick={openSearch} className="tt-search hidden min-[1360px]:inline-flex">
+          <div className="ml-auto flex shrink-0 items-center gap-4 xl:ml-0">
+            <button type="button" onClick={openSearch} className="tt-search hidden min-[1440px]:inline-flex">
+              Search
               <SearchIcon />
-              Search articles, companies, IPOs…
             </button>
-            <button type="button" onClick={openSearch} aria-label="Search stories, IPOs and calculators" className="pm-icon-btn min-[1360px]:hidden">
+            <button type="button" onClick={openSearch} aria-label="Search stories, IPOs and calculators" className="pm-icon-btn min-[1440px]:hidden">
               <SearchIcon />
             </button>
             <Link prefetch={false} href="/#newsletter" className="btn hidden min-h-11 sm:inline-flex">
               Subscribe
             </Link>
-            <button
-              ref={menuButton}
-              type="button"
-              onClick={() => setOpen(true)}
-              aria-expanded={open}
-              aria-controls="site-menu"
-              aria-label="Open menu"
-              className="pm-icon-btn xl:hidden"
-            >
-              <svg aria-hidden width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="currentColor" strokeWidth="1.6">
-                <path d="M0 1h18M0 6h18M0 11h18" />
-              </svg>
-            </button>
           </div>
         </nav>
       </div>
 
-      {/* Always mounted so it can animate both ways; hidden and inert while closed. Outside the
-          frosted bar, whose backdrop filter would otherwise become this fixed layer's frame. */}
-      <div id="site-menu" role="dialog" aria-modal="true" aria-label="Site menu" inert={!open} className={`fixed inset-0 z-50 flex justify-end overflow-hidden ${open ? "visible" : "invisible transition-[visibility] duration-200"}`}>
-        <div aria-hidden onClick={() => close()} className={`absolute inset-0 bg-black/50 transition-opacity duration-200 ease-out ${open ? "opacity-100" : "opacity-0"}`} />
-        <div
-          ref={panel}
-          className={`relative flex h-full w-[min(380px,88vw)] flex-col bg-white text-ink shadow-overlay transition-transform duration-200 ease-out ${open ? "translate-x-0" : "translate-x-full"}`}
-        >
-          <div className="flex shrink-0 items-center justify-between border-b border-rule py-3 pl-5 pr-3">
-            <span className="pm-wordmark">tradetarget</span>
-            <button ref={closeButton} type="button" onClick={() => close()} aria-label="Close menu" className="pm-icon-btn">
-              <svg aria-hidden width="12" height="12" viewBox="0 0 12 12" stroke="currentColor" strokeWidth="1.6">
-                <path d="M1 1l10 10M11 1L1 11" />
-              </svg>
-            </button>
-          </div>
-          <ul className="flex-1 divide-y divide-rule overflow-y-auto overscroll-contain px-5 pb-8">
+      {/* The full-screen menu. Always mounted so it can fade both ways; hidden and inert while
+          closed. Outside the frosted bar, whose backdrop filter would otherwise become its frame. */}
+      <div
+        id="site-menu"
+        ref={panel}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Site menu"
+        inert={!open}
+        className={`fixed inset-0 z-50 overflow-y-auto overscroll-contain bg-white text-ink transition-[opacity,visibility] duration-200 ease-out ${open ? "visible opacity-100" : "invisible opacity-0"}`}
+      >
+        <div className="wrap flex h-[4.5rem] items-center gap-3">
+          <button ref={closeButton} type="button" onClick={() => close()} aria-label="Close menu" className="pm-icon-btn -ml-3">
+            <svg aria-hidden width="18" height="18" viewBox="0 0 18 18" stroke="currentColor" strokeWidth="1.2">
+              <path d="M1 1l16 16M17 1L1 17" />
+            </svg>
+          </button>
+          <Link href="/" onClick={() => close(false)} aria-label="TradeTarget home" className="flex items-center gap-2.5">
+            <LogoArt variant="mark" height={22} alt="" />
+            <span className="pm-wordmark">TradeTarget</span>
+          </Link>
+        </div>
+        <div className="wrap grid gap-12 pb-16 pt-8 md:pt-14 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)] lg:gap-20">
+          <ul>
             {menu.map((m) => (
-              <li key={m.href} className="py-2">
-                <Link
-                  prefetch={false}
-                  href={m.href}
-                  onClick={() => close(false)}
-                  aria-current={pathname === m.href ? "page" : undefined}
-                  className="flex min-h-11 items-center font-serif text-lg font-bold tracking-tight text-ink"
-                >
+              <li key={m.href}>
+                <Link prefetch={false} href={m.href} onClick={() => close(false)} aria-current={pathname === m.href ? "page" : undefined} className="tt-menu-main block py-1">
                   {m.label}
                 </Link>
-                {m.children.length ? (
-                  <ul className="grid grid-cols-2 gap-x-4 pb-2">
-                    {m.children.map((c) => (
-                      <li key={c.href}>
-                        <Link prefetch={false} href={c.href} onClick={() => close(false)} className="link-soft flex min-h-9 items-center py-1 text-sm leading-snug pointer-coarse:min-h-11">
-                          {c.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                ) : null}
               </li>
             ))}
+            <li className="mt-6">
+              <Link prefetch={false} href="/hire-writers/" onClick={() => close(false)} className="tt-menu-main block py-1">
+                Hire our writers
+              </Link>
+            </li>
           </ul>
-          <div className="grid gap-2 border-t border-rule p-5">
-            <Link prefetch={false} href="/#newsletter" onClick={() => close(false)} className="btn btn-block">
-              Subscribe
-            </Link>
-            <Link prefetch={false} href="/hire-writers/" onClick={() => close(false)} className="btn btn-secondary btn-block">
-              Hire our writers
-            </Link>
+          <div className="grid content-start gap-x-10 gap-y-10 sm:grid-cols-2">
+            {groups.map((g, i) => (
+              <section key={g.href} aria-label={g.label}>
+                <p className="tt-label border-b border-ink pb-3">
+                  <b>[{String(i + 1).padStart(2, "0")}]</b> {g.label}
+                </p>
+                <ul className="mt-3">
+                  {g.children.map((c) => (
+                    <li key={c.href}>
+                      <Link prefetch={false} href={c.href} onClick={() => close(false)} className="flex min-h-9 items-center text-xs font-medium uppercase tracking-[0.12em] text-ink-2 hover:text-accent pointer-coarse:min-h-11">
+                        {c.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ))}
+            <div className="sm:col-span-2">
+              <Link prefetch={false} href="/#newsletter" onClick={() => close(false)} className="btn">
+                Subscribe to the morning brief
+              </Link>
+            </div>
           </div>
         </div>
       </div>

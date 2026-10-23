@@ -1,7 +1,7 @@
 import { STATUS_META, type IpoStatus } from "@/lib/ipo";
 
 /**
- * Rounded status tag. Only the label comes from STATUS_META; the look is set here from tokens.
+ * Square status tag. Only the label comes from STATUS_META; the look is set here from tokens.
  * Every variant carries a 1px border so all five share one box size.
  */
 const STYLE: Record<IpoStatus, string> = {
@@ -16,7 +16,7 @@ export function StatusPill({ status, className = "" }: { status: IpoStatus; clas
   const m = STATUS_META[status];
   return (
     <span
-      className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-2 py-0.5 font-sans text-2xs font-semibold uppercase leading-snug tracking-[0.08em] tabular ${STYLE[status]} ${className}`}
+      className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-none border px-2 py-0.5 font-sans text-2xs font-semibold uppercase leading-snug tracking-[0.08em] tabular ${STYLE[status]} ${className}`}
     >
       {status === "open" ? <span aria-hidden className="block size-1.5 rounded-full bg-up" /> : null}
       {m.label}

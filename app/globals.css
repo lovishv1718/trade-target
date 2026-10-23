@@ -3,7 +3,7 @@
 @import "./css/data.css";
 /* Tokens, base styles and the shared component system */
 @import "./css/system.css";
-/* The insights theme: white and a warm off-white, a bold serif for headlines and the orange of
-   the bull in the mark as the one accent. Loaded last so it restyles the system's components in
-   place. */
-@import "./css/insights.css";
+/* The editorial theme: black on white, a Didone at display size, hairlines in place of boxes and
+   the reference's orange kept to a few marks. Loaded last so it restyles the system's components
+   in place. */
+@import "./css/editorial.css";

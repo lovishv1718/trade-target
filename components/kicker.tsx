@@ -1,6 +1,6 @@
-// Section labels are set in the accent orange, whatever their section.
+// Section labels are small black capitals, whatever their section.
 export function kickerColor(_label: string) {
-  return "text-accent";
+  return "text-ink";
 }
 
 /** The section label. `pill` sets it on a soft tint of its own colour, as on story cards. */
