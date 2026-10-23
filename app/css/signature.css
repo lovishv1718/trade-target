@@ -1,14 +1,15 @@
 /* ==========================================================================
    Signature theme
 
-   Private bank meets financial magazine: warm ivory paper, deep emerald ink taken from
-   the bull in TradeTarget's mark, an editorial serif for headlines and figures, and the
-   bull's red kept for one small accent. Photographs share one emerald tone; only the
-   article page shows them in full colour. This file loads after system.css and restyles its
+   Private bank meets financial magazine: warm ivory paper, warm near-black ink and
+   charcoal bands, an editorial serif for headlines and figures, and the two colours of the
+   bull in TradeTarget's mark kept small: emerald for actions and emphasis, red for one
+   accent. This file loads after system.css and restyles its
    components in place, so every page takes the theme without its markup changing.
 
    Colour roles:
-     ink, emerald   type, primary buttons, the selected state, the dark bands
+     ink            type, rules, the selected state; charcoal for the dark bands
+     emerald        buttons, links, the italic words in titles, sliders
      accent         the bull's red: the active nav rule, section numbers, link underlines
      up / down      market direction, always with a sign or an arrow as well
    ========================================================================== */
@@ -18,16 +19,15 @@
   --color-paper: #f7f3ec;
   --color-paper-2: #efe9de;
   --color-paper-3: #e7dfd1;
-  --color-ink: #10201a; /* 15.6:1 on paper */
-  --color-ink-2: #2f3c36; /* 10.9:1 */
-  --color-muted: #5b655f; /* 5.6:1 */
-  --color-faint: #959b95; /* decorative only */
+  --color-ink: #1a1917; /* 16.1:1 on paper */
+  --color-ink-2: #3b3934; /* 10.6:1 */
+  --color-muted: #67635b; /* 5.5:1 */
+  --color-faint: #9c978d; /* decorative only */
   --color-rule: #e0d7c8;
   --color-rule-strong: #cbbfab;
 
   --color-emerald: #0f4d36; /* 9.1:1 on paper */
   --color-emerald-2: #1a6a4b;
-  --color-emerald-deep: #0b3427;
   --color-sage: #a9c2b3;
 
   --color-up: #1c7a4b; /* 5.0:1 on paper */
@@ -46,18 +46,18 @@
   --color-accent: #c8402f; /* 4.9:1 on paper */
   --color-accent-deep: #a3321f;
   --color-accent-tint: #f5e2da;
-  --color-dark: #0b3427;
-  --color-dark-2: #0f3f2f;
+  --color-dark: #1c1a17; /* warm charcoal for the tape, the brief and the footer */
+  --color-dark-2: #24221e;
 
   --font-serif: var(--font-newsreader), "Newsreader", ui-serif, Georgia, "Times New Roman", serif;
   --font-sans: var(--font-geist), "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: var(--font-geist-mono), "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
-  --shadow-overlay: 0 24px 48px -16px rgb(16 32 26 / 0.22), 0 2px 6px rgb(16 32 26 / 0.06);
+  --shadow-overlay: 0 24px 48px -16px rgb(26 25 23 / 0.22), 0 2px 6px rgb(26 25 23 / 0.06);
 }
 
 :root {
-  --focus: var(--color-emerald);
+  --focus: var(--color-ink);
   --surface: var(--color-paper);
   --field-bg: #fdfbf7;
   --btn-2-bg: transparent;
@@ -76,7 +76,7 @@
     font-family: var(--font-sans);
   }
   ::selection {
-    background: rgb(169 194 179 / 0.55);
+    background: #e9dfcb;
   }
   :focus-visible {
     outline: 2px solid var(--focus);
@@ -87,10 +87,10 @@
 @layer components {
   /* ---- Surfaces ----------------------------------------------------------------- */
   .surface-paper {
-    --color-ink: #10201a;
-    --color-ink-2: #2f3c36;
-    --color-muted: #5b655f;
-    --color-faint: #959b95;
+    --color-ink: #1a1917;
+    --color-ink-2: #3b3934;
+    --color-muted: #67635b;
+    --color-faint: #9c978d;
     --color-rule: #e0d7c8;
     --color-rule-strong: #cbbfab;
     --color-paper: #f7f3ec;
@@ -102,7 +102,7 @@
     --color-money: #1a6a4b;
     --color-learn: #4f4a7d;
     --color-accent: #c8402f;
-    --focus: #0f4d36;
+    --focus: #1a1917;
     --surface: #f7f3ec;
     --field-bg: #fdfbf7;
     background-color: #f7f3ec;
@@ -118,12 +118,12 @@
     color: #f7f3ec;
     --color-ink: #f7f3ec;
     --color-ink-2: rgb(247 243 236 / 0.84);
-    --color-muted: #a9bdb2; /* 6.9:1 on the emerald ground */
-    --color-faint: #6f8a7d;
+    --color-muted: #b3ada2; /* 7.7:1 on the charcoal ground */
+    --color-faint: #7d776d;
     --color-rule: rgb(247 243 236 / 0.14);
     --color-rule-strong: rgb(247 243 236 / 0.26);
-    --color-paper: #0b3427;
-    --color-paper-2: #0f3f2f;
+    --color-paper: #1c1a17;
+    --color-paper-2: #24221e;
     --color-up: #8ee0b1;
     --color-down: #ff9a8a;
     --color-ipo: #9cc3dd;
@@ -132,8 +132,8 @@
     --color-learn: #c9c3f0;
     --color-accent: #f39a84;
     --focus: #f7f3ec;
-    --surface: #0b3427;
-    --field-bg: #0f3f2f;
+    --surface: #1c1a17;
+    --field-bg: #24221e;
     --btn-2-bg: transparent;
   }
 
@@ -201,16 +201,16 @@
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--color-emerald);
+    color: var(--color-ink-2);
   }
   .eyebrow::before {
     content: "";
     width: 1.75rem;
     height: 1px;
-    background: currentColor;
+    background: var(--color-emerald);
   }
-  .surface-ink .eyebrow {
-    color: var(--color-sage);
+  .surface-ink .eyebrow::before {
+    background: var(--color-sage);
   }
   .dateline dt,
   .mkt-stamp,
@@ -247,17 +247,17 @@
   }
   .surface-ink .btn {
     --btn-bg: #f7f3ec;
-    --btn-fg: #0b3427;
+    --btn-fg: #1a1917;
     --btn-bd: #f7f3ec;
     --btn-bg-h: #ffffff;
-    --btn-fg-h: #0b3427;
+    --btn-fg-h: #1a1917;
     --btn-bd-h: #ffffff;
   }
   .btn-secondary {
     --btn-bg: var(--btn-2-bg);
     --btn-fg: var(--color-ink);
     --btn-bd: var(--color-rule-strong);
-    --btn-bg-h: rgb(16 32 26 / 0.04);
+    --btn-bg-h: rgb(26 25 23 / 0.04);
     --btn-fg-h: var(--color-ink);
     --btn-bd-h: var(--color-ink);
   }
@@ -302,8 +302,8 @@
   .chip[aria-pressed="true"],
   .chip[aria-current="page"],
   .chip[aria-checked="true"] {
-    background: var(--color-emerald);
-    border-color: var(--color-emerald);
+    background: var(--color-ink);
+    border-color: var(--color-ink);
     color: #f7f3ec;
   }
 
@@ -314,8 +314,8 @@
   }
   .field:focus-visible,
   .field:focus {
-    border-color: var(--color-emerald);
-    outline: 1px solid var(--color-emerald);
+    border-color: var(--color-ink);
+    outline: 1px solid var(--color-ink);
     outline-offset: 0;
   }
 
@@ -352,12 +352,12 @@
     border-top-color: var(--color-rule);
   }
   .end-bar {
-    background: var(--color-emerald);
+    background: var(--color-ink);
     color: #f7f3ec;
   }
   .surface-ink .end-bar {
     background: #f7f3ec;
-    color: #0b3427;
+    color: #1a1917;
   }
   .end-bar-label {
     font-family: var(--font-serif);
@@ -375,12 +375,12 @@
     overflow: hidden;
   }
   .photo-frame::after {
-    border-color: rgb(16 32 26 / 0.08);
+    border-color: rgb(26 25 23 / 0.08);
   }
-  /* One tone for every photograph: emerald shadows, sage middles, ivory lights (the
-     #tt-duotone filter in the layout). Inside an article the picture keeps its own colour. */
+  /* Photographs keep their own colour, evened out a touch so a row of them sits together.
+     Inside an article the picture is shown exactly as it is. */
   .photo-frame img {
-    filter: url(#tt-duotone) contrast(1.04);
+    filter: saturate(0.88) contrast(1.02);
   }
   #article-main .photo-frame img {
     filter: none;
@@ -416,7 +416,7 @@
   /* ---- Notes, tables ------------------------------------------------------------------ */
   .note {
     border-left-width: 2px;
-    border-left-color: var(--color-emerald);
+    border-left-color: var(--color-ink);
     background: var(--color-paper-2);
   }
   .table-wrap {
@@ -443,7 +443,7 @@
   }
   .data-table tbody tr:nth-child(even),
   .article-body tbody tr:nth-child(even) {
-    background: rgb(16 32 26 / 0.018);
+    background: rgb(26 25 23 / 0.018);
   }
   .data-table tbody tr[data-live] {
     background: rgb(28 122 75 / 0.07);
@@ -498,10 +498,10 @@
     text-decoration-color: rgb(200 64 47 / 0.55);
   }
   .article-body ul > li::before {
-    background: var(--color-emerald);
+    background: var(--color-ink);
   }
   .article-body ol > li::marker {
-    color: var(--color-emerald);
+    color: var(--color-accent);
   }
   .article-body blockquote::before {
     color: var(--color-accent);
@@ -530,8 +530,8 @@
     background: var(--color-white);
   }
   .cx-unit:focus-within {
-    border-color: var(--color-emerald);
-    outline: 1px solid var(--color-emerald);
+    border-color: var(--color-ink);
+    outline: 1px solid var(--color-ink);
   }
   .cx-unit-label {
     font-weight: 500;
@@ -556,7 +556,7 @@
     border: 2px solid var(--color-emerald);
     border-radius: 50%;
     background: var(--color-white);
-    box-shadow: 0 2px 6px rgb(16 32 26 / 0.18);
+    box-shadow: 0 2px 6px rgb(26 25 23 / 0.18);
   }
   .cx-thumb::after {
     display: none;
@@ -567,17 +567,17 @@
   }
   .cx-readout {
     border-radius: 6px;
-    background-color: var(--color-emerald-deep);
+    background-color: var(--color-dark);
     background-image:
-      radial-gradient(120% 140% at 100% 0%, rgb(169 194 179 / 0.26) 0%, rgb(169 194 179 / 0) 55%),
+      radial-gradient(120% 140% at 100% 0%, rgb(247 243 236 / 0.1) 0%, rgb(247 243 236 / 0) 55%),
       var(--facet-tile);
     --color-ink: #f7f3ec;
     --color-ink-2: rgb(247 243 236 / 0.9);
-    --color-muted: #a9bdb2;
+    --color-muted: #b3ada2;
     --color-rule: rgb(247 243 236 / 0.2);
   }
   .cx-readout .kicker {
-    color: #a9bdb2;
+    color: #b3ada2;
   }
   /* The switch: a rounded track with a round thumb, emerald when on */
   .calc-switch-track {
@@ -587,7 +587,7 @@
   .calc-switch-thumb {
     border-radius: 999px;
     background: var(--color-white);
-    box-shadow: 0 1px 3px rgb(16 32 26 / 0.25);
+    box-shadow: 0 1px 3px rgb(26 25 23 / 0.25);
   }
   .calc-switch-input:checked + .calc-switch-track {
     border-color: var(--color-emerald);
@@ -726,7 +726,7 @@
     color: var(--color-sage);
   }
   .sg-facets {
-    color: var(--color-emerald);
+    color: var(--color-ink);
   }
   .pm-section {
     padding-block: 4.5rem;
@@ -756,21 +756,21 @@
   @media (hover: hover) and (prefers-reduced-motion: no-preference) {
     .pm-lift:hover {
       transform: translateY(-3px);
-      box-shadow: 0 24px 44px -30px rgb(11 52 39 / 0.45);
+      box-shadow: 0 24px 44px -30px rgb(26 25 23 / 0.45);
     }
   }
   .pm-lift:hover,
   .pm-lift:has(a:focus-visible) {
     border-color: var(--color-ink);
   }
-  /* The company card's stand-in for a picture: initials in the serif italic on an emerald disc */
+  /* The company card's stand-in for a picture: initials in the serif italic on an ink disc */
   .pm-monogram {
     display: inline-grid;
     place-items: center;
     width: 3.5rem;
     height: 3.5rem;
     border-radius: 999px;
-    background: var(--color-emerald);
+    background: var(--color-ink);
     font-family: var(--font-serif);
     font-size: 1.375rem;
     font-style: italic;
@@ -779,7 +779,7 @@
     transition: background-color 200ms var(--ease-out);
   }
   .group:hover .pm-monogram {
-    background: var(--color-accent);
+    background: var(--color-emerald);
   }
   .pm-figure {
     font-family: var(--font-serif);

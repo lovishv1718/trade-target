@@ -1,6 +1,6 @@
 // The facet motif, after the low-poly triangles of the bull in TradeTarget's mark: a fine-line
-// mesh of triangles with a few faces filled in emerald and one or two in the bull's red. The mesh
-// comes from a seeded generator, so a given seed draws the same picture on every build.
+// mesh of triangles with a few faces shaded, and one or two in each of the bull's red and green.
+// The mesh comes from a seeded generator, so a given seed draws the same picture on every build.
 
 function rng(seed: number) {
   let a = seed >>> 0;
@@ -23,6 +23,8 @@ export function Facets({
   seed = 7,
   fill = 0.12,
   red = 2,
+  green = 1,
+  lineOpacity = 0.22,
   className = "",
 }: {
   cols?: number;
@@ -30,10 +32,12 @@ export function Facets({
   width?: number;
   height?: number;
   seed?: number;
-  /** Share of faces filled in emerald */
+  /** Share of faces shaded in the current colour */
   fill?: number;
-  /** How many faces are filled in the bull's red */
+  /** How many faces are filled in the bull's red, and in its green */
   red?: number;
+  green?: number;
+  lineOpacity?: number;
   className?: string;
 }) {
   const rand = rng(seed);
@@ -64,7 +68,9 @@ export function Facets({
   }
   const path = (t: Pt[]) => `M${t[0][0]} ${t[0][1]}L${t[1][0]} ${t[1][1]}L${t[2][0]} ${t[2][1]}Z`;
   const filled = tris.filter(() => rand() < fill);
-  const reds = Array.from({ length: red }, () => tris[Math.floor(rand() * tris.length)]);
+  const pick = () => tris[Math.floor(rand() * tris.length)];
+  const reds = Array.from({ length: red }, pick);
+  const greens = Array.from({ length: green }, pick);
 
   return (
     <svg aria-hidden viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="xMidYMid slice" className={className}>
@@ -74,7 +80,10 @@ export function Facets({
       {reds.map((t, i) => (
         <path key={`r${i}`} d={path(t)} fill="var(--color-accent)" fillOpacity={0.5} />
       ))}
-      <path d={tris.map(path).join("")} fill="none" stroke="currentColor" strokeOpacity={0.22} strokeWidth={1} vectorEffect="non-scaling-stroke" />
+      {greens.map((t, i) => (
+        <path key={`g${i}`} d={path(t)} fill="var(--color-emerald)" fillOpacity={0.45} />
+      ))}
+      <path d={tris.map(path).join("")} fill="none" stroke="currentColor" strokeOpacity={lineOpacity} strokeWidth={1} vectorEffect="non-scaling-stroke" />
     </svg>
   );
 }

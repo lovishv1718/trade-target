@@ -9,8 +9,8 @@ type SeriesDef = { key: string; name: string; color: string };
 // grid = rule, axis = rule-strong, ticks = muted, labels = ink-2.
 const GRID = "#e0d7c8";
 const AXIS = "#cbbfab";
-const TICK = "#5b655f";
-const LABEL = "#2f3c36";
+const TICK = "#67635b";
+const LABEL = "#3b3934";
 
 // Animation stays off: easing a whole series on every slider step reads as jitter.
 // The donut and the result figure carry the motion instead.
@@ -20,7 +20,7 @@ const axisProps = { tick: { fontSize: 12, fill: TICK }, tickLine: false };
 const xAxisLine = { stroke: AXIS };
 const tooltipProps = {
   contentStyle: { fontSize: 14, borderRadius: 6, border: `1px solid ${GRID}`, background: "#fdfbf7", padding: "8px 10px", boxShadow: "none" },
-  labelStyle: { color: "#10201a", fontWeight: 600, marginBottom: 4 },
+  labelStyle: { color: "#1a1917", fontWeight: 600, marginBottom: 4 },
   itemStyle: { padding: 0 },
 };
 const legendProps = {

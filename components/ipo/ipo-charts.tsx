@@ -8,10 +8,10 @@ import type { Subscription } from "@/lib/ipo";
 const C = {
   grid: "#e0d7c8", // rule
   axis: "#cbbfab", // rule-strong
-  tick: "#5b655f", // muted
-  zero: "#959b95", // faint: reference rule only
-  ink: "#10201a",
-  ipo: "#0f4d36",
+  tick: "#67635b", // muted
+  zero: "#9c978d", // faint: reference rule only
+  ink: "#1a1917",
+  ipo: "#1a1917",
   cursor: "#efe9de", // paper-2
 };
 const TICK = { fontSize: 12, fill: C.tick };

@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0b3427",
+  themeColor: "#1c1a17",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -46,17 +46,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="min-h-screen">
-        {/* The photograph tone: luminance mapped from deep emerald through sage to ivory (signature.css) */}
-        <svg aria-hidden width="0" height="0" className="absolute">
-          <filter id="tt-duotone" colorInterpolationFilters="sRGB">
-            <feColorMatrix type="matrix" values="0.2126 0.7152 0.0722 0 0 0.2126 0.7152 0.0722 0 0 0.2126 0.7152 0.0722 0 0 0 0 0 1 0" />
-            <feComponentTransfer>
-              <feFuncR type="table" tableValues="0.043 0.306 0.953" />
-              <feFuncG type="table" tableValues="0.204 0.490 0.933" />
-              <feFuncB type="table" tableValues="0.153 0.408 0.890" />
-            </feComponentTransfer>
-          </filter>
-        </svg>
         <Header />
         <main id="main">{children}</main>
         <Footer />

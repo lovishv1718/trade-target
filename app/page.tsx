@@ -94,6 +94,9 @@ export default function HomePage() {
               rows={6}
               width={800}
               height={600}
+              fill={0.1}
+              green={2}
+              lineOpacity={0.14}
               className="sg-facets pointer-events-none absolute -right-8 top-0 -z-10 hidden h-full w-[52%] [mask-image:linear-gradient(to_left,black_40%,transparent),linear-gradient(to_top,transparent,black_25%)] [mask-composite:intersect] md:block"
             />
             <p className="eyebrow">Today in one sentence</p>
@@ -196,7 +199,7 @@ export default function HomePage() {
               <li key={c.slug}>
                 <Link prefetch={false} href={`/calculators/${c.slug}/`} className="pm-card pm-lift group flex h-full flex-col justify-between gap-6 p-4 sm:p-6 md:gap-10 md:p-7">
                   <span>
-                    <span className="mb-5 inline-grid size-12 place-items-center rounded-full border border-rule-strong text-emerald transition-colors group-hover:border-emerald group-hover:bg-emerald group-hover:text-paper md:mb-7">
+                    <span className="mb-5 inline-grid size-12 place-items-center rounded-full border border-rule-strong text-ink transition-colors group-hover:border-emerald group-hover:bg-emerald group-hover:text-paper md:mb-7">
                       <Icon name={c.icon} size={22} />
                     </span>
                     <span className="block font-serif text-xl font-medium tracking-[-0.01em] text-ink md:text-2xl">{c.name.replace(" Calculator", "")}</span>
@@ -243,9 +246,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* The morning brief, on the emerald band with its facets --------------------------------- */}
+      {/* The morning brief, on the charcoal band with its facets -------------------------------- */}
       <section id="newsletter" className="surface-ink band-closing relative scroll-mt-20 overflow-hidden [background-image:none]" aria-labelledby="brief-title">
-        <Facets seed={8} cols={8} rows={5} width={800} height={500} red={1} className="pointer-events-none absolute -right-24 top-0 hidden h-full w-[55%] text-sage [mask-image:linear-gradient(to_left,black_30%,transparent)] lg:block" />
+        <Facets seed={8} cols={8} rows={5} width={800} height={500} red={1} green={1} lineOpacity={0.26} className="pointer-events-none absolute -right-24 top-0 hidden h-full w-[55%] text-paper [mask-image:linear-gradient(to_left,black_30%,transparent)] lg:block" />
         <div className="wrap relative grid gap-10 py-16 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] md:items-end md:gap-16 md:py-24">
           <div>
             <p className="eyebrow">The morning brief</p>
