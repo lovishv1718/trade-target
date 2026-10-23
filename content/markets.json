@@ -3,12 +3,12 @@
   "isSample": true,
   "note": "Sample values for this design preview. Wire to an exchange data feed before launch.",
   "ticker": [
-    { "id": "nifty50", "name": "Nifty 50", "value": 24312.45, "change": 118.6, "changePct": 0.49 },
-    { "id": "sensex", "name": "Sensex", "value": 79948.6, "change": 402.15, "changePct": 0.51 },
-    { "id": "niftybank", "name": "Nifty Bank", "value": 53214.3, "change": -96.4, "changePct": -0.18 },
-    { "id": "niftyit", "name": "Nifty IT", "value": 34880.15, "change": -212.55, "changePct": -0.61 },
-    { "id": "usdinr", "name": "USD/INR", "value": 88.42, "change": 0.07, "changePct": 0.08 },
-    { "id": "gold", "name": "Gold 10g", "value": 158920, "change": 640, "changePct": 0.4, "unit": "rupee" }
+    {"id": "nifty50", "name": "Nifty 50", "value": 25184.4, "change": 105.33, "changePct": 0.42},
+    {"id": "sensex", "name": "Sensex", "value": 82330.15, "change": 319.84, "changePct": 0.39},
+    {"id": "niftybank", "name": "Nifty Bank", "value": 56212.7, "change": -101.37, "changePct": -0.18},
+    {"id": "niftyit", "name": "Nifty IT", "value": 35906.55, "change": 323.8, "changePct": 0.91},
+    {"id": "usdinr", "name": "USD/INR", "value": 83.94, "change": -0.05, "changePct": -0.06},
+    {"id": "gold", "name": "Gold 10g", "value": 112450, "change": 302.8, "changePct": 0.27, "unit": "rupee"}
   ],
   "board": [
     { "id": "nifty50", "name": "Nifty 50", "value": 24312.45, "change": 118.6, "changePct": 0.49 },

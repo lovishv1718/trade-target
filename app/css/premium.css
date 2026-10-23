@@ -593,36 +593,75 @@
      Header
      ========================================================================== */
   .pm-tape {
-    background: var(--color-dark);
+    background: #0e100f;
     color: #ffffff;
     font-family: var(--font-mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.02em;
+    font-size: 0.6875rem;
+    letter-spacing: 0.01em;
   }
   /* A rule after every quote, so the join between the two copies of the moving track matches */
   .pm-tape li {
     border-right: 1px solid #3a3835;
-    padding-inline: 1.75rem;
+  }
+  /* The still strip on a wide screen, measured from the design: 10px type, 29px hairlines, the
+     row set 49px right of centre and a wider step after the first quote */
+  .hm-tape-still {
+    padding-left: 3.0625vw;
+    font-size: 0.625rem;
+    letter-spacing: 0.075em;
+  }
+  .hm-tape-v {
+    margin-left: 1.58em;
+  }
+  .hm-tape-c {
+    margin-left: 1.04em;
+  }
+  .hm-tape-still li {
+    height: 29px;
+    padding: 3px 19.5px 0 22px;
+    border-right: 0;
+  }
+  /* The design's gap before each figure varies from quote to quote; kept, so its hairlines land
+     where it draws them */
+  .hm-tape-still li:nth-child(1) .hm-tape-v,
+  .hm-tape-still li:nth-child(2) .hm-tape-v {
+    margin-left: calc(1.58em - 1px);
+  }
+  .hm-tape-still li:nth-child(3) .hm-tape-v,
+  .hm-tape-still li:nth-child(4) .hm-tape-v {
+    margin-left: calc(1.58em - 8px);
+  }
+  .hm-tape-still li:nth-child(5) .hm-tape-v {
+    margin-left: calc(1.58em - 6px);
+  }
+  .hm-tape-still li:nth-child(6) .hm-tape-v {
+    margin-left: calc(1.58em + 2px);
+  }
+  .hm-tape-still li + li {
+    border-left: 1px solid #696b69;
+  }
+  .hm-tape-still li:nth-child(2) {
+    padding-left: 28.5px;
   }
   .pm-header {
     position: sticky;
     top: 0;
     z-index: 40;
-    background: rgb(247 242 234 / 0.94);
+    container-type: inline-size;
+    background: rgb(246 242 233 / 0.96);
     -webkit-backdrop-filter: saturate(1.2) blur(10px);
     backdrop-filter: saturate(1.2) blur(10px);
-    border-bottom: 1px solid var(--color-rule);
+    border-bottom: 1px solid #efeadf;
   }
   .pm-nav-link {
     position: relative;
     display: inline-flex;
     align-items: center;
     min-height: 2.75rem;
-    padding-inline: 1rem;
     font-family: var(--font-mono);
-    font-size: 0.8125rem;
+    font-size: max(12px, calc(var(--u) * 13.5));
     font-weight: 500;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.02em;
     text-transform: uppercase;
     color: var(--color-ink);
     white-space: nowrap;
@@ -630,8 +669,8 @@
   .pm-nav-link::after {
     content: "";
     position: absolute;
-    left: 1rem;
-    right: 1rem;
+    left: 0;
+    right: 0;
     bottom: 0.375rem;
     height: 1.5px;
     background: var(--color-accent-bright);
@@ -643,11 +682,11 @@
     transform: scaleX(1);
   }
   .pm-wordmark {
-    font-family: var(--font-sans);
-    font-size: 1.625rem;
-    font-weight: 600;
-    letter-spacing: -0.04em;
-    color: var(--color-ink);
+    font-family: "Helvetica Neue", Helvetica, var(--font-arimo), Arimo, Arial, sans-serif;
+    font-size: 1.5rem;
+    font-weight: 650;
+    letter-spacing: -0.035em;
+    color: #0b0b0b;
   }
   .pm-icon-btn {
     display: inline-grid;
@@ -662,22 +701,117 @@
   .pm-icon-btn:hover {
     color: var(--color-accent);
   }
-  /* The writers link at the end of the bar: mono capitals and an arrow, after a hairline */
+  /* ---- The bar, measured from the design (drawn at 1600px: one design pixel is --u) ---- */
+  .hm-bar {
+    --u: calc(100cqw / 1600);
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 640px) {
+    .hm-bar {
+      padding-inline: 2rem;
+    }
+  }
+  .hm-bar-logo {
+    gap: 0.875rem;
+  }
+  .hm-mark {
+    width: 1.375rem;
+    height: 1.2rem;
+    color: #de6815;
+  }
+  .hm-bar-search {
+    display: inline-grid;
+    place-items: center;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    color: var(--color-ink);
+  }
+  .hm-bar-search svg {
+    width: 1.25rem;
+    height: 1.19rem;
+  }
+  .hm-bar-search:hover {
+    color: var(--color-accent);
+  }
+  .hm-bar-rule {
+    width: 1px;
+    height: 38px;
+    margin-inline: 1.25rem;
+    background: #76736c;
+  }
   .hm-bar-link {
     display: inline-flex;
     align-items: center;
-    gap: 1.75rem;
+    gap: 1.25rem;
     min-height: 2.75rem;
     font-family: var(--font-mono);
-    font-size: 0.8125rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--color-ink);
     white-space: nowrap;
   }
   .hm-bar-link:hover {
     color: var(--color-accent);
+  }
+  .hm-bar-arrow {
+    width: 14px;
+    height: 11px;
+  }
+  @media (min-width: 1280px) {
+    /* The design centres the icons 1.5px below the bar's middle and its capitals lower still */
+    .hm-bar {
+      padding-top: calc(var(--u) * 3);
+      padding-left: calc(var(--u) * 54);
+      padding-right: calc(var(--u) * 50);
+    }
+    .hm-bar-logo {
+      gap: calc(var(--u) * 18);
+    }
+    .hm-mark {
+      width: calc(var(--u) * 24);
+      height: calc(var(--u) * 21);
+    }
+    .pm-wordmark {
+      font-size: max(20px, calc(var(--u) * 29));
+    }
+    .hm-bar-links {
+      margin-left: calc(var(--u) * 187);
+      gap: calc(var(--u) * 33.5);
+    }
+    /* The design leaves a wider step before Calculators */
+    .hm-bar-links li:nth-child(6) {
+      margin-left: calc(var(--u) * 8.5);
+    }
+    .hm-bar .pm-nav-link {
+      top: calc(var(--u) * 3);
+      letter-spacing: 0.035em;
+    }
+    .hm-bar-search {
+      min-width: 0;
+    }
+    .hm-bar-search svg {
+      width: calc(var(--u) * 22);
+      height: calc(var(--u) * 21);
+    }
+    .hm-bar-rule {
+      height: calc(var(--u) * 36);
+      margin-left: calc(var(--u) * 36);
+      margin-right: calc(var(--u) * 41.5);
+    }
+    .hm-bar-link {
+      position: relative;
+      top: calc(var(--u) * 2.5);
+      gap: calc(var(--u) * 28.2);
+      font-size: max(11px, calc(var(--u) * 11.85));
+    }
+    .hm-bar-arrow {
+      position: relative;
+      top: calc(var(--u) * -1.5);
+      width: calc(var(--u) * 14);
+      height: calc(var(--u) * 11);
+    }
   }
 
   /* ==========================================================================
@@ -757,6 +891,13 @@
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--color-muted);
+  }
+  /* On the home page the Ask launcher waits until the hero has scrolled away; the design shows the
+     hero without it */
+  html:has([data-hero]) .ask-launcher:not([data-past-hero]) {
+    visibility: hidden;
+    opacity: 0;
+    translate: 0 0.5rem;
   }
   .pm-arrow {
     display: inline-block;
@@ -861,38 +1002,183 @@
     color: var(--color-ink);
   }
 
-  /* ---- Hero: the photograph runs under the words and fades into the page on the left ---- */
-  .hm-hero {
+  /* ---- Hero, as drawn: the sunset photograph from the design, the words set over its sky.
+     From 1024px every size and position is the design's, in design pixels (--u = width / 1600). */
+  .hm-hx {
     position: relative;
-    isolation: isolate;
-    overflow: hidden;
+    container-type: inline-size;
+    background: #f4f1e8;
   }
-  .hm-hero-photo {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
+  .hm-hx-photo {
+    position: relative;
+    aspect-ratio: 1600 / 762;
+    background: url("/images/hero/bse-sunset-960.webp") 78% 50% / cover no-repeat;
   }
-  .hm-hero-photo img {
-    filter: sepia(0.32) saturate(1.3) contrast(1.03) brightness(1.06);
+  .hm-hx-in {
+    --u: calc(100cqw / 1600);
+    padding: 3.5rem 1.25rem 2.5rem;
   }
-  .hm-hero-photo::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background:
-      linear-gradient(to right, #f7f2ea 0%, rgb(247 242 234 / 0.92) 26%, rgb(247 242 234 / 0.35) 46%, rgb(247 242 234 / 0) 62%),
-      linear-gradient(to top, rgb(196 81 31 / 0.18), rgb(196 81 31 / 0) 40%),
-      radial-gradient(60% 55% at 62% 62%, rgb(255 196 128 / 0.35), rgb(255 196 128 / 0) 70%);
-    pointer-events: none;
+  .hm-hx-h1 {
+    font-family: var(--font-serif);
+    font-size: clamp(3.5rem, 15vw, 5.5rem);
+    font-weight: 400;
+    line-height: 0.9;
+    letter-spacing: var(--h1-track);
+    font-optical-sizing: auto;
+    color: #0b0b0b;
   }
-  @media (max-width: 1023px) {
-    .hm-hero-photo::after {
-      background: linear-gradient(to bottom, #f7f2ea 0%, rgb(247 242 234 / 0.94) 46%, rgb(247 242 234 / 0.2) 72%, rgb(247 242 234 / 0) 100%);
+  .hm-hx-h1 span,
+  .hm-hx-h1 em {
+    display: block;
+  }
+  /* The design's roman is narrower than Newsreader draws it, its italic is not */
+  .hm-hx-h1 span {
+    transform: scaleX(var(--h1-sx));
+    transform-origin: 0 50%;
+  }
+  .hm-hx-h1 em {
+    position: relative;
+    top: 0.025em;
+    font-size: calc(var(--em-scale) * 1em);
+    font-style: italic;
+    letter-spacing: var(--em-track);
+    color: #c64e12;
+  }
+  .hm-hx-lede {
+    margin-top: 1.75rem;
+    font-size: 1.125rem;
+    line-height: 1.5;
+    color: #4d4c47;
+  }
+  .hm-hx-lede strong {
+    font-weight: 700;
+    color: #bf5220;
+  }
+  .hm-hx-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 2.25rem;
+    margin-top: 2.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: var(--cta-track);
+    text-transform: uppercase;
+    color: #0b0b0b;
+  }
+  /* The rule runs a little past the words, as drawn */
+  .hm-hx-cta .t {
+    padding-right: 0.625rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1.5px solid #d0703c;
+  }
+  /* On a 1x screen the 1.5px rule draws as one pixel; a faint second row keeps its weight */
+  @media (max-resolution: 1dppx) {
+    .hm-hx-cta .t {
+      box-shadow: 0 1px 0 rgb(208 112 60 / 0.4);
     }
   }
-  .hm-hero-lede strong {
-    font-weight: 600;
+  .hm-hx-cta .a {
+    padding-bottom: 0.75rem;
+    transition: transform var(--duration-fast) var(--ease-out);
+  }
+  .hm-hx-cta .a svg {
+    position: relative;
+    top: var(--cta-arrow-dy);
+    display: inline-block;
+    width: 14px;
+    height: 10px;
+    vertical-align: middle;
+  }
+  .hm-hx-cta:hover .t {
     color: var(--color-accent);
+  }
+  .hm-hx-cta:hover .a {
+    transform: translateX(3px);
+  }
+  .hm-hx-credit {
+    position: absolute;
+    right: 0.75rem;
+    bottom: 0.5rem;
+    font-size: 0.625rem;
+    color: rgb(255 255 255 / 0.8);
+  }
+  @media (min-width: 1024px) {
+    .hm-hx {
+      aspect-ratio: 1600 / 762;
+      background: url("/images/hero/bse-sunset.webp") 0 0 / 100% 100% no-repeat, #f4f1e8;
+    }
+    .hm-hx-photo {
+      display: none;
+    }
+    .hm-hx-in {
+      position: absolute;
+      inset: 0;
+      padding: 0;
+    }
+    .hm-hx-h1 {
+      position: absolute;
+      left: calc(var(--u) * var(--h1-x));
+      top: calc(var(--u) * var(--h1-y));
+      font-size: calc(var(--u) * var(--h1-size));
+      line-height: calc(var(--u) * 100.5);
+      letter-spacing: var(--h1-track);
+    }
+    .hm-hx-lede {
+      position: absolute;
+      left: calc(var(--u) * var(--lede-x));
+      top: calc(var(--u) * var(--lede-y));
+      margin: 0;
+      font-size: calc(var(--u) * var(--lede-size));
+      line-height: calc(var(--u) * 27.5);
+      white-space: nowrap;
+    }
+    .hm-hx-lede > * {
+      display: block;
+    }
+    .hm-hx-cta {
+      position: absolute;
+      left: calc(var(--u) * var(--cta-x));
+      top: calc(var(--u) * var(--cta-y));
+      margin: 0;
+      gap: calc(var(--u) * var(--cta-gap));
+      font-size: calc(var(--u) * var(--cta-size));
+      letter-spacing: var(--cta-track);
+    }
+    .hm-hx-cta .t,
+    .hm-hx-cta .a {
+      padding-bottom: calc(var(--u) * var(--cta-pad));
+    }
+    .hm-hx-cta .t {
+      padding-right: calc(var(--u) * 13);
+    }
+    .hm-hx-cta .a svg {
+      width: calc(var(--u) * 14);
+      height: calc(var(--u) * 10);
+    }
+    .hm-hx-credit {
+      right: calc(var(--u) * 16);
+    }
+  }
+  /* The measurements, in design pixels; tuned against the design at 1600 by 885 */
+  .hm-hx {
+    --h1-x: 143;
+    --h1-y: 138.6;
+    --h1-size: 135.2;
+    --h1-track: 0em;
+    --h1-sx: 0.819;
+    --em-scale: 0.9075;
+    --em-track: -0.038em;
+    --lede-x: 149;
+    --lede-y: 456;
+    --lede-size: 18.7;
+    --cta-x: 150;
+    --cta-y: 585;
+    --cta-gap: 23.5;
+    --cta-size: 13.5;
+    --cta-track: 0.082em;
+    --cta-pad: 11;
+    --cta-arrow-dy: -1.5px;
   }
 
   /* ---- The dark statement ---- */

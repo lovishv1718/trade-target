@@ -3,17 +3,33 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { LogoArt } from "../logo";
 import { openSearch } from "../search/search-trigger";
 
 type NavItem = { label: string; href: string };
 type MenuItem = NavItem & { children: NavItem[] };
 
+function ArrowMark() {
+  return (
+    <svg aria-hidden viewBox="0 0 24 21" className="hm-mark" fill="none" stroke="currentColor">
+      <path d="M2.4 19.6L19 3" strokeWidth="3.9" />
+      <path d="M9.5 2.3H20V12.5" strokeWidth="3.6" />
+    </svg>
+  );
+}
+
 function SearchIcon() {
   return (
-    <svg aria-hidden width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.3">
-      <circle cx="7" cy="7" r="5.2" />
-      <path d="M11 11l3.8 3.8" strokeLinecap="square" />
+    <svg aria-hidden viewBox="0 0 22 21" fill="none" stroke="currentColor">
+      <circle cx="9.5" cy="9" r="8" strokeWidth="1.5" />
+      <path d="M15.2 14.7L21.4 20.5" strokeWidth="1.4" />
+    </svg>
+  );
+}
+
+function LinkArrow() {
+  return (
+    <svg aria-hidden viewBox="0 0 14 11" className="hm-bar-arrow pm-arrow" fill="none" stroke="currentColor" strokeWidth="1.4">
+      <path d="M0 5.5H12.8M8.2 0.8l4.7 4.7-4.7 4.7" />
     </svg>
   );
 }
@@ -65,12 +81,13 @@ export function SiteNav({ items, menu }: { items: NavItem[]; menu: MenuItem[] })
   return (
     <>
       <div className="pm-header">
-        <nav aria-label="Main" className="wrap flex h-[5.25rem] items-center gap-4">
-          <Link href="/" aria-label="TradeTarget home" className="flex shrink-0 items-center gap-3">
-            <LogoArt variant="mark" height={26} eager alt="" />
+        {/* From 1280px every position follows the design, drawn at 1600px wide (1 design px = --u) */}
+        <nav aria-label="Main" className="hm-bar flex h-[85px] items-center">
+          <Link href="/" aria-label="TradeTarget home" className="hm-bar-logo flex shrink-0 items-center">
+            <ArrowMark />
             <span className="pm-wordmark">tradetarget</span>
           </Link>
-          <ul className="mx-auto hidden items-center xl:flex">
+          <ul className="hm-bar-links hidden items-center xl:flex">
             {items.map((item) => (
               <li key={item.href}>
                 <Link prefetch={false} href={item.href} aria-current={active(item.href) ? "page" : undefined} className="pm-nav-link">
@@ -79,13 +96,13 @@ export function SiteNav({ items, menu }: { items: NavItem[]; menu: MenuItem[] })
               </li>
             ))}
           </ul>
-          <div className="ml-auto flex shrink-0 items-center gap-2 xl:ml-0">
-            <button type="button" onClick={openSearch} aria-label="Search stories, IPOs and calculators" className="pm-icon-btn">
+          <div className="hm-bar-end ml-auto flex shrink-0 items-center">
+            <button type="button" onClick={openSearch} aria-label="Search stories, IPOs and calculators" className="hm-bar-search">
               <SearchIcon />
             </button>
-            <span aria-hidden className="mx-4 hidden h-10 w-px bg-ink/50 sm:block" />
+            <span aria-hidden className="hm-bar-rule hidden sm:block" />
             <Link prefetch={false} href="/hire-writers/" className="hm-bar-link hidden sm:inline-flex">
-              Hire our writers <span className="pm-arrow" aria-hidden>→</span>
+              Hire our writers <LinkArrow />
             </Link>
             <button
               ref={menuButton}
@@ -94,7 +111,7 @@ export function SiteNav({ items, menu }: { items: NavItem[]; menu: MenuItem[] })
               aria-expanded={open}
               aria-controls="site-menu"
               aria-label="Open menu"
-              className="pm-icon-btn xl:hidden"
+              className="pm-icon-btn ml-2 xl:hidden"
             >
               <svg aria-hidden width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="currentColor" strokeWidth="1.6">
                 <path d="M0 1h18M0 6h18M0 11h18" />

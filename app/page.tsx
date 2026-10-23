@@ -110,28 +110,28 @@ export default function HomePage() {
 
   return (
     <>
-      {/* Hero: the promise over the exchange, the photograph fading into the page on the left ---- */}
-      <section className="hm-hero" aria-labelledby="hero-title">
-        <div className="hm-hero-photo lg:left-[38%]">
-          <Image src={hero.src} alt="" fill priority sizes="(min-width: 1024px) 62vw, 100vw" className="object-cover object-[50%_70%] lg:object-[45%_30%]" />
-          <p className="absolute bottom-3 right-4 text-[0.625rem] text-white/85">Photo: {hero.credit}</p>
+      {/* Hero, exactly as designed: the sunset photograph from the design, the words over its sky */}
+      <section className="hm-hx" data-hero aria-labelledby="hero-title">
+        <div className="hm-hx-in">
+          <h1 id="hero-title" className="hm-hx-h1">
+            <span>Indian</span>
+            <span>markets,</span>
+            <em>made clear.</em>
+          </h1>
+          <p className="hm-hx-lede">
+            <span>IPOs, results, company analysis and personal finance,</span> <strong>written by people who follow India’s markets every day.</strong>{" "}
+            <span>No jargon, no tips, every figure sourced.</span>
+          </p>
+          <Link prefetch={false} href="/ipo/" className="hm-hx-cta">
+            <span className="t">Explore the IPO desk</span>
+            <span className="a" aria-hidden>
+              <svg viewBox="0 0 14 10" fill="none" stroke="currentColor" strokeWidth="1.6">
+                <path d="M0 4.8H12.8M9 0.7l4.1 4.1L9 8.9" />
+              </svg>
+            </span>
+          </Link>
         </div>
-        <div className="wrap flex min-h-[860px] flex-col justify-start pb-[340px] pt-16 sm:min-h-[900px] lg:min-h-[min(86vh,800px)] lg:justify-center lg:py-24">
-          <div className="max-w-[44rem] lg:pl-[4.5rem]">
-            <h1 id="hero-title" className="hm-display">
-              <span className="block">Indian</span>
-              <span className="block">markets,</span>
-              <em className="block">made clear.</em>
-            </h1>
-            <p className="hm-hero-lede mt-9 max-w-[33rem] text-lg leading-relaxed text-muted md:max-w-none md:text-[1.3125rem] md:leading-[1.55]">
-              <span className="md:block">IPOs, results, company analysis and personal finance,</span> <strong className="md:block">written by people who follow India’s markets every day.</strong>{" "}
-              <span className="md:block">No jargon, no tips, every figure sourced.</span>
-            </p>
-            <Cta href="/ipo/" className="mt-12">
-              Explore the IPO desk
-            </Cta>
-          </div>
-        </div>
+        <div className="hm-hx-photo" role="img" aria-label="The BSE building on Dalal Street at sunset" />
       </section>
 
       {/* The dark statement ---------------------------------------------------------------- */}
@@ -227,7 +227,7 @@ export default function HomePage() {
             ipos={getIpos()}
             buildDate={istToday()}
             intro={
-              <div>
+              <div key="intro">
                 <p className="eyebrow">IPO desk</p>
                 <h2 id="ipo-title" className="hm-title mt-5">
                   <span className="block">Every issue,</span>
@@ -237,7 +237,7 @@ export default function HomePage() {
               </div>
             }
             aside={
-              <section aria-labelledby="results-heading" className="self-start border border-rule bg-white px-6 pb-2 pt-6 md:px-9">
+              <section key="aside" aria-labelledby="results-heading" className="self-start border border-rule bg-white px-6 pb-2 pt-6 md:px-9">
                 <div className="flex items-center justify-between gap-4 border-b border-rule pb-5">
                   <h3 id="results-heading" className="hm-label font-medium text-ink">
                     Results this week
