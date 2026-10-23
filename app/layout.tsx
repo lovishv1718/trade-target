@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Newsreader } from "next/font/google";
+import { Inter, Source_Serif_4 } from "next/font/google";
 import site from "@/content/site.json";
 import { AskWidget } from "@/components/assistant/ask-widget";
 import { Footer } from "@/components/layout/footer";
@@ -7,12 +7,11 @@ import { Header } from "@/components/layout/header";
 import { SearchOverlay } from "@/components/search/search-overlay";
 import "./globals.css";
 
-// Three faces: Newsreader, an editorial serif with optical sizes and a true italic, for headlines
-// and figures; Geist for reading and interface; Geist Mono for the tape and tables. Variable files
-// cover every weight used.
-const display = Newsreader({ subsets: ["latin"], style: ["normal", "italic"], axes: ["opsz"], variable: "--font-newsreader", display: "swap" });
-const text = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
-const mono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono", display: "swap" });
+// Two faces: Source Serif 4, a sturdy serif with optical sizes, set bold for headlines and figures;
+// Inter for reading, interface and the tape, with tabular figures where numbers line up. Variable
+// files cover every weight used.
+const display = Source_Serif_4({ subsets: ["latin"], style: ["normal", "italic"], axes: ["opsz"], variable: "--font-sourceserif", display: "swap" });
+const text = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -28,12 +27,12 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1c1a17",
+  themeColor: "#121212",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-IN" className={`${display.variable} ${text.variable} ${mono.variable}`} suppressHydrationWarning>
+    <html lang="en-IN" className={`${display.variable} ${text.variable}`} suppressHydrationWarning>
       <head>
         {/* Flags scripting for the reveal styles, then marks every image as loaded once it decodes,
             so photographs wipe in. Registered before any image parses and independent of

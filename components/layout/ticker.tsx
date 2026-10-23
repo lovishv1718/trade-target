@@ -14,8 +14,8 @@ function Item({ q, echo = false }: { q: Quote; echo?: boolean }) {
   const decimals = q.id === "usdinr" ? 2 : q.unit === "rupee" ? 0 : 2;
   return (
     <li aria-hidden={echo || undefined} className={`flex shrink-0 items-center gap-2 whitespace-nowrap px-4 tabular ${echo ? "dx-tape-copy" : ""}`}>
-      <span className="uppercase text-white/60">{q.name}</span>
-      <span className="text-white">
+      <span className="font-semibold uppercase tracking-[0.04em] text-white">{q.name}</span>
+      <span className="text-white/85">
         {q.unit === "rupee" ? "₹" : ""}
         {formatNumber(q.value, decimals)}
       </span>
@@ -57,7 +57,10 @@ export function Ticker() {
             </ul>
           </div>
         </div>
-        <p className="flex shrink-0 items-center border-l border-white/12 px-4 uppercase text-white/50">Indicative</p>
+        <p className="flex shrink-0 items-center gap-2 border-l border-white/10 px-4 text-xs text-white/55">
+          Previous close
+          <span className="hidden sm:inline">· Indicative</span>
+        </p>
       </div>
     </div>
   );

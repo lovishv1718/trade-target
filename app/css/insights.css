@@ -1,144 +1,139 @@
 /* ==========================================================================
-   Signature theme
+   Insights theme
 
-   Private bank meets financial magazine: warm ivory paper, warm near-black ink and
-   charcoal bands, an editorial serif for headlines and figures, and the two colours of the
-   bull in TradeTarget's mark kept small: emerald for actions and emphasis, red for one
-   accent. This file loads after system.css and restyles its
-   components in place, so every page takes the theme without its markup changing.
+   White and a warm off-white, near-black type, a bold serif for headlines and the orange
+   of the bull in TradeTarget's mark as the one accent. Bands alternate between the two
+   grounds; the tape, the morning brief and the footer sit on near-black. This file loads
+   after system.css and restyles its components in place, so every page takes the theme
+   without its markup changing.
 
    Colour roles:
-     ink            type, rules, the selected state; charcoal for the dark bands
-     emerald        buttons, links, the italic words in titles, sliders
-     accent         the bull's red: the active nav rule, section numbers, link underlines
+     ink            type, rules, the selected state, the dark bands
+     accent         the bull's orange: buttons, links, category labels, numbers
+     accent-bright  the same orange at display size only (headline words, rules, marks)
      up / down      market direction, always with a sign or an arrow as well
    ========================================================================== */
 
 @theme static {
-  --color-white: #fdfbf7; /* cards and fields: a lighter ivory, never a cold white */
-  --color-paper: #f7f3ec;
-  --color-paper-2: #efe9de;
-  --color-paper-3: #e7dfd1;
-  --color-ink: #1a1917; /* 16.1:1 on paper */
-  --color-ink-2: #3b3934; /* 10.6:1 */
-  --color-muted: #67635b; /* 5.5:1 */
-  --color-faint: #9c978d; /* decorative only */
-  --color-rule: #e0d7c8;
-  --color-rule-strong: #cbbfab;
+  --color-paper: #ffffff;
+  --color-paper-2: #faf7f3;
+  --color-paper-3: #f2ede6;
+  --color-ink: #121212; /* 18.4:1 on white */
+  --color-ink-2: #34322f; /* 12.2:1 */
+  --color-muted: #6b6762; /* 5.6:1 */
+  --color-faint: #a19c95; /* decorative only */
+  --color-rule: #ebe6df;
+  --color-rule-strong: #d8d1c7;
 
-  --color-emerald: #0f4d36; /* 9.1:1 on paper */
-  --color-emerald-2: #1a6a4b;
-  --color-sage: #a9c2b3;
+  --color-up: #0f8048; /* 5.0:1 on white */
+  --color-down: #c83a2b; /* 5.1:1 on white */
+  --color-up-bright: #46d98a;
+  --color-down-bright: #ff7a66;
+  --color-success: #0f8048;
+  --color-error: #c83a2b;
 
-  --color-up: #1c7a4b; /* 5.0:1 on paper */
-  --color-down: #b7372b; /* 5.3:1 on paper */
-  --color-up-bright: #8ee0b1;
-  --color-down-bright: #ff9a8a;
-  --color-success: #1c7a4b;
-  --color-error: #b7372b;
+  --color-ipo: #2b5d8a;
+  --color-company: #a8361a;
+  --color-company-mark: #e8521f;
+  --color-money: #0f8048;
+  --color-learn: #574a9e;
 
-  --color-ipo: #2a5d7a;
-  --color-company: #8a5a1f;
-  --color-company-mark: #c8402f;
-  --color-money: #1a6a4b;
-  --color-learn: #4f4a7d;
+  --color-accent: #d1441a; /* 4.6:1 on white: buttons and small text */
+  --color-accent-bright: #ee5622; /* 3.4:1: display sizes and marks only */
+  --color-accent-deep: #a8361a;
+  --color-accent-tint: #fdece4;
+  --color-dark: #121212;
+  --color-dark-2: #1c1c1c;
 
-  --color-accent: #c8402f; /* 4.9:1 on paper */
-  --color-accent-deep: #a3321f;
-  --color-accent-tint: #f5e2da;
-  --color-dark: #1c1a17; /* warm charcoal for the tape, the brief and the footer */
-  --color-dark-2: #24221e;
+  --font-serif: var(--font-sourceserif), "Source Serif 4", ui-serif, Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-inter), "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-inter), "Inter", ui-sans-serif, system-ui, sans-serif;
 
-  --font-serif: var(--font-newsreader), "Newsreader", ui-serif, Georgia, "Times New Roman", serif;
-  --font-sans: var(--font-geist), "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-mono: var(--font-geist-mono), "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-
-  --shadow-overlay: 0 24px 48px -16px rgb(26 25 23 / 0.22), 0 2px 6px rgb(26 25 23 / 0.06);
+  --shadow-overlay: 0 24px 48px -16px rgb(18 18 18 / 0.2), 0 2px 6px rgb(18 18 18 / 0.06);
 }
 
 :root {
   --focus: var(--color-ink);
-  --surface: var(--color-paper);
-  --field-bg: #fdfbf7;
-  --btn-2-bg: transparent;
-  --paper-light: #f7f3ec;
-  --paper-2-light: #efe9de;
+  --surface: #ffffff;
+  --field-bg: #ffffff;
+  --btn-2-bg: #ffffff;
+  --paper-light: #ffffff;
+  --paper-2-light: #faf7f3;
   --photo-tone: transparent;
   --nav-h: 4.5rem;
-  /* A quiet facet texture for the dark bands, after the triangles of the bull */
-  --facet-tile: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='138' viewBox='0 0 160 138'><g fill='none' stroke='%23f7f3ec' stroke-opacity='.045' stroke-width='1'><path d='M0 0L80 0L40 69Z M80 0L160 0L120 69Z M40 69L120 69L80 0Z M0 138L40 69L80 138Z M80 138L120 69L160 138Z M40 69L80 138L120 69Z M0 0L40 69L0 138 M160 0L120 69L160 138'/></g></svg>");
 }
 
 @layer base {
   body {
-    background: var(--color-paper);
+    background: #ffffff;
     color: var(--color-ink);
     font-family: var(--font-sans);
+    font-feature-settings: "cv11";
   }
   ::selection {
-    background: #e9dfcb;
+    background: var(--color-accent-tint);
   }
   :focus-visible {
     outline: 2px solid var(--focus);
     outline-offset: 2px;
+  }
+  /* Inter stands in for the mono face: figures line up */
+  .font-mono {
+    font-variant-numeric: tabular-nums;
   }
 }
 
 @layer components {
   /* ---- Surfaces ----------------------------------------------------------------- */
   .surface-paper {
-    --color-ink: #1a1917;
-    --color-ink-2: #3b3934;
-    --color-muted: #67635b;
-    --color-faint: #9c978d;
-    --color-rule: #e0d7c8;
-    --color-rule-strong: #cbbfab;
-    --color-paper: #f7f3ec;
-    --color-paper-2: #efe9de;
-    --color-up: #1c7a4b;
-    --color-down: #b7372b;
-    --color-ipo: #2a5d7a;
-    --color-company: #8a5a1f;
-    --color-money: #1a6a4b;
-    --color-learn: #4f4a7d;
-    --color-accent: #c8402f;
-    --focus: #1a1917;
-    --surface: #f7f3ec;
-    --field-bg: #fdfbf7;
-    background-color: #f7f3ec;
+    --color-ink: #121212;
+    --color-ink-2: #34322f;
+    --color-muted: #6b6762;
+    --color-faint: #a19c95;
+    --color-rule: #ebe6df;
+    --color-rule-strong: #d8d1c7;
+    --color-paper: #ffffff;
+    --color-paper-2: #faf7f3;
+    --color-up: #0f8048;
+    --color-down: #c83a2b;
+    --color-accent: #d1441a;
+    --focus: #121212;
+    --surface: #ffffff;
+    --field-bg: #ffffff;
+    background-color: #ffffff;
   }
   .surface-paper-2 {
     background-color: var(--color-paper-2);
-    --surface: #efe9de;
-    --btn-2-bg: transparent;
+    --surface: #faf7f3;
+    --btn-2-bg: #ffffff;
   }
   .surface-ink {
     background-color: var(--color-dark);
-    background-image: var(--facet-tile);
-    color: #f7f3ec;
-    --color-ink: #f7f3ec;
-    --color-ink-2: rgb(247 243 236 / 0.84);
-    --color-muted: #b3ada2; /* 7.7:1 on the charcoal ground */
-    --color-faint: #7d776d;
-    --color-rule: rgb(247 243 236 / 0.14);
-    --color-rule-strong: rgb(247 243 236 / 0.26);
-    --color-paper: #1c1a17;
-    --color-paper-2: #24221e;
-    --color-up: #8ee0b1;
-    --color-down: #ff9a8a;
-    --color-ipo: #9cc3dd;
-    --color-company: #f0b98a;
-    --color-money: #8ee0b1;
-    --color-learn: #c9c3f0;
-    --color-accent: #f39a84;
-    --focus: #f7f3ec;
-    --surface: #1c1a17;
-    --field-bg: #24221e;
+    background-image: none;
+    color: #ffffff;
+    --color-ink: #ffffff;
+    --color-ink-2: rgb(255 255 255 / 0.84);
+    --color-muted: #a8a49e; /* 7.9:1 on the dark ground */
+    --color-faint: #75716b;
+    --color-rule: rgb(255 255 255 / 0.12);
+    --color-rule-strong: rgb(255 255 255 / 0.24);
+    --color-paper: #121212;
+    --color-paper-2: #1c1c1c;
+    --color-up: #46d98a;
+    --color-down: #ff7a66;
+    --color-ipo: #8fb5e0;
+    --color-company: #ffa27e;
+    --color-money: #46d98a;
+    --color-learn: #c4baf2;
+    --color-accent: #ff8a5c;
+    --focus: #ffffff;
+    --surface: #121212;
+    --field-bg: #1c1c1c;
     --btn-2-bg: transparent;
   }
 
   .wrap {
-    max-width: 1240px;
+    max-width: 1280px;
   }
   @media (min-width: 768px) {
     .wrap {
@@ -169,8 +164,8 @@
   /* ---- Type ------------------------------------------------------------------------ */
   .headline {
     font-family: var(--font-serif);
-    font-weight: 500;
-    letter-spacing: -0.015em;
+    font-weight: 700;
+    letter-spacing: -0.02em;
     font-optical-sizing: auto;
   }
   .deck {
@@ -180,37 +175,34 @@
   .kicker {
     font-family: var(--font-sans);
     font-size: 0.6875rem;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 0.12em;
   }
   .kicker-pill {
     display: inline-flex;
     align-items: center;
-    padding: 0.125rem 0.625rem;
+    padding: 0.125rem 0.5rem;
     border: 1px solid var(--color-rule);
-    border-radius: 999px;
-    background: var(--color-white);
+    border-radius: 3px;
+    background: var(--color-paper);
   }
-  /* Eyebrow: small capitals in emerald, led in by a short rule */
+  /* Eyebrow: letter-spaced capitals led in by a short orange rule */
   .eyebrow {
     display: inline-flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.875rem;
     font-family: var(--font-sans);
     font-size: 0.75rem;
     font-weight: 600;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--color-ink-2);
   }
   .eyebrow::before {
     content: "";
-    width: 1.75rem;
-    height: 1px;
-    background: var(--color-emerald);
-  }
-  .surface-ink .eyebrow::before {
-    background: var(--color-sage);
+    width: 2rem;
+    height: 2px;
+    background: var(--color-accent-bright);
   }
   .dateline dt,
   .mkt-stamp,
@@ -229,45 +221,45 @@
     }
   }
 
-  /* ---- Buttons: rounded, sans, emerald -------------------------------------------- */
+  /* ---- Buttons: orange, a small radius ------------------------------------------- */
   .btn {
-    --btn-bg: var(--color-emerald);
-    --btn-fg: #f7f3ec;
-    --btn-bd: var(--color-emerald);
-    --btn-bg-h: var(--color-emerald-2);
-    --btn-fg-h: #f7f3ec;
-    --btn-bd-h: var(--color-emerald-2);
+    --btn-bg: var(--color-accent);
+    --btn-fg: #ffffff;
+    --btn-bd: var(--color-accent);
+    --btn-bg-h: var(--color-accent-deep);
+    --btn-fg-h: #ffffff;
+    --btn-bd-h: var(--color-accent-deep);
     --btn-px: 1.375rem;
-    border-radius: 999px;
+    border-radius: 4px;
     font-family: var(--font-sans);
-    font-size: 0.875rem;
-    font-weight: 500;
+    font-size: 0.9375rem;
+    font-weight: 600;
     letter-spacing: 0;
     text-transform: none;
   }
   .surface-ink .btn {
-    --btn-bg: #f7f3ec;
-    --btn-fg: #1a1917;
-    --btn-bd: #f7f3ec;
-    --btn-bg-h: #ffffff;
-    --btn-fg-h: #1a1917;
-    --btn-bd-h: #ffffff;
+    --btn-bg: #ee5622;
+    --btn-fg: #ffffff;
+    --btn-bd: #ee5622;
+    --btn-bg-h: #d1441a;
+    --btn-fg-h: #ffffff;
+    --btn-bd-h: #d1441a;
   }
   .btn-secondary {
     --btn-bg: var(--btn-2-bg);
     --btn-fg: var(--color-ink);
     --btn-bd: var(--color-rule-strong);
-    --btn-bg-h: rgb(26 25 23 / 0.04);
+    --btn-bg-h: var(--btn-2-bg);
     --btn-fg-h: var(--color-ink);
     --btn-bd-h: var(--color-ink);
   }
   .surface-ink .btn-secondary {
     --btn-bg: transparent;
-    --btn-fg: #f7f3ec;
-    --btn-bd: rgb(247 243 236 / 0.3);
-    --btn-bg-h: rgb(247 243 236 / 0.06);
-    --btn-fg-h: #f7f3ec;
-    --btn-bd-h: #f7f3ec;
+    --btn-fg: #ffffff;
+    --btn-bd: rgb(255 255 255 / 0.3);
+    --btn-bg-h: rgb(255 255 255 / 0.06);
+    --btn-fg-h: #ffffff;
+    --btn-bd-h: #ffffff;
   }
   .btn-tertiary,
   .btn-text {
@@ -287,11 +279,16 @@
   .btn-icon {
     --btn-px: 0;
   }
+  .btn-lg {
+    --btn-h: 3.5rem;
+    --btn-px: 1.875rem;
+    font-size: 1rem;
+  }
 
-  /* ---- Tags and chips: rounded, sans --------------------------------------------- */
+  /* ---- Tags and chips -------------------------------------------------------------- */
   .tag,
   .chip {
-    border-radius: 999px;
+    border-radius: 4px;
     border-color: var(--color-rule-strong);
     font-family: var(--font-sans);
     font-size: 0.8125rem;
@@ -304,12 +301,12 @@
   .chip[aria-checked="true"] {
     background: var(--color-ink);
     border-color: var(--color-ink);
-    color: #f7f3ec;
+    color: #ffffff;
   }
 
   /* ---- Fields ------------------------------------------------------------------------- */
   .field {
-    border-radius: 6px;
+    border-radius: 4px;
     border-color: var(--color-rule-strong);
   }
   .field:focus-visible,
@@ -332,10 +329,10 @@
   }
   .section-title {
     font-family: var(--font-serif);
-    font-weight: 500;
+    font-weight: 700;
     font-size: clamp(1.625rem, 2.6vw, 2.25rem);
     line-height: 1.1;
-    letter-spacing: -0.015em;
+    letter-spacing: -0.02em;
   }
   .section-dek {
     font-size: var(--text-md);
@@ -346,18 +343,18 @@
     font-weight: 600;
     letter-spacing: 0;
     text-transform: none;
-    color: var(--color-emerald);
+    color: var(--color-accent);
   }
   .section-end {
     border-top-color: var(--color-rule);
   }
   .end-bar {
     background: var(--color-ink);
-    color: #f7f3ec;
+    color: #ffffff;
   }
   .surface-ink .end-bar {
-    background: #f7f3ec;
-    color: #1a1917;
+    background: #ffffff;
+    color: #121212;
   }
   .end-bar-label {
     font-family: var(--font-serif);
@@ -366,8 +363,8 @@
 
   /* ---- Stories and photographs ------------------------------------------------------ */
   .story::before {
-    height: 1px;
-    background: var(--color-ink);
+    height: 2px;
+    background: var(--color-accent-bright);
   }
   .photo-frame {
     background: var(--color-paper-3);
@@ -375,14 +372,9 @@
     overflow: hidden;
   }
   .photo-frame::after {
-    border-color: rgb(26 25 23 / 0.08);
+    border-color: rgb(18 18 18 / 0.06);
   }
-  /* Photographs keep their own colour, evened out a touch so a row of them sits together.
-     Inside an article the picture is shown exactly as it is. */
   .photo-frame img {
-    filter: saturate(0.88) contrast(1.02);
-  }
-  #article-main .photo-frame img {
     filter: none;
   }
   /* The paper's own cover graphics carry its mark in the top-left corner. Framing them from the
@@ -416,7 +408,7 @@
   /* ---- Notes, tables ------------------------------------------------------------------ */
   .note {
     border-left-width: 2px;
-    border-left-color: var(--color-ink);
+    border-left-color: var(--color-accent-bright);
     background: var(--color-paper-2);
   }
   .table-wrap {
@@ -443,13 +435,13 @@
   }
   .data-table tbody tr:nth-child(even),
   .article-body tbody tr:nth-child(even) {
-    background: rgb(26 25 23 / 0.018);
+    background: #fcfbf9;
   }
   .data-table tbody tr[data-live] {
-    background: rgb(28 122 75 / 0.07);
+    background: var(--color-accent-tint);
   }
   .data-table tbody tr[data-live] > :first-child {
-    box-shadow: inset 2px 0 0 var(--color-emerald);
+    box-shadow: inset 2px 0 0 var(--color-accent-bright);
   }
 
   /* ---- Market state, change chips ---------------------------------------------------- */
@@ -465,8 +457,8 @@
   }
   .chg {
     border-color: transparent;
-    border-radius: 999px;
-    font-family: var(--font-mono);
+    border-radius: 4px;
+    font-variant-numeric: tabular-nums;
   }
 
   /* ---- Article body ---------------------------------------------------------------- */
@@ -477,9 +469,9 @@
   }
   .article-body > p:first-child,
   .lede {
-    font-family: var(--font-serif);
-    font-size: 1.3125rem;
-    line-height: 1.55;
+    font-family: var(--font-sans);
+    font-size: 1.1875rem;
+    line-height: 1.6;
     color: var(--color-ink);
   }
   .article-body > p:first-child::first-line,
@@ -490,28 +482,28 @@
   .article-body h2,
   .article-body h3 {
     font-family: var(--font-serif);
-    font-weight: 500;
-    letter-spacing: -0.01em;
+    font-weight: 700;
+    letter-spacing: -0.015em;
   }
   .article-body a {
-    color: var(--color-emerald);
-    text-decoration-color: rgb(200 64 47 / 0.55);
+    color: var(--color-accent);
+    text-decoration-color: rgb(209 68 26 / 0.4);
   }
   .article-body ul > li::before {
-    background: var(--color-ink);
+    background: var(--color-accent-bright);
   }
   .article-body ol > li::marker {
     color: var(--color-accent);
   }
   .article-body blockquote::before {
-    color: var(--color-accent);
+    color: var(--color-accent-bright);
   }
   .article-body blockquote::after,
   .stat {
-    text-decoration-color: var(--color-accent);
+    text-decoration-color: var(--color-accent-bright);
   }
 
-  /* ---- Calculators: soft instruments, the readout on the emerald band --------------- */
+  /* ---- Calculators: soft instruments, the readout on near-black --------------------- */
   .instrument {
     border-color: var(--color-rule);
     border-radius: 6px;
@@ -527,7 +519,7 @@
     --cx-thumb-h: 18px;
     border-color: var(--color-rule);
     border-radius: 6px;
-    background: var(--color-white);
+    background: #ffffff;
   }
   .cx-unit:focus-within {
     border-color: var(--color-ink);
@@ -538,63 +530,60 @@
   }
   .cx-num-affix {
     background: var(--color-paper-2);
-    font-family: var(--font-mono);
   }
   .cx-num-input {
-    font-family: var(--font-mono);
-    font-weight: 500;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
   }
   .cx-num::after,
   .cx-stop,
   .cx-preset::before {
-    background: var(--color-emerald);
+    background: var(--color-accent-bright);
   }
   .cx-fill {
-    background: var(--color-emerald);
+    background: var(--color-accent-bright);
   }
   .cx-thumb {
-    border: 2px solid var(--color-emerald);
+    border: 2px solid var(--color-accent-bright);
     border-radius: 50%;
-    background: var(--color-white);
-    box-shadow: 0 2px 6px rgb(26 25 23 / 0.18);
+    background: #ffffff;
+    box-shadow: 0 2px 6px rgb(18 18 18 / 0.16);
   }
   .cx-thumb::after {
     display: none;
   }
   .cx-unit[data-drag] .cx-thumb,
   .cx-range:active ~ .cx-rail .cx-thumb {
-    background: var(--color-emerald);
+    background: var(--color-accent-bright);
   }
   .cx-readout {
     border-radius: 6px;
     background-color: var(--color-dark);
-    background-image:
-      radial-gradient(120% 140% at 100% 0%, rgb(247 243 236 / 0.1) 0%, rgb(247 243 236 / 0) 55%),
-      var(--facet-tile);
-    --color-ink: #f7f3ec;
-    --color-ink-2: rgb(247 243 236 / 0.9);
-    --color-muted: #b3ada2;
-    --color-rule: rgb(247 243 236 / 0.2);
+    background-image: radial-gradient(110% 140% at 100% 0%, rgb(238 86 34 / 0.38) 0%, rgb(238 86 34 / 0) 58%);
+    --color-ink: #ffffff;
+    --color-ink-2: rgb(255 255 255 / 0.9);
+    --color-muted: #a8a49e;
+    --color-rule: rgb(255 255 255 / 0.18);
   }
   .cx-readout .kicker {
-    color: #b3ada2;
+    color: #a8a49e;
   }
-  /* The switch: a rounded track with a round thumb, emerald when on */
+  /* The switch: a rounded track with a round thumb, orange when on */
   .calc-switch-track {
     border-radius: 999px;
     background: var(--color-paper-3);
   }
   .calc-switch-thumb {
     border-radius: 999px;
-    background: var(--color-white);
-    box-shadow: 0 1px 3px rgb(26 25 23 / 0.25);
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgb(18 18 18 / 0.25);
   }
   .calc-switch-input:checked + .calc-switch-track {
-    border-color: var(--color-emerald);
-    background: var(--color-emerald);
+    border-color: var(--color-accent);
+    background: var(--color-accent);
   }
   .calc-switch-input:checked ~ .calc-switch-thumb {
-    background: #f7f3ec;
+    background: #ffffff;
   }
 
   /* ==========================================================================
@@ -602,20 +591,22 @@
      ========================================================================== */
   .pm-tape {
     background: var(--color-dark);
-    color: #f7f3ec;
-    font-family: var(--font-mono);
-    font-size: 0.71875rem;
-    letter-spacing: 0.02em;
+    color: #ffffff;
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
   }
   /* A rule after every quote, so the join between the two copies of the moving track matches */
   .pm-tape li {
-    border-right: 1px solid rgb(247 243 236 / 0.12);
+    border-right: 1px solid rgb(255 255 255 / 0.1);
+    padding-inline: 1.25rem;
   }
   .pm-header {
     position: sticky;
     top: 0;
     z-index: 40;
-    background: rgb(247 243 236 / 0.9);
+    background: rgb(255 255 255 / 0.94);
     -webkit-backdrop-filter: saturate(1.3) blur(10px);
     backdrop-filter: saturate(1.3) blur(10px);
     border-bottom: 1px solid var(--color-rule);
@@ -627,9 +618,9 @@
     min-height: 2.75rem;
     padding-inline: 0.75rem;
     font-family: var(--font-sans);
-    font-size: 0.875rem;
+    font-size: 0.9375rem;
     font-weight: 500;
-    color: var(--color-ink-2);
+    color: var(--color-ink);
     white-space: nowrap;
   }
   .pm-nav-link::after {
@@ -637,9 +628,9 @@
     position: absolute;
     left: 0.75rem;
     right: 0.75rem;
-    bottom: 0.5rem;
-    height: 1.5px;
-    background: var(--color-accent);
+    bottom: 0.375rem;
+    height: 2px;
+    background: var(--color-accent-bright);
     transform: scaleX(0);
     transition: transform var(--duration-base) var(--ease-out);
   }
@@ -652,10 +643,10 @@
     transform: scaleX(1);
   }
   .pm-wordmark {
-    font-family: var(--font-serif);
-    font-size: 1.5rem;
-    font-weight: 600;
-    letter-spacing: -0.02em;
+    font-family: var(--font-sans);
+    font-size: 1.625rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
     color: var(--color-ink);
   }
   .pm-icon-btn {
@@ -664,7 +655,7 @@
     width: 2.75rem;
     height: 2.75rem;
     border: 1px solid var(--color-rule-strong);
-    border-radius: 999px;
+    border-radius: 4px;
     background: transparent;
     color: var(--color-ink);
     transition: border-color var(--duration-base) var(--ease-out);
@@ -672,74 +663,109 @@
   .pm-icon-btn:hover {
     border-color: var(--color-ink);
   }
+  /* The search field in the bar: a button that looks like the box it opens */
+  .tt-search {
+    flex-shrink: 0;
+    align-items: center;
+    white-space: nowrap;
+    gap: 0.625rem;
+    width: 17.5rem;
+    min-height: 2.75rem;
+    padding-inline: 0.875rem;
+    border: 1px solid var(--color-rule-strong);
+    border-radius: 4px;
+    background: var(--color-paper-2);
+    font-size: 0.875rem;
+    color: var(--color-muted);
+    text-align: left;
+    transition: border-color var(--duration-base) var(--ease-out);
+  }
+  .tt-search:hover {
+    border-color: var(--color-ink);
+  }
 
   /* ==========================================================================
      Front page
      ========================================================================== */
-  /* The cover: today in one sentence, set large in the serif */
-  .sg-cover {
-    max-width: 17ch;
+  .tt-hero {
+    background: var(--color-paper-2);
+  }
+  .tt-hero-title {
     font-family: var(--font-serif);
-    font-weight: 400;
-    font-size: clamp(2.375rem, 5.6vw, 5rem);
-    line-height: 1.04;
-    letter-spacing: -0.025em;
+    font-weight: 700;
+    font-size: clamp(2.625rem, 5.4vw, 5.25rem);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
     text-wrap: balance;
     font-optical-sizing: auto;
     color: var(--color-ink);
   }
-  .sg-cover em {
-    font-style: italic;
-    color: var(--color-emerald);
+  .tt-hero-title em {
+    font-style: normal;
+    color: var(--color-accent-bright);
   }
-  .sg-cover a {
-    text-decoration-line: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.14em;
-    text-decoration-color: var(--color-rule-strong);
-    transition: text-decoration-color var(--duration-base) var(--ease-out);
+  /* The hero picture, cut on the slant, with a warm wash over its lower half */
+  .tt-frame {
+    clip-path: polygon(14% 0, 100% 0, 86% 100%, 0 100%);
   }
-  .sg-cover a:hover {
-    text-decoration-color: var(--color-accent);
+  @media (min-width: 1024px) {
+    .tt-frame {
+      clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%);
+    }
   }
-  /* Section numbers and story numerals: the serif's italic in the bull's red */
-  .sg-num {
+  /* A late-afternoon wash: orange rising from the street, a peach sky over the tower */
+  .tt-frame::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to top, rgb(238 86 34 / 0.58), rgb(238 86 34 / 0) 62%),
+      radial-gradient(120% 70% at 85% 0%, rgb(244 162 97 / 0.55), rgb(244 162 97 / 0) 62%);
+    mix-blend-mode: multiply;
+    pointer-events: none;
+  }
+  /* Section numbers: the serif at a light weight in orange */
+  .tt-num {
     font-family: var(--font-serif);
-    font-style: italic;
-    font-weight: 400;
-    color: var(--color-accent);
+    font-size: clamp(2.75rem, 4.4vw, 3.75rem);
+    font-weight: 300;
+    line-height: 0.85;
+    letter-spacing: -0.03em;
+    color: var(--color-accent-bright);
+    font-optical-sizing: auto;
   }
-  .sg-title {
+  .tt-label {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .tt-title {
     font-family: var(--font-serif);
-    font-weight: 500;
-    font-size: clamp(2rem, 3.8vw, 3.25rem);
-    line-height: 1.04;
-    letter-spacing: -0.02em;
+    font-weight: 700;
+    font-size: clamp(1.875rem, 3.4vw, 2.875rem);
+    line-height: 1.06;
+    letter-spacing: -0.025em;
     text-wrap: balance;
   }
-  .sg-title em {
-    font-style: italic;
-    font-weight: 400;
-    color: var(--color-emerald);
-  }
-  .surface-ink .sg-title em {
-    color: var(--color-sage);
-  }
-  .sg-facets {
-    color: var(--color-ink);
+  .tt-title em {
+    font-style: normal;
+    color: var(--color-accent-bright);
   }
   .pm-section {
     padding-block: 4.5rem;
   }
   @media (min-width: 768px) {
     .pm-section {
-      padding-block: 6.5rem;
+      padding-block: 6rem;
     }
   }
   .pm-card {
     border: 1px solid var(--color-rule);
     border-radius: 6px;
-    background: var(--color-white);
+    background: #ffffff;
     transition: border-color var(--duration-base) var(--ease-out);
   }
   a.pm-card:hover,
@@ -756,35 +782,37 @@
   @media (hover: hover) and (prefers-reduced-motion: no-preference) {
     .pm-lift:hover {
       transform: translateY(-3px);
-      box-shadow: 0 24px 44px -30px rgb(26 25 23 / 0.45);
+      box-shadow: 0 24px 44px -30px rgb(18 18 18 / 0.4);
     }
   }
   .pm-lift:hover,
   .pm-lift:has(a:focus-visible) {
     border-color: var(--color-ink);
   }
-  /* The company card's stand-in for a picture: initials in the serif italic on an ink disc */
+  /* The company card's stand-in for a picture: initials on a soft orange disc */
   .pm-monogram {
     display: inline-grid;
     place-items: center;
     width: 3.5rem;
     height: 3.5rem;
     border-radius: 999px;
-    background: var(--color-ink);
+    background: var(--color-accent-tint);
     font-family: var(--font-serif);
-    font-size: 1.375rem;
-    font-style: italic;
-    font-weight: 400;
-    color: #f7f3ec;
-    transition: background-color 200ms var(--ease-out);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-accent-deep);
+    transition:
+      background-color 200ms var(--ease-out),
+      color 200ms var(--ease-out);
   }
   .group:hover .pm-monogram {
-    background: var(--color-emerald);
+    background: var(--color-accent-bright);
+    color: #ffffff;
   }
   .pm-figure {
     font-family: var(--font-serif);
-    font-weight: 400;
-    letter-spacing: -0.025em;
+    font-weight: 700;
+    letter-spacing: -0.03em;
     line-height: 1;
     font-optical-sizing: auto;
   }

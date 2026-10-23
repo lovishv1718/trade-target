@@ -50,7 +50,7 @@ export function IpoDesk({ ipos, buildDate }: { ipos: Ipo[]; buildDate: string })
           {rows.map(({ ipo, status }) => (
             <li key={ipo.slug} className="border-b border-rule">
               <Link prefetch={false} href={`/ipo/${ipo.slug}/`} className="group grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-1 py-5 sm:grid-cols-[minmax(0,1fr)_9rem_8rem_7.5rem]">
-                <span className="font-serif text-lg font-medium leading-snug tracking-tight text-ink group-hover:underline group-hover:decoration-accent group-hover:underline-offset-4">{ipo.name}</span>
+                <span className="font-serif text-lg font-bold leading-snug tracking-tight text-ink group-hover:underline group-hover:decoration-accent group-hover:underline-offset-4">{ipo.name}</span>
                 <span className="pm-meta col-start-1 row-start-2 sm:col-start-auto sm:row-start-auto">
                   {ipo.dates.open && ipo.dates.close ? `${formatDayMonth(ipo.dates.open)} – ${formatDayMonth(ipo.dates.close)}` : ipo.dates.close ? `Closed ${formatDayMonth(ipo.dates.close)}` : "Dates to come"}
                 </span>

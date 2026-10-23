@@ -51,7 +51,7 @@ export function Footer() {
         <div className="grid gap-6 border-b border-rule pb-8 md:grid-cols-[auto_minmax(0,1fr)_auto] md:items-center md:gap-8">
           <Link href="/" aria-label="TradeTarget home" className="flex items-center gap-2.5">
             <LogoArt variant="mark" height={26} alt="" />
-            <span className="pm-wordmark">TradeTarget</span>
+            <span className="pm-wordmark">tradetarget</span>
           </Link>
           <p className="max-w-md text-md leading-normal text-ink-2">{site.tagline}. Finance content writing for brokers, AMCs and fintechs.</p>
           <div>

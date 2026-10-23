@@ -3,7 +3,7 @@
 @import "./css/data.css";
 /* Tokens, base styles and the shared component system */
 @import "./css/system.css";
-/* The signature theme: ivory paper, emerald ink from the bull in the mark, an editorial serif,
-   and the bull's red as the one accent. Loaded last so it restyles the system's components in
+/* The insights theme: white and a warm off-white, a bold serif for headlines and the orange of
+   the bull in the mark as the one accent. Loaded last so it restyles the system's components in
    place. */
-@import "./css/signature.css";
+@import "./css/insights.css";

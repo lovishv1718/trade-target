@@ -1,6 +1,6 @@
-// Section labels speak in one quiet mono voice in the premium theme, whatever their section.
+// Section labels are set in the accent orange, whatever their section.
 export function kickerColor(_label: string) {
-  return "text-muted";
+  return "text-accent";
 }
 
 /** The section label. `pill` sets it on a soft tint of its own colour, as on story cards. */
