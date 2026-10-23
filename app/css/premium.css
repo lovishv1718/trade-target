@@ -49,7 +49,8 @@
   --color-dark-2: #161616;
 
   --font-serif: var(--font-newsreader), "Newsreader", ui-serif, Georgia, "Times New Roman", serif;
-  --font-sans: var(--font-inter), "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* Helvetica where the system has it (Apple devices); Arimo, its free metric match, everywhere else */
+  --font-sans: "Helvetica Neue", Helvetica, var(--font-arimo), Arimo, Arial, sans-serif;
   --font-mono: var(--font-jbmono), "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
   --shadow-overlay: 0 24px 48px -16px rgb(20 20 20 / 0.18), 0 2px 6px rgb(20 20 20 / 0.06);
@@ -78,7 +79,6 @@
     background: var(--color-paper);
     color: var(--color-ink);
     font-family: var(--font-sans);
-    font-feature-settings: "cv11", "ss01";
   }
   ::selection {
     background: var(--color-accent-tint);
