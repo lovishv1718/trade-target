@@ -101,14 +101,14 @@ const MARKS = [
   ["Smarter", "decisions"],
 ];
 
-// Recently covered: the reference's strip under the hero, linked to the stories themselves
-const RECENT: { name: string; tag: "Results" | "IPO" | "Analysis" | "Comparison"; slug?: string; href?: string }[] = [
-  { name: "NTPC", tag: "Results", slug: "ntpc-q4-2026-result" },
-  { name: "Jio Platforms", tag: "IPO", href: "/ipo/jio-platforms-ipo/" },
-  { name: "SAIL", tag: "Analysis", slug: "steel-authority-of-india-fundamental-analysis" },
-  { name: "Divi’s Labs", tag: "Results", slug: "divis-lab-q4-2026-results" },
-  { name: "Colgate-Palmolive", tag: "Analysis", slug: "colgate-palmolive-fundamental-analysis" },
-  { name: "PPFAS vs HDFC", tag: "Comparison", slug: "parag-parikh-flexi-cap-fund-vs-hdfc-flexi-cap-fund" },
+// Recently covered: the strip under the hero, each story with its company's logo
+const RECENT: { name: string; tag: "Results" | "IPO" | "Analysis" | "Comparison"; logo: string; slug?: string; href?: string }[] = [
+  { name: "NTPC", tag: "Results", logo: "ntpc", slug: "ntpc-q4-2026-result" },
+  { name: "Jio Platforms", tag: "IPO", logo: "jio", href: "/ipo/jio-platforms-ipo/" },
+  { name: "SAIL", tag: "Analysis", logo: "sail", slug: "steel-authority-of-india-fundamental-analysis" },
+  { name: "Divi’s Labs", tag: "Results", logo: "divis", slug: "divis-lab-q4-2026-results" },
+  { name: "Colgate-Palmolive", tag: "Analysis", logo: "colgate", slug: "colgate-palmolive-fundamental-analysis" },
+  { name: "PPFAS vs HDFC", tag: "Comparison", logo: "ppfas", slug: "parag-parikh-flexi-cap-fund-vs-hdfc-flexi-cap-fund" },
 ];
 
 // The three services, each description split where the design breaks it
@@ -186,24 +186,22 @@ export default function HomePage() {
         <div className="hm-hx-photo" role="img" aria-label="The BSE building on Dalal Street at sunset" />
       </section>
 
-      {/* Recently covered ----------------------------------------------------------------------- */}
+      {/* Recently covered: set into the foot of the hero, where its photograph turns to mist ---- */}
       <section className="hm-rc" aria-labelledby="rc-title">
         <div className="hm-rc-c">
-          <h2 id="rc-title" className="hm-rc-lab">
-            <span className="eyebrow">Recently covered</span>
-            <span className="hm-rc-sub">on TradeTarget</span>
+          <h2 id="rc-title" className="hm-rc-h">
+            Recently covered on <em>TradeTarget.</em>
           </h2>
           <ul className="hm-rc-list">
             {RECENT.map((r) => (
-              <li key={r.name}>
+              <li key={r.name} data-logo={r.logo}>
                 <Link prefetch={false} href={r.href ?? getArticleBySlug(r.slug!)!.path} className="hm-rc-item">
-                  <span className="hm-rc-tag" data-t={r.tag}>
-                    {r.tag}
-                  </span>
-                  <span className="hm-rc-name">
-                    {r.name}
-                    <Arrow />
-                  </span>
+                  <Image src={`/images/logos/${r.logo}.webp`} alt="" width={160} height={120} unoptimized className="hm-rc-logo" />
+                  <span className="hm-rc-name">{r.name}</span>
+                  <span className="hm-rc-tag">{r.tag}</span>
+                  <svg aria-hidden viewBox="0 0 18 12" className="hm-rc-arrow" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path d="M0 6h16.6M11.6 1l5 5-5 5" />
+                  </svg>
                 </Link>
               </li>
             ))}

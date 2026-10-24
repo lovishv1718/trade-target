@@ -1065,6 +1065,17 @@
       radial-gradient(120% 55% at 100% 70%, rgb(247 200 150 / 0.4), rgb(247 200 150 / 0) 70%),
       linear-gradient(180deg, #f5f2ea 0%, #f2ede3 100%);
   }
+  /* The foot of the hero turns to the warm mist the Recently covered strip is set on */
+  .hm-hx::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 22%;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgb(245 229 212 / 0) 0%, rgb(245 229 212 / 0.55) 40%, rgb(245 229 212 / 0.93) 76%, #f5e5d4 100%);
+  }
   .hm-hx-photo {
     position: absolute;
     left: 0;
