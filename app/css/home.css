@@ -7,6 +7,423 @@
 
 @layer components {
   /* ==========================================================================
+     Recently covered: the strip under the hero
+     ========================================================================== */
+  .hm-rc {
+    container-type: inline-size;
+    border-bottom: 1px solid #e6dfd2;
+    background: linear-gradient(180deg, #f3eee4, #f7f3eb);
+  }
+  .hm-rc-c {
+    padding: 1.75rem 1.25rem 1.5rem;
+  }
+  .hm-rc-lab {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 0.75rem;
+  }
+  .hm-rc-lab .eyebrow {
+    color: #3d3b37;
+  }
+  .hm-rc-sub {
+    font-family: var(--font-serif);
+    font-size: 1.0625rem;
+    font-style: italic;
+    color: #8a857d;
+  }
+  .hm-rc-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 1.25rem;
+    border-top: 1px solid #e0d9cc;
+  }
+  .hm-rc-list li {
+    border-bottom: 1px solid #e0d9cc;
+  }
+  .hm-rc-list li:nth-child(odd) {
+    border-right: 1px solid #e0d9cc;
+  }
+  .hm-rc-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    height: 100%;
+    padding: 1rem 0.875rem 1.125rem;
+    transition: background-color 250ms var(--ease-out);
+  }
+  .hm-rc-item:hover {
+    background: rgb(255 255 255 / 0.55);
+  }
+  .hm-rc-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #6f6a62;
+  }
+  .hm-rc-tag::before {
+    content: "";
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 999px;
+    background: currentColor;
+  }
+  .hm-rc-tag[data-t="Results"] {
+    color: #1c7a48;
+  }
+  .hm-rc-tag[data-t="IPO"] {
+    color: #2457c5;
+  }
+  .hm-rc-tag[data-t="Analysis"] {
+    color: #c4511f;
+  }
+  .hm-rc-tag[data-t="Comparison"] {
+    color: #7a5f3a;
+  }
+  .hm-rc-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-serif);
+    font-size: 1.3125rem;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    color: #141414;
+    transition: color 250ms var(--ease-out);
+  }
+  .hm-rc-name svg {
+    flex: none;
+    width: 0.75rem;
+    height: 0.5rem;
+    opacity: 0;
+    transform: translateX(-6px);
+    transition:
+      opacity 250ms var(--ease-out),
+      transform 250ms var(--ease-out);
+  }
+  .hm-rc-item:hover .hm-rc-name {
+    color: var(--color-accent);
+  }
+  .hm-rc-item:hover .hm-rc-name svg,
+  .hm-rc-item:focus-visible .hm-rc-name svg {
+    opacity: 1;
+    transform: none;
+  }
+  @media (min-width: 640px) {
+    .hm-rc-c {
+      padding-inline: 2rem;
+    }
+    .hm-rc-list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .hm-rc-list li:nth-child(odd) {
+      border-right: 0;
+    }
+    .hm-rc-list li:not(:nth-child(3n)) {
+      border-right: 1px solid #e0d9cc;
+    }
+  }
+  /* One line from 1280px: the label, then the six stories between hairlines */
+  @media (min-width: 1280px) {
+    .hm-rc-c {
+      --u: calc(min(1360px, 100cqw - 80px) / 1360);
+      display: grid;
+      grid-template-columns: calc(var(--u) * 214) minmax(0, 1fr);
+      align-items: stretch;
+      width: calc(var(--u) * 1360);
+      margin-inline: auto;
+      padding: 0;
+    }
+    .hm-rc-lab {
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 0.375rem;
+      padding-block: 1.625rem;
+    }
+    .hm-rc-list {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      margin: 0;
+      border-top: 0;
+      border-left: 1px solid #e0d9cc;
+    }
+    .hm-rc-list li,
+    .hm-rc-list li:not(:nth-child(3n)) {
+      border-bottom: 0;
+      border-right: 1px solid #e0d9cc;
+    }
+    .hm-rc-lab .eyebrow {
+      white-space: nowrap;
+    }
+    .hm-rc-item {
+      justify-content: center;
+      padding: 1.5rem 1rem 1.5rem 1.125rem;
+    }
+    .hm-rc-name {
+      font-size: calc(var(--u) * 19.5);
+      white-space: nowrap;
+    }
+  }
+
+  /* ==========================================================================
+     Our approach
+     ========================================================================== */
+  .hm-ap {
+    position: relative;
+    container-type: inline-size;
+    overflow: hidden;
+    background: #faf6ed;
+    padding-block: 4.5rem;
+  }
+  .hm-ap-bg {
+    display: none;
+  }
+  .hm-ap-c {
+    position: relative;
+    padding-inline: 1.25rem;
+  }
+  .hm-ap-c .eyebrow {
+    color: #3c3c39;
+  }
+  .hm-ap-h {
+    margin-top: 1.25rem;
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 9vw, 4.75rem);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    font-optical-sizing: auto;
+    color: #161717;
+  }
+  .hm-ap-h > span {
+    display: block;
+  }
+  .hm-ap-h em,
+  .hm-ap-title em {
+    font-style: italic;
+    color: #c55a24;
+  }
+  .hm-ap-marks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    margin-top: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #3c3c39;
+  }
+  .hm-ap-marks li::before {
+    content: "";
+    display: inline-block;
+    width: 0.375rem;
+    height: 0.375rem;
+    margin-right: 0.5rem;
+    border-radius: 999px;
+    background: #d66a2c;
+    vertical-align: 0.1em;
+  }
+  .hm-ap-list {
+    display: grid;
+    gap: 2.5rem;
+    margin-top: 3rem;
+  }
+  .hm-ap-num {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 3.5rem;
+    line-height: 1;
+    font-variant-numeric: lining-nums;
+    color: #c85a22;
+  }
+  .hm-ap-title {
+    margin-top: 1rem;
+    font-family: var(--font-serif);
+    font-size: 1.875rem;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #222220;
+  }
+  .hm-ap-title span,
+  .hm-ap-title em {
+    display: block;
+  }
+  .hm-ap-text {
+    margin-top: 0.75rem;
+    font-size: 1rem;
+    line-height: 1.55;
+    color: #6b6a67;
+  }
+  .hm-ap-text span + span::before {
+    content: " ";
+  }
+  @media (min-width: 640px) {
+    .hm-ap-c {
+      padding-inline: 2rem;
+    }
+  }
+  @media (min-width: 768px) {
+    .hm-ap-list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 2rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hm-ap {
+      padding-block: 0;
+    }
+    .hm-ap-bg {
+      --u: calc(min(1360px, 100cqw - 80px) / 1360);
+      display: block;
+      position: absolute;
+      inset: 0;
+      background: #faf6ed url("/images/home/approach.webp") no-repeat;
+      background-size: calc(var(--u) * 1547.7) calc(var(--u) * 788.3);
+      background-position: calc(50cqw - var(--u) * 782.5) 0;
+    }
+    .hm-ap-c {
+      --u: calc(min(1360px, 100cqw - 80px) / 1360);
+      width: calc(var(--u) * 1360);
+      height: calc(var(--u) * 788.3);
+      margin-inline: auto;
+      padding: 0;
+    }
+    .hm-ap-c > *,
+    .hm-ap-item > * {
+      position: absolute;
+      margin: 0;
+    }
+    .hm-ap-c .eyebrow {
+      left: calc(var(--u) * -9.5);
+      top: calc(var(--u) * 149.2);
+      font-size: calc(var(--u) * 13.3);
+      line-height: 1;
+      letter-spacing: calc(var(--u) * 1.6);
+      word-spacing: calc(var(--u) * 3);
+      white-space: nowrap;
+    }
+    .hm-ap-h {
+      left: calc(var(--u) * -0.5);
+      top: calc(var(--u) * 204.7);
+      font-size: calc(var(--u) * 77);
+      line-height: calc(var(--u) * 73.5);
+      white-space: nowrap;
+    }
+    /* The design's roman is narrower than Newsreader draws it, its italic is not */
+    .hm-ap-h > span:first-child {
+      transform: scaleX(0.956);
+      transform-origin: 0 50%;
+    }
+    .hm-ap-h .r {
+      display: inline-block;
+      transform: scaleX(0.94);
+      transform-origin: 0 50%;
+    }
+    .hm-ap-h em {
+      margin-left: calc(var(--u) * -21.3);
+      letter-spacing: -0.035em;
+    }
+    /* The arc's three marks, set beside the design's large faded numbers */
+    .hm-ap-marks {
+      inset: 0;
+      display: block;
+      font-size: calc(var(--u) * 12.6);
+      line-height: calc(var(--u) * 18.4);
+      letter-spacing: calc(var(--u) * 1.3);
+    }
+    .hm-ap-marks li {
+      position: absolute;
+      white-space: nowrap;
+    }
+    .hm-ap-marks li::before {
+      content: none;
+    }
+    .hm-ap-marks li span {
+      display: block;
+    }
+    .hm-ap-marks li:nth-child(1) {
+      left: calc(var(--u) * 1137.9);
+      top: calc(var(--u) * 127.5);
+    }
+    .hm-ap-marks li:nth-child(2) {
+      left: calc(var(--u) * 1218.7);
+      top: calc(var(--u) * 247.5);
+    }
+    .hm-ap-marks li:nth-child(3) {
+      left: calc(var(--u) * 1254);
+      top: calc(var(--u) * 373.2);
+    }
+    .hm-ap-list {
+      inset: 0;
+      display: block;
+    }
+    .hm-ap-item {
+      position: absolute;
+      inset: 0;
+      --nx: 12.3;
+      --tx: 15;
+      --bx: 14.1;
+      --ny: 485.2;
+    }
+    .hm-ap-item:nth-child(2) {
+      --nx: 496.9;
+      --tx: 499.6;
+      --bx: 499.7;
+      --ny: 491;
+    }
+    .hm-ap-item:nth-child(3) {
+      --nx: 952.5;
+      --tx: 956.2;
+      --bx: 956.2;
+      --ny: 491;
+    }
+    .hm-ap-num {
+      left: calc(var(--u) * var(--nx));
+      top: calc(var(--u) * var(--ny));
+      font-size: calc(var(--u) * 72);
+      transform: scaleX(0.85);
+      transform-origin: 0 50%;
+    }
+    /* Newsreader's 1 runs wider than the design's */
+    .hm-ap-item:first-child .hm-ap-num {
+      transform: scaleX(0.75);
+    }
+    .hm-ap-title {
+      left: calc(var(--u) * var(--tx));
+      top: calc(var(--u) * 559.3);
+      font-size: calc(var(--u) * 36);
+      line-height: calc(var(--u) * 41.6);
+      letter-spacing: -0.0025em;
+      white-space: nowrap;
+    }
+    .hm-ap-title em {
+      letter-spacing: 0.022em;
+    }
+    .hm-ap-text {
+      left: calc(var(--u) * var(--bx));
+      top: calc(var(--u) * 649.1);
+      font-size: calc(var(--u) * 18);
+      line-height: calc(var(--u) * 25.2);
+      white-space: nowrap;
+    }
+    .hm-ap-text span {
+      display: block;
+    }
+    .hm-ap-text span + span::before {
+      content: none;
+    }
+  }
+
+  /* ==========================================================================
      IPO desk
      ========================================================================== */
   .hm-ipo {
@@ -679,13 +1096,13 @@
   }
 
   /* ==========================================================================
-     Calculators
+     Calculators: the coins design
      ========================================================================== */
   .hm-calc {
     position: relative;
     container-type: inline-size;
     overflow: hidden;
-    background: #f6f3ec;
+    background: #faf6ed;
     padding-block: 4.5rem;
   }
   .hm-calc-bg {
@@ -701,7 +1118,7 @@
   .hm-calc-h {
     margin-top: 1.25rem;
     font-family: var(--font-serif);
-    font-size: clamp(2.75rem, 11vw, 5.375rem);
+    font-size: clamp(2.75rem, 11vw, 4.75rem);
     font-weight: 400;
     line-height: 0.94;
     letter-spacing: -0.03em;
@@ -712,7 +1129,7 @@
     display: block;
   }
   .hm-calc-h .soft {
-    color: #71706f;
+    color: #7a7874;
   }
   .hm-calc-h em {
     font-style: italic;
@@ -720,22 +1137,22 @@
   }
   .hm-calc-dek {
     margin-top: 1.25rem;
-    font-size: 1.0625rem;
+    font-size: 1rem;
     line-height: 1.6;
-    color: #66635e;
+    color: #75726d;
   }
   .hm-calc-cta {
     display: inline-flex;
     align-items: center;
     gap: 2rem;
-    margin-top: 1.75rem;
-    padding-bottom: 0.625rem;
+    margin-top: 1.5rem;
+    padding-bottom: 0.5rem;
     border-bottom: 2px solid #c35a30;
     font-family: var(--font-mono);
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     font-weight: 500;
-    letter-spacing: 0.18em;
     line-height: 1;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
     color: #2a2825;
   }
@@ -744,36 +1161,36 @@
   }
   .hm-calc-cta svg,
   .hm-calc-open svg {
-    width: 0.75rem;
-    height: 0.5rem;
+    width: 0.625rem;
+    height: 0.4rem;
   }
   .hm-calc-grid {
     display: grid;
     margin-top: 2.5rem;
-    border-top: 1px solid #e4e1db;
-    border-left: 1px solid #e4e1db;
-    background: #f7f4ed;
+    border-top: 1px solid #e6e2da;
+    border-left: 1px solid #e6e2da;
+    background: #faf6ed;
   }
   .hm-calc-cell {
     position: relative;
-    border-right: 1px solid #e4e1db;
-    border-bottom: 1px solid #e4e1db;
+    border-right: 1px solid #e6e2da;
+    border-bottom: 1px solid #e6e2da;
   }
   .hm-calc-link {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    padding: 1.75rem 1.5rem;
+    display: grid;
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+    column-gap: 1.25rem;
+    padding: 1.5rem 1.25rem;
   }
   .hm-calc-icon {
-    width: 2.375rem;
+    grid-row: span 3;
+    width: 2.25rem;
     height: auto;
   }
   .hm-calc-name {
-    margin-top: 1.25rem;
     font-family: var(--font-serif);
-    font-size: 1.5rem;
-    line-height: 1.1;
+    font-size: 1.25rem;
+    line-height: 1.15;
     letter-spacing: -0.01em;
     color: #1d1c19;
   }
@@ -781,26 +1198,27 @@
     color: var(--color-accent);
   }
   .hm-calc-text {
-    margin-top: 0.75rem;
-    font-size: 0.9375rem;
-    line-height: 1.55;
-    color: #85827d;
+    margin-top: 0.375rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: #8a877f;
   }
   .hm-calc-text span + span::before {
     content: " ";
   }
   .hm-calc-open {
     display: inline-flex;
-    align-self: flex-start;
     align-items: center;
-    gap: 1.5rem;
-    margin-top: 1.5rem;
-    padding-bottom: 0.625rem;
+    justify-self: start;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-bottom: 0.375rem;
     border-bottom: 2px solid #c35a30;
     font-family: var(--font-mono);
-    font-size: 0.8125rem;
+    font-size: 0.6875rem;
     font-weight: 500;
-    letter-spacing: 0.2em;
+    line-height: 1;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
     color: #2a2825;
   }
@@ -822,14 +1240,14 @@
       display: block;
       position: absolute;
       inset: 0;
-      background: url("/images/home/calculators.webp") no-repeat;
-      background-size: calc(var(--u) * 1826.9) calc(var(--u) * 961);
-      background-position: calc(50cqw - var(--u) * 770.1) 0;
+      background: #faf6ed url("/images/home/calculators-coins.webp") no-repeat;
+      background-size: calc(var(--u) * 1959.6) calc(var(--u) * 680.6);
+      background-position: calc(50cqw - var(--u) * 853.6) 0;
     }
     .hm-calc-c {
       --u: calc(min(1360px, 100cqw - 80px) / 1360);
       width: calc(var(--u) * 1360);
-      height: calc(var(--u) * 961);
+      height: calc(var(--u) * 680.6);
       margin-inline: auto;
       padding: 0;
     }
@@ -838,89 +1256,91 @@
       margin: 0;
     }
     .hm-calc-c .eyebrow {
-      left: calc(var(--u) * 7);
-      top: calc(var(--u) * 77.7);
-      font-size: calc(var(--u) * 13.3);
+      left: calc(var(--u) * 8);
+      top: calc(var(--u) * 53.8);
+      font-size: calc(var(--u) * 12.4);
       line-height: 1;
-      letter-spacing: calc(var(--u) * 2.7);
-      word-spacing: calc(var(--u) * 1.9);
+      letter-spacing: calc(var(--u) * 2.6);
+      word-spacing: calc(var(--u) * -1);
       white-space: nowrap;
     }
     .hm-calc-h {
-      left: calc(var(--u) * 10.2);
-      top: calc(var(--u) * 121.5);
-      font-size: calc(var(--u) * 92);
-      line-height: calc(var(--u) * 80.4);
-      letter-spacing: -0.055em;
+      left: calc(var(--u) * 8.7);
+      top: calc(var(--u) * 89.5);
+      font-size: calc(var(--u) * 77.8);
+      line-height: calc(var(--u) * 68.2);
+      letter-spacing: -0.032em;
       white-space: nowrap;
     }
-    /* The design sets each part of the second line at its own width */
+    /* "Sixteen" is drawn narrower than Newsreader sets it */
     .hm-calc-h .soft {
-      letter-spacing: -0.06em;
+      display: inline-block;
+      transform: scaleX(0.84);
+      transform-origin: 0 50%;
     }
     .hm-calc-h em {
-      margin-left: calc(var(--u) * 15.5);
-      letter-spacing: -0.005em;
+      margin-left: calc(var(--u) * 10.8);
+      letter-spacing: 0.023em;
     }
     .hm-calc-dek {
-      left: calc(var(--u) * 18.4);
-      top: calc(var(--u) * 292.7);
-      font-size: calc(var(--u) * 20.1);
-      line-height: calc(var(--u) * 31);
+      left: calc(var(--u) * 15.2);
+      top: calc(var(--u) * 235);
+      font-size: calc(var(--u) * 17.7);
+      line-height: calc(var(--u) * 25.6);
       /* Helvetica, spaced to the line lengths of the design's wider sans */
-      letter-spacing: 0.06em;
+      letter-spacing: 0.075em;
       white-space: nowrap;
     }
     .hm-calc-dek span {
       display: block;
     }
     .hm-calc-cta {
-      left: calc(var(--u) * 17.4);
-      top: calc(var(--u) * 386.7);
-      width: calc(var(--u) * 196.7);
-      height: calc(var(--u) * 24);
-      padding: 0 0 0 calc(var(--u) * 0.7);
-      border-bottom-width: 2px;
-      font-size: calc(var(--u) * 13.3);
-      line-height: 1;
-      letter-spacing: calc(var(--u) * 2.3);
+      left: calc(var(--u) * 13.8);
+      top: calc(var(--u) * 309.6);
+      width: calc(var(--u) * 171.5);
+      height: calc(var(--u) * 18.4);
+      padding: 0 0 0 calc(var(--u) * 1.1);
       gap: 0;
-      align-items: flex-start;
       justify-content: space-between;
+      align-items: flex-start;
+      font-size: calc(var(--u) * 11);
+      letter-spacing: calc(var(--u) * 2.45);
     }
     .hm-calc-cta svg {
-      width: calc(var(--u) * 10.7);
-      height: calc(var(--u) * 6);
-      margin: calc(var(--u) * 3.6) calc(var(--u) * 1.9) 0 0;
+      width: calc(var(--u) * 10);
+      height: calc(var(--u) * 5.6);
+      margin: calc(var(--u) * 2.2) calc(var(--u) * 1.1) 0 0;
     }
     .hm-calc-grid {
       left: 0;
-      top: calc(var(--u) * 452.6);
+      top: calc(var(--u) * 363.2);
       width: calc(var(--u) * 1360);
-      height: calc(var(--u) * 472.7);
-      grid-template-columns: calc(var(--u) * 333.2) calc(var(--u) * 345.8) calc(var(--u) * 344.9) minmax(0, 1fr);
-      grid-template-rows: repeat(2, minmax(0, 1fr));
+      height: calc(var(--u) * 299.3);
+      grid-template-columns: calc(var(--u) * 338.7) calc(var(--u) * 340.8) calc(var(--u) * 341.3) minmax(0, 1fr);
+      grid-template-rows: calc(var(--u) * 145.3) minmax(0, 1fr);
+      border-color: #e3e0d9;
     }
     .hm-calc-cell {
-      --x: 33;
+      --x: 95.9;
     }
     .hm-calc-cell:nth-child(4n + 2) {
-      --x: 49.4;
+      --x: 101.2;
     }
     .hm-calc-cell:nth-child(4n + 3) {
-      --x: 42.7;
+      --x: 99.6;
     }
     .hm-calc-cell:nth-child(4n + 4) {
-      --x: 44.6;
+      --x: 103.8;
     }
     .hm-calc-link {
       position: relative;
       display: block;
+      height: 100%;
       padding: 0;
     }
     .hm-calc-link > * {
       position: absolute;
-      left: calc(var(--u) * var(--x));
+      left: calc(var(--u) * (var(--x) - 0.7));
       margin: 0;
     }
     .hm-calc-link > .hm-calc-icon {
@@ -929,25 +1349,26 @@
       width: calc(var(--u) * var(--iw));
       height: calc(var(--u) * var(--ih));
     }
-    .hm-calc-cell[data-icon="sip"] { --ix: 30.1; --iy: 31.5; --iw: 36.8; --ih: 40.7; }
-    .hm-calc-cell[data-icon="emi"] { --ix: 49.4; --iy: 34.4; --iw: 44.6; --ih: 32.9; }
-    .hm-calc-cell[data-icon="ppf"] { --ix: 41.7; --iy: 31.5; --iw: 44.6; --ih: 41.7; }
-    .hm-calc-cell[data-icon="fd"] { --ix: 43.6; --iy: 31.5; --iw: 44.6; --ih: 42.6; }
-    .hm-calc-cell[data-icon="epf"] { --ix: 32; --iy: 29.6; --iw: 34.9; --ih: 40.7; }
-    .hm-calc-cell[data-icon="retirement"] { --ix: 48.5; --iy: 28.6; --iw: 42.6; --ih: 41.7; }
-    .hm-calc-cell[data-icon="home-loan"] { --ix: 42.7; --iy: 29.6; --iw: 42.6; --ih: 40.7; }
-    .hm-calc-cell[data-icon="step-up"] { --ix: 43.6; --iy: 32.5; --iw: 44.6; --ih: 35.8; }
+    .hm-calc-cell[data-icon="sip"] { --ix: 29.8; --iy: 26.6; --iw: 33; --ih: 36.2; --oy: 103.2; --oh: 17.1; }
+    .hm-calc-cell[data-icon="emi"] { --ix: 33; --iy: 29.8; --iw: 39.4; --ih: 27.7; --oy: 104.3; --oh: 16; }
+    .hm-calc-cell[data-icon="ppf"] { --ix: 32; --iy: 26.6; --iw: 39.4; --ih: 36.2; --oy: 106.3; --oh: 17.2; }
+    .hm-calc-cell[data-icon="fd"] { --ix: 33.5; --iy: 26.6; --iw: 40.5; --ih: 37.3; --oy: 105.3; --oh: 17.2; }
+    .hm-calc-cell[data-icon="epf"] { --ix: 30.9; --iy: 25; --iw: 33; --ih: 37.3; --oy: 114.3; --oh: 16.2; }
+    .hm-calc-cell[data-icon="retirement"] { --ix: 34.1; --iy: 25; --iw: 36.2; --ih: 36.2; --oy: 116.4; --oh: 16.2; }
+    .hm-calc-cell[data-icon="home-loan"] { --ix: 33; --iy: 25; --iw: 36.2; --ih: 37.3; --oy: 114.3; --oh: 16.2; }
+    .hm-calc-cell[data-icon="step-up"] { --ix: 35.7; --iy: 29.3; --iw: 38.3; --ih: 27.7; --oy: 117.5; --oh: 16.2; }
     .hm-calc-name {
-      top: calc(var(--u) * 95.2);
-      font-size: calc(var(--u) * 26.8);
+      top: calc(var(--u) * 37.1);
+      font-size: calc(var(--u) * 19.8);
+      letter-spacing: 0;
       line-height: 1;
       white-space: nowrap;
     }
     .hm-calc-text {
-      top: calc(var(--u) * 129.9);
-      font-size: calc(var(--u) * 15.4);
-      line-height: calc(var(--u) * 23.2);
-      letter-spacing: 0.055em;
+      top: calc(var(--u) * 62.2);
+      font-size: calc(var(--u) * 12.4);
+      line-height: calc(var(--u) * 19.2);
+      letter-spacing: 0.05em;
       white-space: nowrap;
     }
     .hm-calc-text span {
@@ -956,33 +1377,28 @@
     .hm-calc-text span + span::before {
       content: none;
     }
+    .hm-calc-cell:nth-child(n + 5) .hm-calc-name {
+      top: calc(var(--u) * 35.5);
+    }
+    .hm-calc-cell:nth-child(n + 5) .hm-calc-text {
+      top: calc(var(--u) * 63.8);
+    }
     .hm-calc-link > .hm-calc-open {
-      left: calc(var(--u) * (var(--x) - 2));
-      top: calc(var(--u) * 186);
-      width: calc(var(--u) * 72.7);
-      height: calc(var(--u) * 21.1);
-      padding: 0 0 0 calc(var(--u) * 1);
+      left: calc(var(--u) * (var(--x) - 1.1));
+      top: calc(var(--u) * var(--oy));
+      width: calc(var(--u) * 57.5);
+      height: calc(var(--u) * var(--oh));
+      padding: 0 0 0 calc(var(--u) * 1.1);
       gap: 0;
       justify-content: space-between;
       align-items: flex-start;
-      border-bottom-width: 2px;
-      font-size: calc(var(--u) * 13.3);
-      line-height: 1;
-      letter-spacing: calc(var(--u) * 2.65);
+      font-size: calc(var(--u) * 9.5);
+      letter-spacing: calc(var(--u) * 2.47);
     }
     .hm-calc-open svg {
-      width: calc(var(--u) * 9.7);
-      height: calc(var(--u) * 5.8);
-      margin: calc(var(--u) * 3.7) calc(var(--u) * 3.9) 0 0;
-    }
-    .hm-calc-cell:nth-child(n + 5) .hm-calc-name {
-      top: calc(var(--u) * 92.1);
-    }
-    .hm-calc-cell:nth-child(n + 5) .hm-calc-text {
-      top: calc(var(--u) * 126);
-    }
-    .hm-calc-cell:nth-child(n + 5) .hm-calc-open {
-      top: calc(var(--u) * 193.5);
+      width: calc(var(--u) * 6.4);
+      height: calc(var(--u) * 4);
+      margin: calc(var(--u) * 2.3) calc(var(--u) * 2.1) 0 0;
     }
   }
 

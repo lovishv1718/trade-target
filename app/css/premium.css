@@ -628,6 +628,16 @@
     -webkit-backdrop-filter: saturate(1.2) blur(10px);
     backdrop-filter: saturate(1.2) blur(10px);
     border-bottom: 1px solid #efeadf;
+    transition:
+      background-color 250ms var(--ease-out),
+      box-shadow 250ms var(--ease-out);
+  }
+  /* Once the page moves under it, the bar turns to frosted glass with a soft edge */
+  .pm-header[data-scrolled] {
+    background: rgb(246 242 233 / 0.8);
+    -webkit-backdrop-filter: saturate(1.5) blur(16px);
+    backdrop-filter: saturate(1.5) blur(16px);
+    box-shadow: 0 10px 28px -22px rgb(20 20 20 / 0.45);
   }
   .pm-nav-link {
     position: relative;
@@ -641,6 +651,7 @@
     text-transform: uppercase;
     color: var(--color-ink);
     white-space: nowrap;
+    transition: color var(--duration-base) var(--ease-out);
   }
   .pm-nav-link::after {
     content: "";
@@ -652,6 +663,9 @@
     background: var(--color-accent-bright);
     transform: scaleX(0);
     transition: transform var(--duration-base) var(--ease-out);
+  }
+  .pm-nav-link:hover {
+    color: var(--color-accent);
   }
   .pm-nav-link[aria-current="page"]::after,
   .pm-nav-link:hover::after {
@@ -670,9 +684,9 @@
   .pm-icon-btn:hover {
     color: var(--color-accent);
   }
-  /* ---- The bar, measured from the design (drawn at 1600px: one design pixel is --u) ---- */
+  /* ---- The bar: the logo, the links and the writers button, inside the page's 1360px ---- */
   .hm-bar {
-    --u: calc(100cqw / 1600);
+    --u: calc(min(1360px, 100cqw - 80px) / 1360);
     padding-inline: 1.25rem;
   }
   @media (min-width: 640px) {
@@ -680,92 +694,92 @@
       padding-inline: 2rem;
     }
   }
+  .hm-bar-end {
+    margin-left: auto;
+  }
   .hm-bar-search {
     display: inline-grid;
     place-items: center;
-    min-width: 2.75rem;
-    min-height: 2.75rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 999px;
     color: var(--color-ink);
+    transition:
+      background-color var(--duration-base) var(--ease-out),
+      color var(--duration-base) var(--ease-out);
   }
   .hm-bar-search svg {
     width: 1.25rem;
     height: 1.19rem;
   }
   .hm-bar-search:hover {
+    background: rgb(13 26 45 / 0.07);
     color: var(--color-accent);
   }
   .hm-bar-rule {
     width: 1px;
-    height: 38px;
-    margin-inline: 1.25rem;
-    background: #76736c;
+    height: 1.75rem;
+    margin-inline: 1rem;
+    background: #c9c3b8;
   }
+  /* Hire our writers: a ruled pill whose arrow sits in a navy disc; on hover the pill fills */
   .hm-bar-link {
     display: inline-flex;
     align-items: center;
-    gap: 1.25rem;
-    min-height: 2.75rem;
+    gap: 0.75rem;
+    height: 2.75rem;
+    padding: 0 0.3125rem 0 1.125rem;
+    border: 1px solid rgb(20 20 20 / 0.8);
+    border-radius: 999px;
     font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-size: 0.71875rem;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--color-ink);
     white-space: nowrap;
+    transition:
+      background-color var(--duration-base) var(--ease-out),
+      color var(--duration-base) var(--ease-out),
+      border-color var(--duration-base) var(--ease-out);
   }
-  .hm-bar-link:hover {
-    color: var(--color-accent);
+  .hm-bar-chip {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 999px;
+    background: #0d1a2d;
+    color: #ffffff;
+    transition: background-color var(--duration-base) var(--ease-out);
   }
   .hm-bar-arrow {
-    width: 14px;
-    height: 11px;
+    width: 12px;
+    height: 10px;
+  }
+  .hm-bar-link:hover {
+    border-color: #0d1a2d;
+    background: #0d1a2d;
+    color: #ffffff;
+  }
+  .hm-bar-link:hover .hm-bar-chip {
+    background: #f5640b;
   }
   @media (min-width: 1280px) {
-    /* The design centres the icons 1.5px below the bar's middle and its capitals lower still */
     .hm-bar {
-      padding-top: calc(var(--u) * 3);
-      padding-left: calc(var(--u) * 54);
-      padding-right: calc(var(--u) * 50);
-    }
-    /* The logo keeps the slot the design's mark and wordmark take, so the links stay where drawn */
-    .hm-bar-logo {
-      width: calc(var(--u) * 182);
+      width: calc(var(--u) * 1360);
+      margin-inline: auto;
+      padding: 0;
     }
     .hm-bar-links {
-      margin-left: calc(var(--u) * 187);
+      margin-inline: auto;
       gap: calc(var(--u) * 33.5);
     }
-    /* The design leaves a wider step before Calculators */
-    .hm-bar-links li:nth-child(6) {
-      margin-left: calc(var(--u) * 8.5);
+    .hm-bar-end {
+      margin-left: 0;
     }
     .hm-bar .pm-nav-link {
-      top: calc(var(--u) * 3);
       letter-spacing: 0.035em;
-    }
-    .hm-bar-search {
-      min-width: 0;
-    }
-    .hm-bar-search svg {
-      width: calc(var(--u) * 22);
-      height: calc(var(--u) * 21);
-    }
-    .hm-bar-rule {
-      height: calc(var(--u) * 36);
-      margin-left: calc(var(--u) * 36);
-      margin-right: calc(var(--u) * 41.5);
-    }
-    .hm-bar-link {
-      position: relative;
-      top: calc(var(--u) * 2.5);
-      gap: calc(var(--u) * 28.2);
-      font-size: max(11px, calc(var(--u) * 11.85));
-    }
-    .hm-bar-arrow {
-      position: relative;
-      top: calc(var(--u) * -1.5);
-      width: calc(var(--u) * 14);
-      height: calc(var(--u) * 11);
     }
   }
 
@@ -847,12 +861,93 @@
     text-transform: uppercase;
     color: var(--color-muted);
   }
-  /* On the home page the Ask launcher waits until the hero has scrolled away; the design shows the
-     hero without it */
-  html:has([data-hero]) .ask-launcher:not([data-past-hero]) {
-    visibility: hidden;
-    opacity: 0;
-    translate: 0 0.5rem;
+  /* The Ask launcher: a navy pill on every page, its orange mark ringed by a slowly turning
+     light; on a phone only the mark shows */
+  .ask-fab {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 40;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    height: 3.25rem;
+    padding: 0.375rem;
+    border-radius: 999px;
+    background: #0d1a2d;
+    color: #ffffff;
+    box-shadow:
+      0 14px 32px -14px rgb(13 26 45 / 0.6),
+      0 2px 6px rgb(13 26 45 / 0.22);
+    transition:
+      transform 200ms var(--ease-out),
+      box-shadow 200ms var(--ease-out);
+  }
+  .ask-fab::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    z-index: -1;
+    padding: 2px;
+    border-radius: inherit;
+    background: conic-gradient(from var(--ask-turn), #f5640b, #f7b267 18%, rgb(13 26 45 / 0) 34%, rgb(13 26 45 / 0) 66%, #f7b267 82%, #f5640b);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: ask-turn 7s linear infinite;
+  }
+  .ask-fab:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 18px 36px -14px rgb(13 26 45 / 0.7),
+      0 0 0 6px rgb(245 100 11 / 0.12);
+  }
+  .ask-fab:focus-visible {
+    outline: 2px solid #f5640b;
+    outline-offset: 4px;
+  }
+  .ask-fab-icon {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 999px;
+    background: radial-gradient(circle at 32% 28%, #ffb26b, #ec6a22 58%, #b9440f);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35);
+  }
+  .ask-fab-icon svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  .ask-fab-label {
+    display: none;
+    padding-right: 0.875rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .ask-fab-label span {
+    color: #f7b267;
+  }
+  @media (min-width: 640px) {
+    .ask-fab {
+      right: 1.5rem;
+      bottom: 1.5rem;
+    }
+    .ask-fab-label {
+      display: inline;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ask-fab::before {
+      animation: none;
+    }
   }
   .pm-arrow {
     display: inline-block;
@@ -1360,5 +1455,17 @@
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: #ffffff;
+  }
+}
+
+/* The Ask launcher's turning ring */
+@property --ask-turn {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes ask-turn {
+  to {
+    --ask-turn: 360deg;
   }
 }

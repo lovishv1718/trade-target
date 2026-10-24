@@ -20,7 +20,7 @@ function SearchIcon() {
 
 function LinkArrow() {
   return (
-    <svg aria-hidden viewBox="0 0 14 11" className="hm-bar-arrow pm-arrow" fill="none" stroke="currentColor" strokeWidth="1.4">
+    <svg aria-hidden viewBox="0 0 14 11" className="hm-bar-arrow pm-arrow" fill="none" stroke="currentColor" strokeWidth="1.5">
       <path d="M0 5.5H12.8M8.2 0.8l4.7 4.7-4.7 4.7" />
     </svg>
   );
@@ -41,6 +41,15 @@ export function SiteNav({ items, menu }: { items: NavItem[]; menu: MenuItem[] })
   const close = useCallback((restoreFocus = true) => {
     setOpen(false);
     if (restoreFocus) menuButton.current?.focus();
+  }, []);
+
+  // The bar turns to frosted glass once the page has moved under it
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   // Drawer: focus moves in, Tab stays inside, Esc closes and focus returns to the menu button
@@ -72,8 +81,7 @@ export function SiteNav({ items, menu }: { items: NavItem[]; menu: MenuItem[] })
 
   return (
     <>
-      <div className="pm-header">
-        {/* From 1280px every position follows the design, drawn at 1600px wide (1 design px = --u) */}
+      <div className="pm-header" data-scrolled={scrolled || undefined}>
         <nav aria-label="Main" className="hm-bar flex h-[85px] items-center">
           <Link href="/" aria-label="TradeTarget home" className="hm-bar-logo flex shrink-0 items-center">
             <LogoArt variant="clear" height={64} eager alt="" />
@@ -87,13 +95,16 @@ export function SiteNav({ items, menu }: { items: NavItem[]; menu: MenuItem[] })
               </li>
             ))}
           </ul>
-          <div className="hm-bar-end ml-auto flex shrink-0 items-center">
+          <div className="hm-bar-end flex shrink-0 items-center">
             <button type="button" onClick={openSearch} aria-label="Search stories, IPOs and calculators" className="hm-bar-search">
               <SearchIcon />
             </button>
             <span aria-hidden className="hm-bar-rule hidden sm:block" />
             <Link prefetch={false} href="/hire-writers/" className="hm-bar-link hidden sm:inline-flex">
-              Hire our writers <LinkArrow />
+              Hire our writers
+              <span aria-hidden className="hm-bar-chip">
+                <LinkArrow />
+              </span>
             </Link>
             <button
               ref={menuButton}

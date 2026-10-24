@@ -80,10 +80,35 @@ const CALCS: { slug: string; name: string; text: [string, string?]; icon: string
   { slug: "step-up-sip-calculator", name: "Step-up SIP Calculator", text: ["A SIP that rises with your income", "every year."], icon: "step-up" },
 ];
 
+// Our approach: the three promises, each body split where the design breaks it
 const PROMISES = [
-  { title: ["Every figure is sourced.", "Nothing is guessed."], text: "Price bands, dates and results come from offer documents and filings. Where we don’t have a number, we say so rather than estimate one." },
-  { title: ["Explained, not hyped.", "No calls to buy or sell."], text: "Every term is defined the first time it appears, in plain language. We tell you what a company does and how it earns, not what to do with your money." },
-  { title: ["Kept current,", "not left to go stale."], text: "IPO status is worked out from each issue’s own dates, and pages are updated when figures change, long after the news cycle moves on." },
+  {
+    title: ["Every figure is sourced.", "Nothing is guessed."],
+    text: ["Price bands, dates and results come from offer", "documents and filings. Where we don’t have a", "number, we say so rather than estimate one."],
+  },
+  {
+    title: ["Explained, not hyped.", "No calls to buy or sell."],
+    text: ["Every term is defined the first time it appears, in", "plain language. We tell you what a company", "does and how it earns, not what to do with your", "money."],
+  },
+  {
+    title: ["Kept current,", "not left to go stale."],
+    text: ["IPO status is worked out from each issue’s own", "dates, and pages are updated when figures", "change, long after the news cycle moves on."],
+  },
+];
+const MARKS = [
+  ["Clearer", "ideas"],
+  ["Better", "perspective"],
+  ["Smarter", "decisions"],
+];
+
+// Recently covered: the reference's strip under the hero, linked to the stories themselves
+const RECENT: { name: string; tag: "Results" | "IPO" | "Analysis" | "Comparison"; slug?: string; href?: string }[] = [
+  { name: "NTPC", tag: "Results", slug: "ntpc-q4-2026-result" },
+  { name: "Jio Platforms", tag: "IPO", href: "/ipo/jio-platforms-ipo/" },
+  { name: "SAIL", tag: "Analysis", slug: "steel-authority-of-india-fundamental-analysis" },
+  { name: "Divi’s Labs", tag: "Results", slug: "divis-lab-q4-2026-results" },
+  { name: "Colgate-Palmolive", tag: "Analysis", slug: "colgate-palmolive-fundamental-analysis" },
+  { name: "PPFAS vs HDFC", tag: "Comparison", slug: "parag-parikh-flexi-cap-fund-vs-hdfc-flexi-cap-fund" },
 ];
 
 // The three services, each description split where the design breaks it
@@ -161,28 +186,66 @@ export default function HomePage() {
         <div className="hm-hx-photo" role="img" aria-label="The BSE building on Dalal Street at sunset" />
       </section>
 
-      {/* The dark statement ---------------------------------------------------------------- */}
-      <section className="hm-dark surface-ink py-24 md:py-32" aria-labelledby="stmt-title">
-        <div className="wrap">
-          <h2 id="stmt-title" className="hm-mid max-w-[57rem] text-white">
-            You want to understand the market. <span className="soft">But most of what you read is tips, noise and jargon.</span>
+      {/* Recently covered ----------------------------------------------------------------------- */}
+      <section className="hm-rc" aria-labelledby="rc-title">
+        <div className="hm-rc-c">
+          <h2 id="rc-title" className="hm-rc-lab">
+            <span className="eyebrow">Recently covered</span>
+            <span className="hm-rc-sub">on TradeTarget</span>
           </h2>
-          <div className="mt-10 max-w-[52rem] space-y-5 text-lg leading-relaxed text-white/75">
-            <p>You know the market rewards people who understand what they own.</p>
-            <p>But headlines chase prices, forums chase tips, and most explainers assume you already know the words. Every read ends with more questions than answers.</p>
-          </div>
-          <div className="mt-16 grid border border-[#2f2d2a] md:grid-cols-3">
-            {PROMISES.map((p) => (
-              <div key={p.text} className="hm-promise px-7 py-9 md:px-10 md:py-11">
-                <h3 className="font-serif text-[1.75rem] leading-[1.18] tracking-[-0.015em] text-white md:text-[2rem]">
-                  {p.title[0]}
-                  <br />
-                  {p.title[1]}
-                </h3>
-                <p className="mt-6 leading-relaxed text-white/70">{p.text}</p>
-              </div>
+          <ul className="hm-rc-list">
+            {RECENT.map((r) => (
+              <li key={r.name}>
+                <Link prefetch={false} href={r.href ?? getArticleBySlug(r.slug!)!.path} className="hm-rc-item">
+                  <span className="hm-rc-tag" data-t={r.tag}>
+                    {r.tag}
+                  </span>
+                  <span className="hm-rc-name">
+                    {r.name}
+                    <Arrow />
+                  </span>
+                </Link>
+              </li>
             ))}
-          </div>
+          </ul>
+        </div>
+      </section>
+
+      {/* Our approach --------------------------------------------------------------------------- */}
+      <section className="hm-ap" aria-labelledby="ap-title">
+        <div aria-hidden className="hm-ap-bg" />
+        <div className="hm-ap-c">
+          <p className="eyebrow">Our approach</p>
+          <h2 id="ap-title" className="hm-ap-h">
+            <span>You want to understand</span>
+            <span>
+              <span className="r">the market.</span> <em>We make it simple.</em>
+            </span>
+          </h2>
+          <ul className="hm-ap-marks" aria-label="What reading us should give you">
+            {MARKS.map((m) => (
+              <li key={m[0]}>
+                {m[0]} <span>{m[1]}</span>
+              </li>
+            ))}
+          </ul>
+          <ol className="hm-ap-list">
+            {PROMISES.map((p, i) => (
+              <li key={p.title[0]} className="hm-ap-item">
+                <span aria-hidden className="hm-ap-num">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 className="hm-ap-title">
+                  <span>{p.title[0]}</span> <em>{p.title[1]}</em>
+                </h3>
+                <p className="hm-ap-text">
+                  {p.text.map((t) => (
+                    <span key={t}>{t}</span>
+                  ))}
+                </p>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
 
@@ -419,7 +482,7 @@ export default function HomePage() {
             {CALCS.map((c) => (
               <li key={c.slug} className="hm-calc-cell" data-icon={c.icon}>
                 <Link prefetch={false} href={`/calculators/${c.slug}/`} className="hm-calc-link group">
-                  <Image src={`/images/home/calc-${c.icon}.webp`} alt="" width={46} height={44} unoptimized className="hm-calc-icon" />
+                  <Image src={`/images/home/calc2-${c.icon}.webp`} alt="" width={46} height={44} unoptimized className="hm-calc-icon" />
                   <span className="hm-calc-name">{c.name}</span>
                   <span className="hm-calc-text">
                     {c.text.map((t) => (

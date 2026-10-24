@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { searchDocs, type SearchDoc } from "@/lib/search";
 
@@ -30,18 +29,6 @@ export function AskWidget() {
   const launcherRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const wasOpen = useRef(false);
-  const pathname = usePathname();
-  const [pastHero, setPastHero] = useState(false);
-
-  // A page with a [data-hero] (the home page) keeps the launcher hidden until most of the hero
-  // has scrolled away; the CSS hides it until then, so it never flashes in on load.
-  useEffect(() => {
-    const hero = document.querySelector("[data-hero]");
-    if (!hero) return;
-    const io = new IntersectionObserver(([entry]) => setPastHero(entry.intersectionRatio < 0.25), { threshold: 0.25 });
-    io.observe(hero);
-    return () => io.disconnect();
-  }, [pathname]);
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -92,18 +79,16 @@ export function AskWidget() {
   return (
     <>
       {!open ? (
-        <button
-          ref={launcherRef}
-          type="button"
-          aria-haspopup="dialog"
-          onClick={() => setOpen(true)}
-          data-past-hero={pastHero || undefined}
-          className="ask-launcher btn fixed right-4 bottom-4 z-40 shadow-overlay transition-[opacity,translate,visibility] duration-200 ease-out starting:translate-y-2 starting:opacity-0 motion-reduce:transition-none md:right-6 md:bottom-6"
-        >
-          <svg aria-hidden width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6">
-            <path d="M2 2.5h12v8.5H7l-3.5 3v-3H2z" strokeLinejoin="miter" />
-          </svg>
-          Ask TradeTarget
+        <button ref={launcherRef} type="button" aria-haspopup="dialog" aria-label="Ask TradeTarget" onClick={() => setOpen(true)} className="ask-fab">
+          <span aria-hidden className="ask-fab-icon">
+            <svg viewBox="0 0 20 20" fill="none">
+              <path d="M3 4.5h14v9H9.2L5.5 16.5v-3H3z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+              <path d="M10 6.4l.75 1.85 1.85.75-1.85.75L10 11.6l-.75-1.85L7.4 9l1.85-.75z" fill="currentColor" />
+            </svg>
+          </span>
+          <span aria-hidden className="ask-fab-label">
+            Ask <span>TradeTarget</span>
+          </span>
         </button>
       ) : null}
 
