@@ -15,16 +15,16 @@
    ========================================================================== */
 
 @theme static {
-  --color-white: #fbf8f3; /* cards and fields: a lighter ivory */
-  --color-paper: #f7f2ea;
-  --color-paper-2: #f1ebe1;
-  --color-paper-3: #e9e1d4;
+  --color-white: #ffffff; /* cards, panels and fields: pure white, where people read numbers */
+  --color-paper: #fbf9f5; /* the page: a warm white */
+  --color-paper-2: #f4f0e8;
+  --color-paper-3: #ebe5da;
   --color-ink: #141414; /* 16.9:1 on paper */
   --color-ink-2: #2e2c29;
   --color-muted: #6a655e; /* 5.3:1 */
   --color-faint: #9d978e; /* decorative only */
-  --color-rule: #e3dbce;
-  --color-rule-strong: #cfc5b6;
+  --color-rule: #e7e1d7;
+  --color-rule-strong: #d3ccc1;
   --color-navy: #0f1b2d;
   --color-navy-2: #1b2a42;
 
@@ -58,11 +58,11 @@
 
 :root {
   --focus: var(--color-ink);
-  --surface: #f7f2ea;
-  --field-bg: #fbf8f3;
+  --surface: #fbf9f5;
+  --field-bg: #ffffff;
   --btn-2-bg: transparent;
-  --paper-light: #f7f2ea;
-  --paper-2-light: #f1ebe1;
+  --paper-light: #fbf9f5;
+  --paper-2-light: #f4f0e8;
   --photo-tone: transparent;
   --nav-h: 4.5rem;
   /* The reference's warm gradient, with its grain */
@@ -96,10 +96,10 @@
     --color-ink-2: #2e2c29;
     --color-muted: #6a655e;
     --color-faint: #9d978e;
-    --color-rule: #e3dbce;
-    --color-rule-strong: #cfc5b6;
-    --color-paper: #f7f2ea;
-    --color-paper-2: #f1ebe1;
+    --color-rule: #e7e1d7;
+    --color-rule-strong: #d3ccc1;
+    --color-paper: #fbf9f5;
+    --color-paper-2: #f4f0e8;
     --color-up: #1c7a48;
     --color-down: #c0392b;
     --color-ipo: #2149c0;
@@ -108,9 +108,9 @@
     --color-learn: #5b3fc4;
     --color-accent: #a8421a;
     --focus: #141414;
-    --surface: #f7f2ea;
-    --field-bg: #fbf8f3;
-    background-color: #f7f2ea;
+    --surface: #fbf9f5;
+    --field-bg: #ffffff;
+    background-color: #fbf9f5;
   }
   .surface-paper-2 {
     background-color: var(--color-paper-2);
@@ -624,17 +624,17 @@
     top: 0;
     z-index: 40;
     container-type: inline-size;
-    background: rgb(246 242 233 / 0.96);
+    background: rgb(251 249 245 / 0.96);
     -webkit-backdrop-filter: saturate(1.2) blur(10px);
     backdrop-filter: saturate(1.2) blur(10px);
-    border-bottom: 1px solid #efeadf;
+    border-bottom: 1px solid #ede8df;
     transition:
       background-color 250ms var(--ease-out),
       box-shadow 250ms var(--ease-out);
   }
   /* Once the page moves under it, the bar turns to frosted glass with a soft edge */
   .pm-header[data-scrolled] {
-    background: rgb(246 242 233 / 0.8);
+    background: rgb(251 249 245 / 0.82);
     -webkit-backdrop-filter: saturate(1.5) blur(16px);
     backdrop-filter: saturate(1.5) blur(16px);
     box-shadow: 0 10px 28px -22px rgb(20 20 20 / 0.45);

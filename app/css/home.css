@@ -483,7 +483,7 @@
     position: relative;
     container-type: inline-size;
     overflow: hidden;
-    background: #f9f5f0;
+    background: #fbf9f5;
     padding-block: 4.5rem;
   }
   /* On small screens the desk's photograph (its newspaper, cup and pen) opens the section */
@@ -536,7 +536,7 @@
     border: 0;
     font-size: 0.6875rem;
     letter-spacing: 0.19em;
-    background: #faf6ef;
+    background: #ffffff;
     color: #1e1e1e;
   }
   .hm-ipo-seg button[aria-pressed="true"] {
@@ -547,8 +547,8 @@
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     margin-top: 1.5rem;
-    border: 1px solid #e5e1dc;
-    background: #fbf8f2;
+    border: 1px solid #e8e3dc;
+    background: #ffffff;
   }
   .hm-ipo-cell {
     position: relative;
@@ -590,8 +590,8 @@
   .hm-ipo-results {
     position: relative;
     margin-top: 1rem;
-    border: 1px solid #e3dfda;
-    background: #f9f5f0;
+    border: 1px solid #e8e3dc;
+    background: #ffffff;
     padding: 1.25rem 1.25rem 0.5rem;
   }
   .hm-ipo-head {
@@ -1166,7 +1166,7 @@
     position: relative;
     container-type: inline-size;
     overflow: hidden;
-    background: #faf6ed;
+    background: #fbf9f5;
     padding-block: 4.5rem;
   }
   /* On small screens the coins open the section */
@@ -1245,9 +1245,9 @@
   .hm-calc-grid {
     display: grid;
     margin-top: 2.5rem;
-    border-top: 1px solid #e6e2da;
-    border-left: 1px solid #e6e2da;
-    background: #faf6ed;
+    border-top: 1px solid #e8e3dc;
+    border-left: 1px solid #e8e3dc;
+    background: #ffffff;
   }
   .hm-calc-cell {
     position: relative;
@@ -1322,7 +1322,7 @@
       height: auto;
       margin: 0;
       padding: 0;
-      background: #faf6ed url("/images/home/calculators-coins.webp") no-repeat;
+      background: #fbf9f5 url("/images/home/calculators-coins.webp") no-repeat;
       background-size: calc(var(--u) * 1959.6) calc(var(--u) * 680.6);
       background-position: calc(50cqw - var(--u) * 853.6) 0;
     }
@@ -1489,7 +1489,7 @@
      ========================================================================== */
   .hm-an {
     container-type: inline-size;
-    background: #faf7f0;
+    background: #fbf9f5;
     padding-block: 4.5rem;
   }
   .hm-an-c {
@@ -1561,8 +1561,8 @@
     display: flex;
     flex-direction: column;
     margin-top: 1.5rem;
-    border: 1px solid #ebe8e1;
-    background: #f9f6ef;
+    border: 1px solid #e8e3dc;
+    background: #ffffff;
   }
   .hm-an-feature {
     margin-top: 2.5rem;
