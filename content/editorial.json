@@ -16,8 +16,8 @@
       { "slug": "hero-motors-ipo-allotment-status", "photo": "stock-chart-screen" }
     ],
     "results": [
-      { "name": "NTPC", "slug": "ntpc-q4-2026-result", "line": "Q4 FY26 · Dividend ₹3.50", "change": 34, "pat": [7897, 10615] },
-      { "name": "Divi’s Laboratories", "slug": "divis-lab-q4-2026-results", "line": "Q4 FY26 · Dividend ₹30.00", "change": 13, "pat": [662, 751] }
+      { "name": "NTPC", "slug": "ntpc-q4-2026-result", "line": "Q4 FY26 · Dividend ₹3.50", "change": 34, "pat": [7897, 10615], "sampleTrend": [7, 16, 18, 21, 25, 23, 30, 26, 26, 32, 41, 44, 48, 53] },
+      { "name": "Divi’s Laboratories", "slug": "divis-lab-q4-2026-results", "line": "Q4 FY26 · Dividend ₹30.00", "change": 13, "pat": [662, 751], "sampleTrend": [7, 14, 16, 21, 23, 24, 28, 24, 26, 31, 41, 42, 48, 52] }
     ],
     "learnSummaries": {
       "dividend-reinvestment-plan": "What a DRIP is, how it compounds, and when it is worth choosing."

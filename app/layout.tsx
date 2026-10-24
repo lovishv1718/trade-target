@@ -13,7 +13,7 @@ import "./globals.css";
 // Variable files cover every weight used.
 const display = Newsreader({ subsets: ["latin"], style: ["normal", "italic"], axes: ["opsz"], variable: "--font-newsreader", display: "swap" });
 const text = Arimo({ subsets: ["latin"], variable: "--font-arimo", display: "swap" });
-const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jbmono", display: "swap" });
+const mono = JetBrains_Mono({ subsets: ["latin", "latin-ext"], variable: "--font-jbmono", display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),

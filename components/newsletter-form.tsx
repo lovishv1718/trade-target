@@ -2,8 +2,24 @@
 
 import { useState } from "react";
 
-/** Email sign-up. Works on any surface: .field and .btn take their look from the band they sit in. */
-export function NewsletterForm({ tone = "light", id, inline = false, cta = "Sign up" }: { tone?: "light" | "dark"; id?: string; inline?: boolean; cta?: string }) {
+/**
+ * Email sign-up. Works on any surface: .field and .btn take their look from the band they sit in.
+ * `look="brief"` drops the utility styling so the home page's brief can size it to its design.
+ */
+export function NewsletterForm({
+  tone = "light",
+  id,
+  inline = false,
+  cta = "Sign up",
+  look,
+}: {
+  tone?: "light" | "dark";
+  id?: string;
+  inline?: boolean;
+  cta?: string;
+  look?: "brief";
+}) {
+  const brief = look === "brief";
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
   const [error, setError] = useState("");
@@ -36,7 +52,7 @@ export function NewsletterForm({ tone = "light", id, inline = false, cta = "Sign
       <label htmlFor={inputId} className={inline ? "sr-only" : "field-label"}>
         Email address
       </label>
-      <div className={inline ? "flex flex-col gap-2 sm:flex-row sm:gap-0" : "mt-1.5 flex flex-col gap-2 sm:flex-row"}>
+      <div className={brief ? "hm-brief-row" : inline ? "flex flex-col gap-2 sm:flex-row sm:gap-0" : "mt-1.5 flex flex-col gap-2 sm:flex-row"}>
         <input
           id={inputId}
           type="email"
@@ -50,10 +66,19 @@ export function NewsletterForm({ tone = "light", id, inline = false, cta = "Sign
           placeholder="Your email address"
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? errorId : undefined}
-          className={`field mt-0 min-w-0 flex-1 ${inline ? "min-h-14 border-white bg-white px-5 shadow-[0_8px_24px_-16px_rgb(20_20_20/0.35)]" : ""}`}
+          className={brief ? "hm-brief-input" : `field mt-0 min-w-0 flex-1 ${inline ? "min-h-14 border-white bg-white px-5 shadow-[0_8px_24px_-16px_rgb(20_20_20/0.35)]" : ""}`}
         />
-        <button type="submit" className={`btn shrink-0 ${inline ? "min-h-14 px-8" : ""}`}>
-          {cta} <span className="arrow" aria-hidden>→</span>
+        <button type="submit" className={brief ? "hm-brief-btn" : `btn shrink-0 ${inline ? "min-h-14 px-8" : ""}`}>
+          {cta}{" "}
+          {brief ? (
+            <svg aria-hidden viewBox="0 0 11 6" fill="none" stroke="currentColor" strokeWidth="1.1">
+              <path d="M0 3h10M7.4.4 10.2 3 7.4 5.6" />
+            </svg>
+          ) : (
+            <span className="arrow" aria-hidden>
+              →
+            </span>
+          )}
         </button>
       </div>
       {error ? (

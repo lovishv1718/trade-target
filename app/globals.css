@@ -7,3 +7,5 @@
    after TradeTarget's own reference design. Loaded last so it restyles the system's components
    in place. */
 @import "./css/premium.css";
+/* The home page's sections built to their designs */
+@import "./css/home.css";
