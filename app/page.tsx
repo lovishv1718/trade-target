@@ -296,14 +296,21 @@ export default function HomePage() {
           </div>
         </article>
 
-        <div className="mt-8 grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-0">
+        <div className="mt-8 grid divide-y divide-rule sm:grid-cols-2 sm:gap-10 sm:divide-y-0 lg:grid-cols-4 lg:gap-0">
           {cards.map((s, i) => (
-            <article key={s.slug} className={`group ${i ? "lg:border-l lg:border-rule lg:pl-9" : ""} ${i < 3 ? "lg:pr-9" : ""}`}>
-              <Link prefetch={false} href={s.path} className="block">
-                <Photo image={s.image} sizes="(min-width: 1024px) 300px, (min-width: 640px) 45vw, 100vw" crop="band" />
-                <p className="hm-label mt-5">{s.section === "ipo" ? "IPO" : "News"}</p>
-                <h3 className="mt-2.5 font-serif text-[1.375rem] leading-[1.2] tracking-[-0.01em] text-ink group-hover:text-accent">{s.title}</h3>
-                <Meta story={s} className="mt-4" />
+            <article key={s.slug} className={`group py-5 first:pt-0 sm:py-0 ${i ? "lg:border-l lg:border-rule lg:pl-9" : ""} ${i < 3 ? "lg:pr-9" : ""}`}>
+              <Link prefetch={false} href={s.path} className="grid grid-cols-[7.5rem_minmax(0,1fr)] items-start gap-x-4 sm:block">
+                <Photo
+                  image={s.image}
+                  sizes="(min-width: 1024px) 300px, (min-width: 640px) 45vw, 120px"
+                  crop="band"
+                  className="[&_.photo-frame]:aspect-[4/3] sm:[&_.photo-frame]:aspect-[5/2]"
+                />
+                <div>
+                  <p className="hm-label sm:mt-5">{s.section === "ipo" ? "IPO" : "News"}</p>
+                  <h3 className="mt-1.5 font-serif text-[1.0625rem] leading-[1.25] tracking-[-0.01em] text-ink group-hover:text-accent sm:mt-2.5 sm:text-[1.375rem] sm:leading-[1.2]">{s.title}</h3>
+                  <Meta story={s} className="mt-2 sm:mt-4" />
+                </div>
               </Link>
             </article>
           ))}

@@ -270,7 +270,7 @@
       padding-inline: 2rem;
     }
   }
-  @media (min-width: 768px) {
+  @media (min-width: 900px) {
     .hm-ap-list {
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 2rem;
@@ -433,8 +433,15 @@
     background: #f9f5f0;
     padding-block: 4.5rem;
   }
+  /* On small screens the desk's photograph (its newspaper, cup and pen) opens the section */
   .hm-ipo-bg {
-    display: none;
+    display: block;
+    height: 0;
+    margin: -4.5rem 0 2.5rem;
+    padding-bottom: 27.9%;
+    background: url("/images/home/ipo-desk.webp") no-repeat;
+    background-size: 285.7% auto;
+    background-position: 69.2% 0;
   }
   .hm-ipo-c {
     position: relative;
@@ -1105,8 +1112,22 @@
     background: #faf6ed;
     padding-block: 4.5rem;
   }
+  /* On small screens the coins open the section */
   .hm-calc-bg {
-    display: none;
+    display: block;
+    height: 0;
+    margin: -3rem 0 1.5rem;
+    padding-bottom: 58.5%;
+    background: url("/images/home/calculators-coins.webp") no-repeat;
+    background-size: 311.9% auto;
+    background-position: 76% 0;
+  }
+  @media (min-width: 640px) {
+    .hm-calc-bg {
+      width: 62%;
+      margin: -3.5rem 0 1rem auto;
+      padding-bottom: calc(62% * 0.585);
+    }
   }
   .hm-calc-c {
     position: relative;

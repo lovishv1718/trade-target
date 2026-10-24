@@ -1054,19 +1054,41 @@
 
   /* ---- Hero, as drawn: the sunset photograph from the design, the words set over its sky.
      From 1024px every size and position is the design's, in design pixels (--u = width / 1600). */
+  /* Below 1024px the photograph sits at the foot of the hero and fades up into the same warm
+     sky the words are set on, so the hero still reads as one picture with the words over it */
   .hm-hx {
+    --ph: min(30rem, 108cqw);
     position: relative;
     container-type: inline-size;
-    background: #f4f1e8;
+    overflow: hidden;
+    background:
+      radial-gradient(120% 55% at 100% 70%, rgb(247 200 150 / 0.4), rgb(247 200 150 / 0) 70%),
+      linear-gradient(180deg, #f5f2ea 0%, #f2ede3 100%);
   }
   .hm-hx-photo {
-    position: relative;
-    aspect-ratio: 1600 / 762;
-    background: url("/images/hero/bse-sunset-960.webp") 78% 50% / cover no-repeat;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: var(--ph);
+    background: url("/images/hero/bse-sunset-960.webp") 92% 100% / cover no-repeat;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 40%);
+    mask-image: linear-gradient(180deg, transparent 0%, #000 40%);
   }
   .hm-hx-in {
     --u: calc(100cqw / 1600);
-    padding: 3.5rem 1.25rem 2.5rem;
+    position: relative;
+    z-index: 1;
+    padding: 3rem 1.25rem calc(var(--ph) - 5.5rem);
+  }
+  @media (min-width: 640px) {
+    .hm-hx {
+      --ph: min(32rem, 66cqw);
+    }
+    .hm-hx-in {
+      max-width: 40rem;
+      padding: 4.5rem 2rem calc(var(--ph) - 8rem);
+    }
   }
   .hm-hx-h1 {
     font-family: var(--font-serif);
@@ -1164,6 +1186,7 @@
     .hm-hx-in {
       position: absolute;
       inset: 0;
+      max-width: none;
       padding: 0;
     }
     .hm-hx-h1 {
